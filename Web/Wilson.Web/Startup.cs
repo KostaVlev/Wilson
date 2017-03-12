@@ -10,8 +10,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Wilson.Web.Services;
-using Wilson.Company.Data;
-using Wilson.Company.Core.Entities;
+using Wilson.Companies.Data;
+using Wilson.Companies.Core.Entities;
 using Wilson.Accounting.Data;
 using Wilson.Accounting.Data.DataAccess;
 

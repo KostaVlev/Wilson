@@ -34,13 +34,13 @@
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="1.0.0" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Accounting\Wilson.Accounting.Data\Wilson.Accounting.Data.csproj" />
-    <ProjectReference Include="..\..\Company\Wilson.Company.Core\Wilson.Company.Core.csproj" />
-    <ProjectReference Include="..\..\Company\Wilson.Company.Data\Wilson.Company.Data.csproj" />
-  </ItemGroup>
-  <ItemGroup>
     <Folder Include="Areas\Accounting\Models\" />
     <Folder Include="Areas\Accounting\Views\Home\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Accounting\Wilson.Accounting.Data\Wilson.Accounting.Data.csproj" />
+    <ProjectReference Include="..\..\Companies\Wilson.Companies.Core\Wilson.Companies.Core.csproj" />
+    <ProjectReference Include="..\..\Companies\Wilson.Companies.Data\Wilson.Companies.Data.csproj" />
   </ItemGroup>
 
 </Project>

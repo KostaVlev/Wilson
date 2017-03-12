@@ -9,7 +9,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Wilson.Web.Models.ManageViewModels;
 using Wilson.Web.Services;
-using Wilson.Company.Core.Entities;
+using Wilson.Companies.Core.Entities;
 
 namespace Wilson.Web.Controllers
 {
