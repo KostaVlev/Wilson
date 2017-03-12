@@ -22,6 +22,7 @@ namespace Wilson.Accounting.Data.Configurations
             builder.Property(p => p.Total).HasPrecision(18, 4);
             builder.HasOne(x => x.Buyer).WithMany(x => x.BuyInvoices).HasForeignKey(x => x.BuyerId).OnDelete(DeleteBehavior.Restrict);
             builder.HasOne(x => x.Seller).WithMany(x => x.SaleInvoices).HasForeignKey(x => x.SellerId).OnDelete(DeleteBehavior.Restrict);
+            builder.HasOne(x => x.Bill).WithOne(x => x.Invoice).HasForeignKey<Invoice>(x => x.BillId);
         }
     }
 }

@@ -9,7 +9,7 @@ using Wilson.Accounting.Core.Enumerations;
 namespace Wilson.Accounting.Data.Migrations
 {
     [DbContext(typeof(AccountingDbContext))]
-    [Migration("20170311122659_Init")]
+    [Migration("20170312085316_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -71,9 +71,6 @@ namespace Wilson.Accounting.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("InvoiceId")
-                        .IsUnique();
-
                     b.HasIndex("ProjectId");
 
                     b.ToTable("Bills");
@@ -133,7 +130,7 @@ namespace Wilson.Accounting.Data.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<Guid?>("BullId");
+                    b.Property<Guid?>("BillId");
 
                     b.Property<Guid>("BuyerId");
 
@@ -171,6 +168,9 @@ namespace Wilson.Accounting.Data.Migrations
                         .HasColumnType("decimal(18,4)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("BillId")
+                        .IsUnique();
 
                     b.HasIndex("BuyerId");
 
@@ -225,16 +225,11 @@ namespace Wilson.Accounting.Data.Migrations
 
                     b.Property<Guid>("InvoiceId");
 
-                    b.Property<Guid?>("PaymentId");
-
                     b.Property<Guid>("PriceId");
 
                     b.HasKey("Id");
 
                     b.HasIndex("InvoiceId");
-
-                    b.HasIndex("PaymentId")
-                        .IsUnique();
 
                     b.ToTable("Payments");
                 });
@@ -254,6 +249,9 @@ namespace Wilson.Accounting.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ItemId");
+
+                    b.HasIndex("PaymentId")
+                        .IsUnique();
 
                     b.ToTable("Prices");
                 });
@@ -305,11 +303,6 @@ namespace Wilson.Accounting.Data.Migrations
 
             modelBuilder.Entity("Wilson.Accounting.Core.Entities.Bill", b =>
                 {
-                    b.HasOne("Wilson.Accounting.Core.Entities.Invoice", "Invoice")
-                        .WithOne("Bill")
-                        .HasForeignKey("Wilson.Accounting.Core.Entities.Bill", "InvoiceId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
                     b.HasOne("Wilson.Accounting.Core.Entities.Project", "Project")
                         .WithMany("Bills")
                         .HasForeignKey("ProjectId")
@@ -334,6 +327,10 @@ namespace Wilson.Accounting.Data.Migrations
 
             modelBuilder.Entity("Wilson.Accounting.Core.Entities.Invoice", b =>
                 {
+                    b.HasOne("Wilson.Accounting.Core.Entities.Bill", "Bill")
+                        .WithOne("Invoice")
+                        .HasForeignKey("Wilson.Accounting.Core.Entities.Invoice", "BillId");
+
                     b.HasOne("Wilson.Accounting.Core.Entities.Company", "Buyer")
                         .WithMany("BuyInvoices")
                         .HasForeignKey("BuyerId");
@@ -367,10 +364,6 @@ namespace Wilson.Accounting.Data.Migrations
                         .WithMany("Payments")
                         .HasForeignKey("InvoiceId")
                         .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("Wilson.Accounting.Core.Entities.Price", "Price")
-                        .WithOne("Payment")
-                        .HasForeignKey("Wilson.Accounting.Core.Entities.Payment", "PaymentId");
                 });
 
             modelBuilder.Entity("Wilson.Accounting.Core.Entities.Price", b =>
@@ -378,6 +371,10 @@ namespace Wilson.Accounting.Data.Migrations
                     b.HasOne("Wilson.Accounting.Core.Entities.Item", "Item")
                         .WithMany("Prices")
                         .HasForeignKey("ItemId");
+
+                    b.HasOne("Wilson.Accounting.Core.Entities.Payment", "Payment")
+                        .WithOne("Price")
+                        .HasForeignKey("Wilson.Accounting.Core.Entities.Price", "PaymentId");
                 });
 
             modelBuilder.Entity("Wilson.Accounting.Core.Entities.Project", b =>

@@ -36,7 +36,7 @@ namespace Wilson.Accounting.Core.Entities
 
         public Guid SellerId { get; set; }
 
-        public Guid? BullId { get; set; }
+        public Guid? BillId { get; set; }
 
         public virtual Company Buyer { get; set; }
 

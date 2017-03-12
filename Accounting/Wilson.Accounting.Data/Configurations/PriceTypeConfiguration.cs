@@ -16,6 +16,7 @@ namespace Wilson.Accounting.Data.Configurations
         {
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Amount).HasPrecision(18, 4).IsRequired();
+            builder.HasOne(x => x.Payment).WithOne(x => x.Price).HasForeignKey<Price>(x => x.PaymentId);
         }
     }
 }
