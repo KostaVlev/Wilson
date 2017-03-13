@@ -242,13 +242,23 @@ namespace Wilson.Companies.Data.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<Guid>("CretedById");
+
                     b.Property<DateTime>("Date");
 
                     b.Property<string>("HtmlContent");
 
+                    b.Property<bool>("IsApproved");
+
+                    b.Property<DateTime?>("LastRevisedAt");
+
                     b.Property<Guid>("ProjectId");
 
+                    b.Property<int>("Revision");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("CretedById");
 
                     b.ToTable("CompanyContract");
                 });
@@ -369,14 +379,18 @@ namespace Wilson.Companies.Data.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<Guid>("ContractId");
+                    b.Property<DateTime?>("ApprovedAt");
+
+                    b.Property<Guid?>("ContractId");
 
                     b.Property<string>("HtmlContent")
                         .IsRequired();
 
                     b.Property<Guid>("InquiryId");
 
-                    b.Property<bool>("IsAccepted");
+                    b.Property<bool>("IsApproved");
+
+                    b.Property<DateTime?>("LastRevisedAt");
 
                     b.Property<int>("Revision");
 
@@ -571,6 +585,13 @@ namespace Wilson.Companies.Data.Migrations
                         .HasForeignKey("ShippingAddressId");
                 });
 
+            modelBuilder.Entity("Wilson.Companies.Core.Entities.CompanyContract", b =>
+                {
+                    b.HasOne("Wilson.Companies.Core.Entities.Employee", "CretedBy")
+                        .WithMany()
+                        .HasForeignKey("CretedById");
+                });
+
             modelBuilder.Entity("Wilson.Companies.Core.Entities.Employee", b =>
                 {
                     b.HasOne("Wilson.Companies.Core.Entities.Address", "Address")
@@ -627,8 +648,7 @@ namespace Wilson.Companies.Data.Migrations
                 {
                     b.HasOne("Wilson.Companies.Core.Entities.CompanyContract", "Contract")
                         .WithMany("Offers")
-                        .HasForeignKey("ContractId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("ContractId");
 
                     b.HasOne("Wilson.Companies.Core.Entities.Inquiry", "Inquiry")
                         .WithMany("Offers")

@@ -63,21 +63,6 @@ namespace Wilson.Companies.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "CompanyContract",
-                schema: "Company",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(nullable: false),
-                    Date = table.Column<DateTime>(nullable: false),
-                    HtmlContent = table.Column<string>(nullable: true),
-                    ProjectId = table.Column<Guid>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_CompanyContract", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "ProjectLocation",
                 schema: "Company",
                 columns: table => new
@@ -286,6 +271,32 @@ namespace Wilson.Companies.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "CompanyContract",
+                schema: "Company",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    CretedById = table.Column<Guid>(nullable: false),
+                    Date = table.Column<DateTime>(nullable: false),
+                    HtmlContent = table.Column<string>(nullable: true),
+                    IsApproved = table.Column<bool>(nullable: false),
+                    LastRevisedAt = table.Column<DateTime>(nullable: true),
+                    ProjectId = table.Column<Guid>(nullable: false),
+                    Revision = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CompanyContract", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_CompanyContract_Employee_CretedById",
+                        column: x => x.CretedById,
+                        principalSchema: "Company",
+                        principalTable: "Employee",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Project",
                 schema: "Company",
                 columns: table => new
@@ -426,10 +437,12 @@ namespace Wilson.Companies.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
-                    ContractId = table.Column<Guid>(nullable: false),
+                    ApprovedAt = table.Column<DateTime>(nullable: true),
+                    ContractId = table.Column<Guid>(nullable: true),
                     HtmlContent = table.Column<string>(nullable: false),
                     InquiryId = table.Column<Guid>(nullable: false),
-                    IsAccepted = table.Column<bool>(nullable: false),
+                    IsApproved = table.Column<bool>(nullable: false),
+                    LastRevisedAt = table.Column<DateTime>(nullable: true),
                     Revision = table.Column<int>(nullable: false),
                     SentAt = table.Column<DateTime>(nullable: false),
                     SentById = table.Column<Guid>(nullable: false)
@@ -443,7 +456,7 @@ namespace Wilson.Companies.Data.Migrations
                         principalSchema: "Company",
                         principalTable: "CompanyContract",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Offer_Inquiry_InquiryId",
                         column: x => x.InquiryId,
@@ -574,6 +587,12 @@ namespace Wilson.Companies.Data.Migrations
                 schema: "Company",
                 table: "Company",
                 column: "ShippingAddressId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CompanyContract_CretedById",
+                schema: "Company",
+                table: "CompanyContract",
+                column: "CretedById");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Employee_AddressId",
@@ -730,15 +749,15 @@ namespace Wilson.Companies.Data.Migrations
                 schema: "Company");
 
             migrationBuilder.DropTable(
-                name: "Employee",
-                schema: "Company");
-
-            migrationBuilder.DropTable(
                 name: "CompanyContract",
                 schema: "Company");
 
             migrationBuilder.DropTable(
                 name: "ProjectLocation",
+                schema: "Company");
+
+            migrationBuilder.DropTable(
+                name: "Employee",
                 schema: "Company");
 
             migrationBuilder.DropTable(

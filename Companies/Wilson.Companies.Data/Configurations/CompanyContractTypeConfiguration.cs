@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Wilson.Companies.Core.Entities;
 
@@ -17,6 +18,7 @@ namespace Wilson.Companies.Data.Configurations
             builder.HasMany(x => x.Offers).WithOne(x => x.Contract).HasForeignKey(x => x.ContractId);
             builder.HasOne(x => x.Project).WithOne(x => x.Contract).HasForeignKey<CompanyContract>(x => x.ProjectId);
             builder.HasMany(x => x.Attachments).WithOne(x => x.Cotract).HasForeignKey(x => x.ContractId);
+            builder.HasOne(x => x.CretedBy).WithMany().HasForeignKey(x => x.CretedById).OnDelete(DeleteBehavior.Restrict);
         }
     }
 }
