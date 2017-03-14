@@ -9,13 +9,13 @@ using Wilson.Companies.Core.Enumerations;
 namespace Wilson.Companies.Data.Migrations
 {
     [DbContext(typeof(CompanyDbContext))]
-    [Migration("20170313153958_Init")]
+    [Migration("20170314152701_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
-                .HasDefaultSchema("Company")
+                .HasDefaultSchema("Companies")
                 .HasAnnotation("ProductVersion", "1.1.1")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -159,7 +159,7 @@ namespace Wilson.Companies.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Address");
+                    b.ToTable("Addresses");
                 });
 
             modelBuilder.Entity("Wilson.Companies.Core.Entities.Attachment", b =>
@@ -198,7 +198,7 @@ namespace Wilson.Companies.Data.Migrations
 
                     b.HasIndex("InquiryId");
 
-                    b.ToTable("Attachment");
+                    b.ToTable("Attachments");
                 });
 
             modelBuilder.Entity("Wilson.Companies.Core.Entities.Company", b =>
@@ -235,7 +235,7 @@ namespace Wilson.Companies.Data.Migrations
 
                     b.HasIndex("ShippingAddressId");
 
-                    b.ToTable("Company");
+                    b.ToTable("Companies");
                 });
 
             modelBuilder.Entity("Wilson.Companies.Core.Entities.CompanyContract", b =>
@@ -261,7 +261,7 @@ namespace Wilson.Companies.Data.Migrations
 
                     b.HasIndex("CretedById");
 
-                    b.ToTable("CompanyContract");
+                    b.ToTable("CompanyContracts");
                 });
 
             modelBuilder.Entity("Wilson.Companies.Core.Entities.Employee", b =>
@@ -300,7 +300,7 @@ namespace Wilson.Companies.Data.Migrations
 
                     b.HasIndex("CompanyId");
 
-                    b.ToTable("Employee");
+                    b.ToTable("Employees");
                 });
 
             modelBuilder.Entity("Wilson.Companies.Core.Entities.InfoRequest", b =>
@@ -329,7 +329,7 @@ namespace Wilson.Companies.Data.Migrations
 
                     b.HasIndex("SentById");
 
-                    b.ToTable("InfoRequest");
+                    b.ToTable("InfoRequests");
                 });
 
             modelBuilder.Entity("Wilson.Companies.Core.Entities.Inquiry", b =>
@@ -359,7 +359,7 @@ namespace Wilson.Companies.Data.Migrations
 
                     b.HasIndex("ReceivedById");
 
-                    b.ToTable("Inquiry");
+                    b.ToTable("Inquiries");
                 });
 
             modelBuilder.Entity("Wilson.Companies.Core.Entities.InquiryEmployee", b =>
@@ -407,7 +407,7 @@ namespace Wilson.Companies.Data.Migrations
 
                     b.HasIndex("SentById");
 
-                    b.ToTable("Offer");
+                    b.ToTable("Offers");
                 });
 
             modelBuilder.Entity("Wilson.Companies.Core.Entities.Project", b =>
@@ -435,7 +435,7 @@ namespace Wilson.Companies.Data.Migrations
                     b.HasIndex("LocationId")
                         .IsUnique();
 
-                    b.ToTable("Project");
+                    b.ToTable("Projects");
                 });
 
             modelBuilder.Entity("Wilson.Companies.Core.Entities.ProjectLocation", b =>
@@ -462,7 +462,7 @@ namespace Wilson.Companies.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ProjectLocation");
+                    b.ToTable("ProjectLocations");
                 });
 
             modelBuilder.Entity("Wilson.Companies.Core.Entities.User", b =>

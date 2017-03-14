@@ -15,9 +15,22 @@ namespace Wilson.Companies.Data
         {
         }
 
+        public virtual DbSet<Address> Addresses { get; set; }
+        public virtual DbSet<Attachment> Attachments { get; set; }
+        public virtual DbSet<Company> Companies { get; set; }
+        public virtual DbSet<CompanyContract> CompanyContracts { get; set; }
+        public virtual DbSet<Employee> Employees { get; set; }
+        public virtual DbSet<InfoRequest> InfoRequests { get; set; }
+        public virtual DbSet<Inquiry> Inquiries { get; set; }        
+        public virtual DbSet<Offer> Offers { get; set; }
+        public virtual DbSet<Project> Projects { get; set; }
+        public virtual DbSet<ProjectLocation> ProjectLocations { get; set; }
+
+        public virtual DbSet<InquiryEmployee> InquiryEmployee { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.HasDefaultSchema("Company");
+            builder.HasDefaultSchema("Companies");
             this.RegesterEntityTypeConfigurations(builder);
 
             base.OnModelCreating(builder);
