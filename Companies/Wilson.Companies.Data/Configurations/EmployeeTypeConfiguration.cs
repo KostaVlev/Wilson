@@ -16,6 +16,7 @@ namespace Wilson.Companies.Data.Configurations
             builder.HasKey(x => x.Id);
             builder.Property(x => x.FirstName).HasMaxLength(70).IsRequired();
             builder.Property(x => x.LastName).HasMaxLength(70).IsRequired();
+            builder.Property(x => x.EmployeePosition).IsRequired();
             builder.Property(x => x.Phone).HasMaxLength(15).IsRequired();
             builder.Property(x => x.PrivatePhone).HasMaxLength(15);
             builder.Property(x => x.Email).HasMaxLength(70).IsRequired();
