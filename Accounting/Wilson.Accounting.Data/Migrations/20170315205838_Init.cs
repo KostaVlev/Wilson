@@ -161,6 +161,7 @@ namespace Wilson.Accounting.Data.Migrations
                     Id = table.Column<Guid>(nullable: false),
                     Amount = table.Column<decimal>(type: "decimal(18,4)", nullable: false),
                     Date = table.Column<DateTime>(nullable: false),
+                    HtmlContent = table.Column<string>(nullable: false),
                     InvoiceId = table.Column<Guid>(nullable: false),
                     ProjectId = table.Column<Guid>(nullable: false)
                 },

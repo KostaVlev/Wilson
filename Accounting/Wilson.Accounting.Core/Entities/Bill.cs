@@ -8,6 +8,8 @@ namespace Wilson.Accounting.Core.Entities
 
         public decimal Amount { get; set; }
 
+        public string HtmlContent { get; set; }
+
         public Guid ProjectId { get; set; }
 
         public Guid InvoiceId { get; set; }

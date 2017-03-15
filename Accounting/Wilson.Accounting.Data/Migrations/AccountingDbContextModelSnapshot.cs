@@ -64,6 +64,9 @@ namespace Wilson.Accounting.Data.Migrations
 
                     b.Property<DateTime>("Date");
 
+                    b.Property<string>("HtmlContent")
+                        .IsRequired();
+
                     b.Property<Guid>("InvoiceId");
 
                     b.Property<Guid>("ProjectId");

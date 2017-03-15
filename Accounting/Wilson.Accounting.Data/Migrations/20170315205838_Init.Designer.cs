@@ -9,7 +9,7 @@ using Wilson.Accounting.Core.Enumerations;
 namespace Wilson.Accounting.Data.Migrations
 {
     [DbContext(typeof(AccountingDbContext))]
-    [Migration("20170313153908_Init")]
+    [Migration("20170315205838_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -64,6 +64,9 @@ namespace Wilson.Accounting.Data.Migrations
                         .HasColumnType("decimal(18,4)");
 
                     b.Property<DateTime>("Date");
+
+                    b.Property<string>("HtmlContent")
+                        .IsRequired();
 
                     b.Property<Guid>("InvoiceId");
 
