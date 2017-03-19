@@ -151,6 +151,17 @@ namespace Wilson.Web
 
                 await roleManager.CreateAsync(role);                
             }
+
+            // Create Accouter role.    
+            if (await roleManager.FindByNameAsync("Accouter") == null)
+            {
+                var role = new IdentityRole()
+                {
+                    Name = "Accouter"
+                };
+
+                await roleManager.CreateAsync(role);
+            }
         }
     }
 }
