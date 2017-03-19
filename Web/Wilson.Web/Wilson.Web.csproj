@@ -36,6 +36,8 @@
   <ItemGroup>
     <Folder Include="Areas\Accounting\Models\" />
     <Folder Include="Areas\Accounting\Views\Home\" />
+    <Folder Include="Areas\Admin\Controllers\" />
+    <Folder Include="Areas\Admin\Views\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Accounting\Wilson.Accounting.Data\Wilson.Accounting.Data.csproj" />

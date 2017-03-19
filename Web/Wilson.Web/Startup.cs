@@ -14,6 +14,8 @@ using Wilson.Companies.Data;
 using Wilson.Companies.Core.Entities;
 using Wilson.Accounting.Data;
 using Wilson.Accounting.Data.DataAccess;
+using Wilson.Companies.Data.DataAccess;
+using Microsoft.AspNetCore.Identity;
 
 namespace Wilson.Web
 {
@@ -59,6 +61,7 @@ namespace Wilson.Web
             services.AddTransient<ISmsSender, AuthMessageSender>();
 
             // Add application work dbContexts
+            services.AddTransient<ICompanyWorkData, CompanyWorkData>();
             services.AddTransient<IAccountingWorkData, AccountingWorkData>();
         }
 
@@ -94,8 +97,60 @@ namespace Wilson.Web
 
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    template: "{controller=Account}/{action=Login}/{id?}");
             });
+
+            // Add default Admin user and roles.
+            this.CreateRolesAndAdmin(app).Wait();
+        }
+
+        // This method creates default Admin user and roles.
+        private async Task CreateRolesAndAdmin(IApplicationBuilder app)
+        {
+            var context = app.ApplicationServices.GetService<CompanyDbContext>();
+
+            var roleManager = app.ApplicationServices.GetService<RoleManager<IdentityRole>>();
+            var UserManager = app.ApplicationServices.GetService<UserManager<User>>();
+
+
+            // Create Admin role and Admin if not exist.    
+            if (await roleManager.FindByNameAsync("Admin") == null)
+            {
+                // Create Admin role.   
+                var role = new IdentityRole()
+                {
+                    Name = "Admin"
+                };
+
+                await roleManager.CreateAsync(role);
+
+                // Create a Admin user.
+                var user = new User()
+                {
+                    UserName = "admin@wilson.com",
+                    Email = "admin@wilson.com"
+                };
+
+                string password = "Q!w2e3r4";
+                var admin = await UserManager.CreateAsync(user, password);
+
+                // Add Role Admin to the Admin.   
+                if (admin.Succeeded)
+                {
+                    await UserManager.AddToRoleAsync(user, "Admin");
+                }
+            }
+
+            // Create User role.    
+            if (await roleManager.FindByNameAsync("User") == null)
+            {   
+                var role = new IdentityRole()
+                {
+                    Name = "User"
+                };
+
+                await roleManager.CreateAsync(role);                
+            }
         }
     }
 }
