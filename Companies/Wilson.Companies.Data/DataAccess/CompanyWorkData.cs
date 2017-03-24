@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Wilson.Companies.Core.Aggregates;
+using Wilson.Companies.Core.Entities;
 using Wilson.Companies.Data.DataAccess.Repositories;
 
 namespace Wilson.Companies.Data.DataAccess
@@ -25,6 +26,8 @@ namespace Wilson.Companies.Data.DataAccess
         }
 
         public IRepository<InquiryAggregate> Inquiries => this.GetRepository<InquiryAggregate>();
+
+        public IRepository<User> Users => this.GetRepository<User>();
 
         public int Complete()
         {

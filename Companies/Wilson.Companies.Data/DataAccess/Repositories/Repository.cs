@@ -20,6 +20,11 @@ namespace Wilson.Companies.Data.DataAccess.Repositories
             this.entities = this.Context.Set<TEntity>();
         }
 
+        public async Task<IEnumerable<TEntity>> GetAllAsync()
+        {
+            return await this.entities.ToListAsync();
+        }
+
         public void Add(TEntity entity)
         {
             this.entities.Add(entity);
@@ -29,7 +34,7 @@ namespace Wilson.Companies.Data.DataAccess.Repositories
         {
             return await this.entities.Where(predicate).ToListAsync();
         }
-
+            
         public void Remove(TEntity entity)
         {
             this.entities.Remove(entity);
