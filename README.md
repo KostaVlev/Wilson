@@ -2,7 +2,7 @@
 
 ERP for small to medium contsruction companies.
 
-https://ci.appveyor.com/api/projects/status/t5m1h3vl3xjs1rme?svg=true
+[![Build status](https://ci.appveyor.com/api/projects/status/t5m1h3vl3xjs1rme?svg=true)](https://ci.appveyor.com/project/KostaVlev/wilson)
 
 ## Overview
 
