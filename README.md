@@ -2,6 +2,8 @@
 
 ERP for small to medium contsruction companies.
 
+https://ci.appveyor.com/api/projects/status/t5m1h3vl3xjs1rme?svg=true
+
 ## Overview
 
 ***Wilson***<sup>*TM*</sup> is an open-source web-based ERP system that is designed to help construction companies and companies who offer labor as a service.
