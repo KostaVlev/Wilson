@@ -9,6 +9,8 @@ namespace Wilson.Companies.Data.DataAccess.Repositories
     {
         Task<IEnumerable<TEntity>> GetAllAsync();
 
+        Task<TEntity> GetById(string id);
+
         Task<IEnumerable<TEntity>> FindAsync(Expression<Func<TEntity, bool>> predicate);
 
         Task<TEntity> SingleOrDefaultAsync(Expression<Func<TEntity, bool>> predicate);

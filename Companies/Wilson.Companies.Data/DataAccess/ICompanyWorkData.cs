@@ -13,7 +13,7 @@ namespace Wilson.Companies.Data.DataAccess
 
         DbSet<TEntity> Set<TEntity>() where TEntity : class;
 
-        Task CompleteAsync();
+        Task<int> CompleteAsync();
 
         int Complete();
     }

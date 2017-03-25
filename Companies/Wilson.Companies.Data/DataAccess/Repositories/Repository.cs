@@ -25,6 +25,11 @@ namespace Wilson.Companies.Data.DataAccess.Repositories
             return await this.entities.ToListAsync();
         }
 
+        public async Task<TEntity> GetById(string id)
+        {
+            return await this.entities.FindAsync(id);
+        }
+
         public void Add(TEntity entity)
         {
             this.entities.Add(entity);
@@ -48,6 +53,6 @@ namespace Wilson.Companies.Data.DataAccess.Repositories
         public async Task<TEntity> SingleOrDefaultAsync(Expression<Func<TEntity, bool>> predicate)
         {
             return await this.entities.SingleOrDefaultAsync(predicate);
-        }
+        }            
     }
 }

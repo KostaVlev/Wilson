@@ -34,9 +34,9 @@ namespace Wilson.Companies.Data.DataAccess
             return this.dbContext.SaveChanges();
         }
 
-        public async Task CompleteAsync()
+        public async Task<int> CompleteAsync()
         {
-            await this.dbContext.SaveChangesAsync();
+            return await this.dbContext.SaveChangesAsync();
         }
 
         public DbSet<TEntity> Set<TEntity>() where TEntity : class
