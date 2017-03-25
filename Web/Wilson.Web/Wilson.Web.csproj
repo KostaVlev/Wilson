@@ -11,7 +11,12 @@
   <PropertyGroup>
     <UserSecretsId>aspnet-Wilson.Web-21879d00-3554-4155-ae27-e65eb872770f</UserSecretsId>
   </PropertyGroup>
+
   <ItemGroup>
+    <Content Remove="wwwroot/css\navbar-fixed-side.scss" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="6.0.2" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.0.0" />
     <PackageReference Include="Microsoft.AspNetCore" Version="1.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="1.1.1" />
@@ -36,8 +41,7 @@
   <ItemGroup>
     <Folder Include="Areas\Accounting\Models\" />
     <Folder Include="Areas\Accounting\Views\Home\" />
-    <Folder Include="Areas\Admin\Controllers\" />
-    <Folder Include="Areas\Admin\Views\" />
+    <Folder Include="Areas\Admin\Views\Shared\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Accounting\Wilson.Accounting.Data\Wilson.Accounting.Data.csproj" />

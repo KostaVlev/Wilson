@@ -1,0 +1,9 @@
+﻿@{
+    Layout = "_Layout";
+    @await Html.PartialAsync("_AdminPartial")
+}
+<p class="lead text-success well-lg">@ViewData["StatusMessage"]</p>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

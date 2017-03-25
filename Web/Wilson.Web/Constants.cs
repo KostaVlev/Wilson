@@ -1,0 +1,31 @@
+﻿namespace Wilson.Web
+{
+    public static class Constants
+    {
+        public static class AccountManageMessagesEn
+        {
+            public const string UserCreated = "User has been created";
+            public const string PasswordChanged = "Your password has been changed.";
+            public const string PasswordSet = "Your password has been set.";
+            public const string Error = "An error has occurred.";
+            public const string PhoneWasAdded = "Your phone number was added.";
+            public const string PhoneRemoved = "Your phone number was removed.";
+            public const string UserDeactivated = "User was deactivated.";
+            public const string UserActivated = "User was activated.";
+            public const string UserEdit = "User has been edited.";
+        }
+
+        public static class Roles
+        {
+            public const string Administrator = "Admin";
+            public const string Accouter = "Accouter";
+            public const string User = "User";
+        }
+
+        public static class Areas
+        {
+            public const string Admin = "Admin";
+            public const string Accounting = "Accounting";
+        }
+    }
+}

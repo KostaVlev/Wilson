@@ -1,21 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Wilson.Web.Services;
-using Wilson.Companies.Data;
-using Wilson.Companies.Core.Entities;
 using Wilson.Accounting.Data;
 using Wilson.Accounting.Data.DataAccess;
+using Wilson.Companies.Core.Entities;
+using Wilson.Companies.Data;
 using Wilson.Companies.Data.DataAccess;
-using Microsoft.AspNetCore.Identity;
+using Wilson.Web.Configurations;
+using Wilson.Web.Services;
 
 namespace Wilson.Web
 {
@@ -59,6 +58,10 @@ namespace Wilson.Web
             // Add application services.
             services.AddTransient<IEmailSender, AuthMessageSender>();
             services.AddTransient<ISmsSender, AuthMessageSender>();
+            services.AddTransient<AutoMapper.IConfigurationProvider, MapperConfiguration>();
+
+            services.AddScoped<IMapper>(sp =>
+                new Mapper(new MapperConfiguration(cfg => cfg.AddProfile(new AutoMapperProfileConfiguration()))));
 
             // Add application work dbContexts
             services.AddTransient<ICompanyWorkData, CompanyWorkData>();
@@ -107,10 +110,8 @@ namespace Wilson.Web
         // This method creates default Admin user and roles.
         private async Task CreateRolesAndAdmin(IApplicationBuilder app)
         {
-            var context = app.ApplicationServices.GetService<CompanyDbContext>();
-
             var roleManager = app.ApplicationServices.GetService<RoleManager<IdentityRole>>();
-            var UserManager = app.ApplicationServices.GetService<UserManager<User>>();
+            var userManager = app.ApplicationServices.GetService<UserManager<User>>();
 
 
             // Create Admin role and Admin if not exist.    
@@ -127,17 +128,19 @@ namespace Wilson.Web
                 // Create a Admin user.
                 var user = new User()
                 {
+                    FirstName = "Admin",
+                    LastName = "Admin",
                     UserName = "admin@wilson.com",
                     Email = "admin@wilson.com"
                 };
 
                 string password = "Q!w2e3r4";
-                var admin = await UserManager.CreateAsync(user, password);
+                var admin = await userManager.CreateAsync(user, password);
 
                 // Add Role Admin to the Admin.   
                 if (admin.Succeeded)
                 {
-                    await UserManager.AddToRoleAsync(user, "Admin");
+                    await userManager.AddToRoleAsync(user, "Admin");
                 }
             }
 
