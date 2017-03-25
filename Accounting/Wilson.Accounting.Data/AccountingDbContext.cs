@@ -20,7 +20,7 @@ namespace Wilson.Accounting.Data
         public virtual DbSet<Payment> Payments { get; set; }
         public virtual DbSet<Price> Prices { get; set; }
         public virtual DbSet<Storehouse> Storehouses { get; set; }
-        public virtual DbSet<Address> Addresss { get; set; }
+        public virtual DbSet<Address> Addresses { get; set; }
         public virtual DbSet<Company> Companies { get; set; }
         public virtual DbSet<Employee> Employees { get; set; }
         public virtual DbSet<Project> Projects { get; set; }
