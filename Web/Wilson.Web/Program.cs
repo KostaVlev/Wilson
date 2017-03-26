@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
+using Wilson.Web.Database;
 
 namespace Wilson.Web
 {
@@ -18,6 +19,8 @@ namespace Wilson.Web
                 .UseStartup<Startup>()
                 .UseApplicationInsights()
                 .Build();
+
+            DatabaseSeeder.Seed(host);
 
             host.Run();
         }
