@@ -17,7 +17,13 @@ namespace Wilson.Web.Database
         private static IEnumerable<Company> companies;
         private static IEnumerable<Employee> employees;
         private static IEnumerable<Project> projects;
+        private static IEnumerable<Storehouse> storehouses;
         private static IEnumerable<Invoice> invoices;
+        private static IEnumerable<Item> items;
+        private static IEnumerable<InvoiceItem> invoiceItems;
+        private static IEnumerable<Price> itemPrices;
+        private static IEnumerable<Payment> payments;
+        private static IEnumerable<StorehouseItem> storehouseItems;
 
         /// <summary>
         /// Seeds the data for the Accounting module.
@@ -28,11 +34,19 @@ namespace Wilson.Web.Database
             using (var scope = services.CreateScope())
             {
                 var db = scope.ServiceProvider.GetRequiredService<AccountingDbContext>();
+
+                // Keep the following methods in this exact order.
                 SeedAddresses(db, !db.Addresses.Any(), out addresses);
                 SeedCompanies(db, !db.Companies.Any(), out companies);
                 SeedEmployees(db, !db.Employees.Any(), out employees);
                 SeedProjects(db, !db.Projects.Any(), out projects);
+                SeedStorehouses(db, !db.Storehouses.Any(), out storehouses);
                 SeedInvoices(db, !db.Invoices.Any(), out invoices);
+                SeedItems(db, !db.Items.Any(), out items);
+                SeedItemPrices(db, !db.Prices.Any(x => !string.IsNullOrEmpty(x.ItemId)), out itemPrices);
+                SeedInvoiceItems(db, !db.InvoiceItems.Any(), out invoiceItems);
+                SeedPaymets(db, !db.Payments.Any(), out payments);
+                SeedStorehouseItems(db, !db.StorehouseItems.Any(), out storehouseItems);
 
                 db.SaveChanges();
             }
@@ -216,6 +230,46 @@ namespace Wilson.Web.Database
             }
         }
 
+        private static void SeedStorehouses(AccountingDbContext db, bool hasPayments, out IEnumerable<Storehouse> storehouses)
+        {
+            if (hasPayments)
+            {
+                storehouses = new List<Storehouse>()
+                {
+                    new Storehouse()
+                    {
+                        Name = "Base Storehouse"
+                    },
+                    new Storehouse()
+                    {
+                        Name = "Offices",
+                        ProjectId = projects.Take(1).Last().Id
+                    },
+                    new Storehouse()
+                    {
+                        Name = "River View",
+                        ProjectId = projects.Take(2).Last().Id
+                    },
+                    new Storehouse()
+                    {
+                        Name = "Head office",
+                        ProjectId = projects.Take(3).Last().Id
+                    },
+                    new Storehouse()
+                    {
+                        Name = "Warehouse",
+                        ProjectId = projects.Take(4).Last().Id
+                    },
+                };
+
+                db.Storehouses.AddRange(storehouses);
+            }
+            else
+            {
+                storehouses = db.Storehouses.ToList();
+            }
+        }
+
         private static void SeedInvoices(AccountingDbContext db, bool hasInvoices, out IEnumerable<Invoice> invoices)
         {
             if (hasInvoices)
@@ -233,13 +287,13 @@ namespace Wilson.Web.Database
                         DateOfPayment = new DateTime(2017, 3, 12),
                         DaysOfDelayedPayment = 20,
                         IsPayed = true,
-                        PayedAmount = 223.25M,
+                        PayedAmount = 12707.47M,
                         SellerId = myCompany,
                         BuyerId = companies.Take(2).Last().Id,
-                        SubTotal = 223.25M,
+                        SubTotal = 10589.56M,
                         Vat = 20,
-                        VatAmount = 44.65M,
-                        Total = 267.90M 
+                        VatAmount = 2117.91M,
+                        Total = 12707.47M 
                     },
                     new Invoice()
                     {
@@ -253,10 +307,10 @@ namespace Wilson.Web.Database
                         PayedAmount = 1520M,
                         SellerId = myCompany,
                         BuyerId = companies.Take(2).Last().Id,
-                        SubTotal = 3250.36M,
+                        SubTotal = 5988M,
                         Vat = 20,
-                        VatAmount = 650.07M,
-                        Total = 3900.432M
+                        VatAmount = 1197.60M,
+                        Total = 7185.60M
                     },
                     new Invoice()
                     {
@@ -267,13 +321,13 @@ namespace Wilson.Web.Database
                         IssueDate = new DateTime(2017, 4, 26),
                         DaysOfDelayedPayment = 20,
                         IsPayed = false,
-                        PayedAmount = 1520M,
+                        PayedAmount = 1800M,
                         SellerId = myCompany,
                         BuyerId = companies.Take(3).Last().Id,
-                        SubTotal = 1000M,
+                        SubTotal = 4000M,
                         Vat = 20,
-                        VatAmount = 200M,
-                        Total = 1200M
+                        VatAmount = 800M,
+                        Total = 4800M
                     },
                     new Invoice()
                     {
@@ -286,10 +340,10 @@ namespace Wilson.Web.Database
                         IsPayed = false,
                         SellerId = companies.Take(4).Last().Id,
                         BuyerId = myCompany,
-                        SubTotal = 2000M,
+                        SubTotal = 60300M,
                         Vat = 20,
-                        VatAmount = 400M,
-                        Total = 2400M
+                        VatAmount = 12060M,
+                        Total = 72360M
                     },
                     new Invoice()
                     {
@@ -303,10 +357,10 @@ namespace Wilson.Web.Database
                         IsPayed = true,
                         SellerId = companies.Take(4).Last().Id,
                         BuyerId = myCompany,
-                        SubTotal = 2500M,
+                        SubTotal = 34250M,
                         Vat = 20,
-                        VatAmount = 500M,
-                        Total = 3000M
+                        VatAmount = 6850M,
+                        Total = 41100M
                     },
                 };
 
@@ -315,6 +369,241 @@ namespace Wilson.Web.Database
             else
             {
                 invoices = db.Invoices.ToList();
+            }
+        }
+
+        private static void SeedItems(AccountingDbContext db, bool hasItems, out IEnumerable<Item> items)
+        {
+            if (hasItems)
+            {
+                items = new List<Item>()
+                {
+                    new Item()
+                    {
+                        Name = "Cable NYY 3x1.5",
+                        Мeasure = Мeasure.Meter,
+                        Quantity = 5000,                        
+                    },
+                    new Item()
+                    {
+                        Name = "Cable NYY 3x2.5",
+                        Мeasure = Мeasure.Meter,
+                        Quantity = 5000,
+                    },
+                    new Item()
+                    {
+                        Name = "Cable NYY 3x4",
+                        Мeasure = Мeasure.Meter,
+                        Quantity = 5000,
+                    },
+                    new Item()
+                    {
+                        Name = "Cable NYY 5x10",
+                        Мeasure = Мeasure.Meter,
+                        Quantity = 5000,
+                    },
+                    new Item()
+                    {
+                        Name = "Bill #1 25.01.2017 Project: Office Building - Class A",
+                        Мeasure = Мeasure.Pcs,
+                        Quantity = 1,
+                    },
+                    new Item()
+                    {
+                        Name = "Bill #1 14.04.2017 Project: Apartment Complex - River View",
+                        Мeasure = Мeasure.Pcs,
+                        Quantity = 1,
+                    },
+                    new Item()
+                    {
+                        Name = "Bill #2 14.04.2017 Project: Apartment Complex - River View",
+                        Мeasure = Мeasure.Pcs,
+                        Quantity = 1,
+                    },
+                };
+
+                db.Items.AddRange(items);
+            }
+            else
+            {
+                items = db.Items.ToList();
+            }
+        }
+
+        private static void SeedItemPrices(AccountingDbContext db, bool hasItemPrices, out IEnumerable<Price> itemPrices)
+        {
+            if (hasItemPrices)
+            {
+                itemPrices = new List<Price>()
+                {
+                    new Price()
+                    {
+                        Amount = 3.52M,
+                        ItemId = items.Take(1).Last().Id
+                    },
+                    new Price()
+                    {
+                        Amount = 3.89M,
+                        ItemId = items.Take(2).Last().Id
+                    },
+                    new Price()
+                    {
+                        Amount = 4.65M,
+                        ItemId = items.Take(3).Last().Id
+                    },
+                    new Price()
+                    {
+                        Amount = 6.85M,
+                        ItemId = items.Take(4).Last().Id
+                    },
+                    new Price()
+                    {
+                        Amount = 10589.56M,
+                        ItemId = items.Take(5).Last().Id
+                    },
+                    new Price()
+                    {
+                        Amount = 5988M,
+                        ItemId = items.Take(6).Last().Id
+                    },
+                    new Price()
+                    {
+                        Amount = 4000M,
+                        ItemId = items.Take(7).Last().Id
+                    },
+                };
+
+                db.Prices.AddRange(itemPrices);
+            }
+            else
+            {
+                itemPrices = db.Prices.ToList();
+            }
+        }
+
+        private static void SeedInvoiceItems(AccountingDbContext db, bool hasInvoiceItems, out IEnumerable<InvoiceItem> invoiceItems)
+        {
+            if (hasInvoiceItems)
+            {
+                invoiceItems = new List<InvoiceItem>()
+                {
+                    new InvoiceItem()
+                    {
+                        Quantity = 1,
+                        InvoiceId = invoices.Take(1).Last().Id,
+                        ItemId = items.Take(5).Last().Id,
+                        PriceId = itemPrices.Where(x => x.ItemId == items.Take(5).Last().Id).First().Id
+                    },
+                    new InvoiceItem()
+                    {
+                        Quantity = 1,
+                        InvoiceId = invoices.Take(2).Last().Id,
+                        ItemId = items.Take(6).Last().Id,
+                        PriceId = itemPrices.Where(x => x.ItemId == items.Take(6).Last().Id).First().Id
+                    },
+                    new InvoiceItem()
+                    {
+                        Quantity = 1,
+                        InvoiceId = invoices.Take(3).Last().Id,
+                        ItemId = items.Take(7).Last().Id,
+                        PriceId = itemPrices.Where(x => x.ItemId == items.Take(7).Last().Id).First().Id
+                    },
+                    new InvoiceItem()
+                    {
+                        Quantity = 5000,
+                        InvoiceId = invoices.Take(4).Last().Id,
+                        ItemId = items.Take(1).Last().Id,
+                        PriceId = itemPrices.Where(x => x.ItemId == items.Take(1).Last().Id).First().Id
+                    },
+                    new InvoiceItem()
+                    {
+                        Quantity = 5000,
+                        InvoiceId = invoices.Take(4).Last().Id,
+                        ItemId = items.Take(2).Last().Id,
+                        PriceId = itemPrices.Where(x => x.ItemId == items.Take(2).Last().Id).First().Id
+                    },
+                    new InvoiceItem()
+                    {
+                        Quantity = 5000,
+                        InvoiceId = invoices.Take(4).Last().Id,
+                        ItemId = items.Take(3).Last().Id,
+                        PriceId = itemPrices.Where(x => x.ItemId == items.Take(3).Last().Id).First().Id
+                    },
+                    new InvoiceItem()
+                    {
+                        Quantity = 5000,
+                        InvoiceId = invoices.Take(5).Last().Id,
+                        ItemId = items.Take(4).Last().Id,
+                        PriceId = itemPrices.Where(x => x.ItemId == items.Take(4).Last().Id).First().Id
+                    },
+                };
+
+                db.InvoiceItems.AddRange(invoiceItems);
+            }
+            else
+            {
+                invoiceItems = db.InvoiceItems.ToList();
+            }
+        }
+
+        private static void SeedPaymets(AccountingDbContext db, bool hasPayments, out IEnumerable<Payment> payments)
+        {
+            if (hasPayments)
+            {
+                var price = new Price() { Amount = 12707.47M };
+                payments = new List<Payment>()
+                {
+                    new Payment()
+                    {
+                        Date = new DateTime(2017, 3, 12),
+                        InvoiceId = invoices.Take(1).Last().Id,
+                        PriceId = price.Id
+                    },
+                };
+
+                price.PaymentId = payments.Take(1).Last().Id;
+                db.Prices.Add(price);
+                db.Payments.AddRange(payments);
+            }
+            else
+            {
+                payments = db.Payments.ToList();
+            }
+        }
+
+        private static void SeedStorehouseItems(AccountingDbContext db, bool hasItems, out IEnumerable<StorehouseItem> storehouseItems)
+        {
+            if (hasItems)
+            {
+                storehouseItems = new List<StorehouseItem>()
+                {
+                    new StorehouseItem()
+                    {
+                        StorehouseId = storehouses.Take(2).Last().Id,
+                        InvoiceItemId = invoiceItems.Take(4).Last().Id,
+                    },
+                    new StorehouseItem()
+                    {
+                        StorehouseId = storehouses.Take(3).Last().Id,
+                        InvoiceItemId = invoiceItems.Take(5).Last().Id,
+                    },
+                    new StorehouseItem()
+                    {
+                        StorehouseId = storehouses.Take(4).Last().Id,
+                        InvoiceItemId = invoiceItems.Take(6).Last().Id,
+                    },
+                    new StorehouseItem()
+                    {
+                        StorehouseId = storehouses.Take(5).Last().Id,
+                        InvoiceItemId = invoiceItems.Take(7).Last().Id,
+                    },
+                };
+
+                db.StorehouseItems.AddRange(storehouseItems);
+            }
+            else
+            {
+                storehouseItems = db.StorehouseItems.ToList();
             }
         }
     }

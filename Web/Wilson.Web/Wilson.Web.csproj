@@ -46,6 +46,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Accounting\Wilson.Accounting.Data\Wilson.Accounting.Data.csproj" />
     <ProjectReference Include="..\..\Companies\Wilson.Companies.Data\Wilson.Companies.Data.csproj" />
+    <ProjectReference Include="..\..\Projects\Wilson.Projects.Core\Wilson.Projects.Core.csproj" />
   </ItemGroup>
 
 </Project>
