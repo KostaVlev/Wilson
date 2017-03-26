@@ -20,8 +20,9 @@ namespace Wilson.Scheduler.Data.Migrations
 
             modelBuilder.Entity("Wilson.Scheduler.Core.Entities.Employee", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(36);
 
                     b.Property<int>("EmployeePosition");
 
@@ -33,7 +34,9 @@ namespace Wilson.Scheduler.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(70);
 
-                    b.Property<Guid>("PayRateId");
+                    b.Property<string>("PayRateId")
+                        .IsRequired()
+                        .HasMaxLength(36);
 
                     b.HasKey("Id");
 
@@ -44,12 +47,15 @@ namespace Wilson.Scheduler.Data.Migrations
 
             modelBuilder.Entity("Wilson.Scheduler.Core.Entities.Paycheck", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(36);
 
                     b.Property<DateTime>("Date");
 
-                    b.Property<Guid>("EmployeeId");
+                    b.Property<string>("EmployeeId")
+                        .IsRequired()
+                        .HasMaxLength(36);
 
                     b.Property<int>("ExtraHours");
 
@@ -91,8 +97,9 @@ namespace Wilson.Scheduler.Data.Migrations
 
             modelBuilder.Entity("Wilson.Scheduler.Core.Entities.PayRate", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(36);
 
                     b.Property<decimal>("ExtraHour")
                         .HasColumnType("decimal(18,4)");
@@ -109,8 +116,9 @@ namespace Wilson.Scheduler.Data.Migrations
 
             modelBuilder.Entity("Wilson.Scheduler.Core.Entities.Project", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(36);
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -127,12 +135,15 @@ namespace Wilson.Scheduler.Data.Migrations
 
             modelBuilder.Entity("Wilson.Scheduler.Core.Entities.Schedule", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(36);
 
                     b.Property<DateTime>("Date");
 
-                    b.Property<Guid>("EmployeeId");
+                    b.Property<string>("EmployeeId")
+                        .IsRequired()
+                        .HasMaxLength(36);
 
                     b.Property<int>("ExtraWorkHours");
 
@@ -144,7 +155,9 @@ namespace Wilson.Scheduler.Data.Migrations
 
                     b.Property<bool>("IsUnpaidDayOff");
 
-                    b.Property<Guid>("ProjectId");
+                    b.Property<string>("ProjectId")
+                        .IsRequired()
+                        .HasMaxLength(36);
 
                     b.Property<int>("WorkHours");
 

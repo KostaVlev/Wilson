@@ -18,9 +18,9 @@ namespace Wilson.Scheduler.Core.Entities
 
         public int ExtraWorkHours { get; set; }
 
-        public Guid EmployeeId { get; set; }
+        public string EmployeeId { get; set; }
 
-        public Guid ProjectId { get; set; }
+        public string ProjectId { get; set; }
 
         public virtual Employee Employee { get; set; }
 

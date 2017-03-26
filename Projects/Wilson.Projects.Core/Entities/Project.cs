@@ -17,9 +17,9 @@ namespace Wilson.Projects.Core.Entities
 
         public bool InProgress { get; set; }
 
-        public Guid ManagerId { get; set; }
+        public string ManagerId { get; set; }
 
-        public Guid StorehouseId { get; set; }
+        public string StorehouseId { get; set; }
 
         public virtual Employee Manager { get; set; }
 

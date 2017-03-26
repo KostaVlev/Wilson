@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Wilson.Projects.Core.Entities
 {
@@ -7,7 +6,7 @@ namespace Wilson.Projects.Core.Entities
     {
         public string Name { get; set; }
 
-        public Guid ProjectId { get; set; }
+        public string ProjectId { get; set; }
 
         public virtual Project Project { get; set; }
 

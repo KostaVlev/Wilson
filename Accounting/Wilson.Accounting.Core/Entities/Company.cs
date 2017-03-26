@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Wilson.Accounting.Core.Entities
 {
@@ -13,7 +12,7 @@ namespace Wilson.Accounting.Core.Entities
 
         public bool HasVatRegistration { get; set; }
 
-        public Guid AddressId { get; set; }
+        public string AddressId { get; set; }
 
         public Address Address { get; set; }
 

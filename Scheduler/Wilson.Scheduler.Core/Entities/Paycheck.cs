@@ -32,7 +32,7 @@ namespace Wilson.Scheduler.Core.Entities
 
         public decimal Total { get; set; }
 
-        public Guid EmployeeId { get; set; }
+        public string EmployeeId { get; set; }
 
         public virtual Employee Employee { get; set; }
     }

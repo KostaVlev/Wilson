@@ -7,7 +7,7 @@ namespace Wilson.Accounting.Core.Entities
     {
         public string Name { get; set; }
 
-        public Guid CustomerId { get; set; }
+        public string CustomerId { get; set; }
 
         public Company Customer { get; set; }
 

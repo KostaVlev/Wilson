@@ -16,7 +16,7 @@ namespace Wilson.Scheduler.Data.Migrations
                 schema: "Scheduler",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(nullable: false),
+                    Id = table.Column<string>(maxLength: 36, nullable: false),
                     ExtraHour = table.Column<decimal>(type: "decimal(18,4)", nullable: false),
                     HoidayHour = table.Column<decimal>(nullable: false),
                     Hour = table.Column<decimal>(type: "decimal(18,4)", nullable: false)
@@ -31,7 +31,7 @@ namespace Wilson.Scheduler.Data.Migrations
                 schema: "Scheduler",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(nullable: false),
+                    Id = table.Column<string>(maxLength: 36, nullable: false),
                     Name = table.Column<string>(maxLength: 900, nullable: false),
                     ShortName = table.Column<string>(maxLength: 4, nullable: false)
                 },
@@ -45,11 +45,11 @@ namespace Wilson.Scheduler.Data.Migrations
                 schema: "Scheduler",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(nullable: false),
+                    Id = table.Column<string>(maxLength: 36, nullable: false),
                     EmployeePosition = table.Column<int>(nullable: false),
                     FirstName = table.Column<string>(maxLength: 70, nullable: false),
                     LastName = table.Column<string>(maxLength: 70, nullable: false),
-                    PayRateId = table.Column<Guid>(nullable: false)
+                    PayRateId = table.Column<string>(maxLength: 36, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -68,9 +68,9 @@ namespace Wilson.Scheduler.Data.Migrations
                 schema: "Scheduler",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(nullable: false),
+                    Id = table.Column<string>(maxLength: 36, nullable: false),
                     Date = table.Column<DateTime>(nullable: false),
-                    EmployeeId = table.Column<Guid>(nullable: false),
+                    EmployeeId = table.Column<string>(maxLength: 36, nullable: false),
                     ExtraHours = table.Column<int>(nullable: false),
                     From = table.Column<DateTime>(nullable: false),
                     HourOnHolidays = table.Column<int>(nullable: false),
@@ -102,15 +102,15 @@ namespace Wilson.Scheduler.Data.Migrations
                 schema: "Scheduler",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(nullable: false),
+                    Id = table.Column<string>(maxLength: 36, nullable: false),
                     Date = table.Column<DateTime>(nullable: false),
-                    EmployeeId = table.Column<Guid>(nullable: false),
+                    EmployeeId = table.Column<string>(maxLength: 36, nullable: false),
                     ExtraWorkHours = table.Column<int>(nullable: false),
                     IsHoliday = table.Column<bool>(nullable: false),
                     IsPaidDayOff = table.Column<bool>(nullable: false),
                     IsSickDayOff = table.Column<bool>(nullable: false),
                     IsUnpaidDayOff = table.Column<bool>(nullable: false),
-                    ProjectId = table.Column<Guid>(nullable: false),
+                    ProjectId = table.Column<string>(maxLength: 36, nullable: false),
                     WorkHours = table.Column<int>(nullable: false)
                 },
                 constraints: table =>

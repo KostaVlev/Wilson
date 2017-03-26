@@ -9,7 +9,7 @@ using Wilson.Companies.Core.Enumerations;
 namespace Wilson.Companies.Data.Migrations
 {
     [DbContext(typeof(CompanyDbContext))]
-    [Migration("20170324161800_Init")]
+    [Migration("20170326104720_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -128,8 +128,9 @@ namespace Wilson.Companies.Data.Migrations
 
             modelBuilder.Entity("Wilson.Companies.Core.Entities.Address", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(36);
 
                     b.Property<string>("City")
                         .IsRequired()
@@ -164,10 +165,12 @@ namespace Wilson.Companies.Data.Migrations
 
             modelBuilder.Entity("Wilson.Companies.Core.Entities.Attachment", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(36);
 
-                    b.Property<Guid?>("ContractId");
+                    b.Property<string>("ContractId")
+                        .HasMaxLength(36);
 
                     b.Property<string>("Extention")
                         .IsRequired()
@@ -180,11 +183,13 @@ namespace Wilson.Companies.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(70);
 
-                    b.Property<Guid?>("InfoRequestId");
+                    b.Property<string>("InfoRequestId")
+                        .HasMaxLength(36);
 
-                    b.Property<Guid?>("InforequestResponseId");
+                    b.Property<string>("InforequestResponseId")
+                        .HasMaxLength(36);
 
-                    b.Property<Guid?>("InquiryId");
+                    b.Property<string>("InquiryId");
 
                     b.Property<DateTime>("UploadDate");
 
@@ -203,10 +208,13 @@ namespace Wilson.Companies.Data.Migrations
 
             modelBuilder.Entity("Wilson.Companies.Core.Entities.Company", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(36);
 
-                    b.Property<Guid>("AddressId");
+                    b.Property<string>("AddressId")
+                        .IsRequired()
+                        .HasMaxLength(36);
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -224,7 +232,9 @@ namespace Wilson.Companies.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(10);
 
-                    b.Property<Guid>("ShippingAddressId");
+                    b.Property<string>("ShippingAddressId")
+                        .IsRequired()
+                        .HasMaxLength(36);
 
                     b.Property<string>("VatNumber")
                         .HasMaxLength(12);
@@ -240,10 +250,13 @@ namespace Wilson.Companies.Data.Migrations
 
             modelBuilder.Entity("Wilson.Companies.Core.Entities.CompanyContract", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(36);
 
-                    b.Property<Guid>("CretedById");
+                    b.Property<string>("CretedById")
+                        .IsRequired()
+                        .HasMaxLength(36);
 
                     b.Property<DateTime>("Date");
 
@@ -253,7 +266,9 @@ namespace Wilson.Companies.Data.Migrations
 
                     b.Property<DateTime?>("LastRevisedAt");
 
-                    b.Property<Guid>("ProjectId");
+                    b.Property<string>("ProjectId")
+                        .IsRequired()
+                        .HasMaxLength(36);
 
                     b.Property<int>("Revision");
 
@@ -266,12 +281,16 @@ namespace Wilson.Companies.Data.Migrations
 
             modelBuilder.Entity("Wilson.Companies.Core.Entities.Employee", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(36);
 
-                    b.Property<Guid?>("AddressId");
+                    b.Property<string>("AddressId")
+                        .HasMaxLength(36);
 
-                    b.Property<Guid>("CompanyId");
+                    b.Property<string>("CompanyId")
+                        .IsRequired()
+                        .HasMaxLength(36);
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -305,10 +324,13 @@ namespace Wilson.Companies.Data.Migrations
 
             modelBuilder.Entity("Wilson.Companies.Core.Entities.InfoRequest", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(36);
 
-                    b.Property<Guid>("InquiryId");
+                    b.Property<string>("InquiryId")
+                        .IsRequired()
+                        .HasMaxLength(36);
 
                     b.Property<string>("RequestMessage")
                         .IsRequired()
@@ -321,7 +343,9 @@ namespace Wilson.Companies.Data.Migrations
 
                     b.Property<DateTime>("SentAt");
 
-                    b.Property<Guid>("SentById");
+                    b.Property<string>("SentById")
+                        .IsRequired()
+                        .HasMaxLength(36);
 
                     b.HasKey("Id");
 
@@ -334,22 +358,29 @@ namespace Wilson.Companies.Data.Migrations
 
             modelBuilder.Entity("Wilson.Companies.Core.Entities.Inquiry", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(36);
 
                     b.Property<DateTime?>("ClosedAt");
 
-                    b.Property<Guid>("CustomerId");
+                    b.Property<string>("CustomerId")
+                        .IsRequired()
+                        .HasMaxLength(36);
 
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(900);
 
-                    b.Property<Guid>("ProjectId");
+                    b.Property<string>("ProjectId")
+                        .IsRequired()
+                        .HasMaxLength(36);
 
                     b.Property<DateTime>("ReceivedAt");
 
-                    b.Property<Guid>("ReceivedById");
+                    b.Property<string>("ReceivedById")
+                        .IsRequired()
+                        .HasMaxLength(36);
 
                     b.HasKey("Id");
 
@@ -364,9 +395,11 @@ namespace Wilson.Companies.Data.Migrations
 
             modelBuilder.Entity("Wilson.Companies.Core.Entities.InquiryEmployee", b =>
                 {
-                    b.Property<Guid>("InquiryId");
+                    b.Property<string>("InquiryId")
+                        .HasMaxLength(36);
 
-                    b.Property<Guid>("EmployeeId");
+                    b.Property<string>("EmployeeId")
+                        .HasMaxLength(36);
 
                     b.HasKey("InquiryId", "EmployeeId");
 
@@ -377,17 +410,21 @@ namespace Wilson.Companies.Data.Migrations
 
             modelBuilder.Entity("Wilson.Companies.Core.Entities.Offer", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(36);
 
                     b.Property<DateTime?>("ApprovedAt");
 
-                    b.Property<Guid?>("ContractId");
+                    b.Property<string>("ContractId")
+                        .HasMaxLength(36);
 
                     b.Property<string>("HtmlContent")
                         .IsRequired();
 
-                    b.Property<Guid>("InquiryId");
+                    b.Property<string>("InquiryId")
+                        .IsRequired()
+                        .HasMaxLength(36);
 
                     b.Property<bool>("IsApproved");
 
@@ -397,7 +434,9 @@ namespace Wilson.Companies.Data.Migrations
 
                     b.Property<DateTime>("SentAt");
 
-                    b.Property<Guid>("SentById");
+                    b.Property<string>("SentById")
+                        .IsRequired()
+                        .HasMaxLength(36);
 
                     b.HasKey("Id");
 
@@ -412,14 +451,21 @@ namespace Wilson.Companies.Data.Migrations
 
             modelBuilder.Entity("Wilson.Companies.Core.Entities.Project", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(36);
 
-                    b.Property<Guid>("ContractId");
+                    b.Property<string>("ContractId")
+                        .IsRequired()
+                        .HasMaxLength(36);
 
-                    b.Property<Guid>("CustomerId");
+                    b.Property<string>("CustomerId")
+                        .IsRequired()
+                        .HasMaxLength(36);
 
-                    b.Property<Guid>("LocationId");
+                    b.Property<string>("LocationId")
+                        .IsRequired()
+                        .HasMaxLength(36);
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -440,8 +486,9 @@ namespace Wilson.Companies.Data.Migrations
 
             modelBuilder.Entity("Wilson.Companies.Core.Entities.ProjectLocation", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(36);
 
                     b.Property<string>("City")
                         .IsRequired()
@@ -480,6 +527,9 @@ namespace Wilson.Companies.Data.Migrations
 
                     b.Property<bool>("EmailConfirmed");
 
+                    b.Property<string>("EmployeeId")
+                        .HasMaxLength(36);
+
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasMaxLength(70);
@@ -516,6 +566,8 @@ namespace Wilson.Companies.Data.Migrations
                         .HasMaxLength(256);
 
                     b.HasKey("Id");
+
+                    b.HasIndex("EmployeeId");
 
                     b.HasIndex("NormalizedEmail")
                         .HasName("EmailIndex");
@@ -684,6 +736,13 @@ namespace Wilson.Companies.Data.Migrations
                     b.HasOne("Wilson.Companies.Core.Entities.ProjectLocation", "Location")
                         .WithOne()
                         .HasForeignKey("Wilson.Companies.Core.Entities.Project", "LocationId");
+                });
+
+            modelBuilder.Entity("Wilson.Companies.Core.Entities.User", b =>
+                {
+                    b.HasOne("Wilson.Companies.Core.Entities.Employee", "Employee")
+                        .WithMany()
+                        .HasForeignKey("EmployeeId");
                 });
         }
     }

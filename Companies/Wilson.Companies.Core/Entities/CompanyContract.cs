@@ -15,9 +15,9 @@ namespace Wilson.Companies.Core.Entities
 
         public string HtmlContent { get; set; }
 
-        public Guid ProjectId { get; set; }
+        public string ProjectId { get; set; }
 
-        public Guid CretedById { get; set; }
+        public string CretedById { get; set; }
 
         public virtual Project Project { get; set; }
 

@@ -16,6 +16,10 @@ namespace Wilson.Accounting.Data.Configurations
         public override void Map(EntityTypeBuilder<Invoice> builder)
         {
             builder.HasKey(o => o.Id);
+            builder.Property(x => x.Id).HasMaxLength(36);
+            builder.Property(x => x.BuyerId).HasMaxLength(36).IsRequired();
+            builder.Property(x => x.SellerId).HasMaxLength(36).IsRequired();
+            builder.Property(x => x.BillId).HasMaxLength(36);
             builder.Property(p => p.Number).HasMaxLength(10).IsRequired();
             builder.Property(p => p.SubTotal).HasPrecision(18, 4);
             builder.Property(p => p.VatAmount).HasPrecision(18, 4);

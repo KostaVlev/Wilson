@@ -15,6 +15,9 @@ namespace Wilson.Accounting.Data.Configurations
         public override void Map(EntityTypeBuilder<Price> builder)
         {
             builder.HasKey(x => x.Id);
+            builder.Property(x => x.Id).HasMaxLength(36);
+            builder.Property(x => x.ItemId).HasMaxLength(36);
+            builder.Property(x => x.PaymentId).HasMaxLength(36);
             builder.Property(x => x.Amount).HasPrecision(18, 4).IsRequired();
             builder.HasOne(x => x.Payment).WithOne(x => x.Price).HasForeignKey<Price>(x => x.PaymentId);
         }

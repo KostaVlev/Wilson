@@ -9,9 +9,9 @@ namespace Wilson.Projects.Core.Entities
 
         public decimal Price { get; set; }
 
-        public Guid StorehouseId { get; set; }
+        public string StorehouseId { get; set; }
 
-        public Guid ItemId { get; set; }        
+        public string ItemId { get; set; }        
 
         public virtual Storehouse Storehouse { get; set; }
 

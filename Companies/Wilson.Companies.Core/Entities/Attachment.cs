@@ -12,13 +12,13 @@ namespace Wilson.Companies.Core.Entities
 
         public byte[] File { get; set; }
 
-        public Guid? ContractId { get; set; }
+        public string ContractId { get; set; }
 
-        public Guid? InfoRequestId { get; set; }
+        public string InfoRequestId { get; set; }
 
-        public Guid? InforequestResponseId { get; set; }
+        public string InforequestResponseId { get; set; }
 
-        public Guid? InquiryId { get; set; }
+        public string InquiryId { get; set; }
 
         public virtual CompanyContract Cotract { get; set; }
 

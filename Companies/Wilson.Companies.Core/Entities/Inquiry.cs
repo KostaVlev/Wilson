@@ -11,11 +11,11 @@ namespace Wilson.Companies.Core.Entities
 
         public string Description { get; set; }
 
-        public Guid ReceivedById { get; set; }
+        public string ReceivedById { get; set; }
 
-        public Guid CustomerId { get; set; }
+        public string CustomerId { get; set; }
 
-        public Guid ProjectId { get; set; }
+        public string ProjectId { get; set; }
 
         public virtual Employee RecivedBy { get; set; }
 

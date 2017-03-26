@@ -20,8 +20,9 @@ namespace Wilson.Accounting.Data.Migrations
 
             modelBuilder.Entity("Wilson.Accounting.Core.Entities.Address", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(36);
 
                     b.Property<string>("Country")
                         .IsRequired()
@@ -51,13 +52,14 @@ namespace Wilson.Accounting.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Addresss");
+                    b.ToTable("Addresses");
                 });
 
             modelBuilder.Entity("Wilson.Accounting.Core.Entities.Bill", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(36);
 
                     b.Property<decimal>("Amount")
                         .HasColumnType("decimal(18,4)");
@@ -67,9 +69,12 @@ namespace Wilson.Accounting.Data.Migrations
                     b.Property<string>("HtmlContent")
                         .IsRequired();
 
-                    b.Property<Guid>("InvoiceId");
+                    b.Property<string>("InvoiceId")
+                        .HasMaxLength(36);
 
-                    b.Property<Guid>("ProjectId");
+                    b.Property<string>("ProjectId")
+                        .IsRequired()
+                        .HasMaxLength(36);
 
                     b.HasKey("Id");
 
@@ -80,10 +85,13 @@ namespace Wilson.Accounting.Data.Migrations
 
             modelBuilder.Entity("Wilson.Accounting.Core.Entities.Company", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(36);
 
-                    b.Property<Guid>("AddressId");
+                    b.Property<string>("AddressId")
+                        .IsRequired()
+                        .HasMaxLength(36);
 
                     b.Property<bool>("HasVatRegistration");
 
@@ -107,10 +115,13 @@ namespace Wilson.Accounting.Data.Migrations
 
             modelBuilder.Entity("Wilson.Accounting.Core.Entities.Employee", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(36);
 
-                    b.Property<Guid>("CompanyId");
+                    b.Property<string>("CompanyId")
+                        .IsRequired()
+                        .HasMaxLength(36);
 
                     b.Property<string>("FirstName")
                         .IsRequired()
@@ -129,12 +140,16 @@ namespace Wilson.Accounting.Data.Migrations
 
             modelBuilder.Entity("Wilson.Accounting.Core.Entities.Invoice", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(36);
 
-                    b.Property<Guid?>("BillId");
+                    b.Property<string>("BillId")
+                        .HasMaxLength(36);
 
-                    b.Property<Guid>("BuyerId");
+                    b.Property<string>("BuyerId")
+                        .IsRequired()
+                        .HasMaxLength(36);
 
                     b.Property<DateTime?>("DateOfPayment");
 
@@ -156,7 +171,9 @@ namespace Wilson.Accounting.Data.Migrations
 
                     b.Property<decimal>("PayedAmount");
 
-                    b.Property<Guid>("SellerId");
+                    b.Property<string>("SellerId")
+                        .IsRequired()
+                        .HasMaxLength(36);
 
                     b.Property<decimal>("SubTotal")
                         .HasColumnType("decimal(18,4)");
@@ -183,11 +200,13 @@ namespace Wilson.Accounting.Data.Migrations
 
             modelBuilder.Entity("Wilson.Accounting.Core.Entities.InvoiceItem", b =>
                 {
-                    b.Property<Guid>("InvoiceId");
+                    b.Property<string>("InvoiceId")
+                        .HasMaxLength(36);
 
-                    b.Property<Guid>("ItemId");
+                    b.Property<string>("ItemId");
 
-                    b.Property<Guid>("PriceId");
+                    b.Property<string>("PriceId")
+                        .HasMaxLength(36);
 
                     b.Property<int>("Quantity");
 
@@ -202,8 +221,9 @@ namespace Wilson.Accounting.Data.Migrations
 
             modelBuilder.Entity("Wilson.Accounting.Core.Entities.Item", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(36);
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -220,14 +240,19 @@ namespace Wilson.Accounting.Data.Migrations
 
             modelBuilder.Entity("Wilson.Accounting.Core.Entities.Payment", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(36);
 
                     b.Property<DateTime>("Date");
 
-                    b.Property<Guid>("InvoiceId");
+                    b.Property<string>("InvoiceId")
+                        .IsRequired()
+                        .HasMaxLength(36);
 
-                    b.Property<Guid>("PriceId");
+                    b.Property<string>("PriceId")
+                        .IsRequired()
+                        .HasMaxLength(36);
 
                     b.HasKey("Id");
 
@@ -238,15 +263,18 @@ namespace Wilson.Accounting.Data.Migrations
 
             modelBuilder.Entity("Wilson.Accounting.Core.Entities.Price", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(36);
 
                     b.Property<decimal>("Amount")
                         .HasColumnType("decimal(18,4)");
 
-                    b.Property<Guid?>("ItemId");
+                    b.Property<string>("ItemId")
+                        .HasMaxLength(36);
 
-                    b.Property<Guid?>("PaymentId");
+                    b.Property<string>("PaymentId")
+                        .HasMaxLength(36);
 
                     b.HasKey("Id");
 
@@ -260,10 +288,13 @@ namespace Wilson.Accounting.Data.Migrations
 
             modelBuilder.Entity("Wilson.Accounting.Core.Entities.Project", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(36);
 
-                    b.Property<Guid>("CustomerId");
+                    b.Property<string>("CustomerId")
+                        .IsRequired()
+                        .HasMaxLength(36);
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -278,8 +309,9 @@ namespace Wilson.Accounting.Data.Migrations
 
             modelBuilder.Entity("Wilson.Accounting.Core.Entities.Storehouse", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(36);
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -292,9 +324,11 @@ namespace Wilson.Accounting.Data.Migrations
 
             modelBuilder.Entity("Wilson.Accounting.Core.Entities.StorehouseItem", b =>
                 {
-                    b.Property<Guid>("ItemId");
+                    b.Property<string>("ItemId")
+                        .HasMaxLength(36);
 
-                    b.Property<Guid>("StorehouseId");
+                    b.Property<string>("StorehouseId")
+                        .HasMaxLength(36);
 
                     b.HasKey("ItemId", "StorehouseId");
 

@@ -10,9 +10,9 @@ namespace Wilson.Accounting.Core.Entities
 
         public string HtmlContent { get; set; }
 
-        public Guid ProjectId { get; set; }
+        public string ProjectId { get; set; }
 
-        public Guid InvoiceId { get; set; }
+        public string InvoiceId { get; set; }
 
         public Project Project { get; set; }
 

@@ -16,7 +16,7 @@ namespace Wilson.Projects.Data.Migrations
                 schema: "Projects",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(nullable: false),
+                    Id = table.Column<string>(maxLength: 36, nullable: false),
                     FirstName = table.Column<string>(maxLength: 70, nullable: false),
                     LastName = table.Column<string>(maxLength: 70, nullable: false)
                 },
@@ -30,7 +30,7 @@ namespace Wilson.Projects.Data.Migrations
                 schema: "Projects",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(nullable: false),
+                    Id = table.Column<string>(maxLength: 36, nullable: false),
                     Name = table.Column<string>(maxLength: 70, nullable: false),
                     Мeasure = table.Column<int>(nullable: false)
                 },
@@ -44,15 +44,15 @@ namespace Wilson.Projects.Data.Migrations
                 schema: "Projects",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(nullable: false),
+                    Id = table.Column<string>(maxLength: 36, nullable: false),
                     ActualEndDate = table.Column<DateTime>(nullable: false),
                     EndDate = table.Column<DateTime>(nullable: false),
                     GuaranteePeriodInMonths = table.Column<int>(nullable: false),
                     InProgress = table.Column<bool>(nullable: false),
-                    ManagerId = table.Column<Guid>(nullable: false),
+                    ManagerId = table.Column<string>(maxLength: 36, nullable: false),
                     Name = table.Column<string>(maxLength: 900, nullable: false),
                     StartDate = table.Column<DateTime>(nullable: false),
-                    StorehouseId = table.Column<Guid>(nullable: false)
+                    StorehouseId = table.Column<string>(maxLength: 36, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -71,14 +71,14 @@ namespace Wilson.Projects.Data.Migrations
                 schema: "Projects",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(nullable: false),
+                    Id = table.Column<string>(maxLength: 36, nullable: false),
                     Amount = table.Column<decimal>(type: "decimal(18,4)", nullable: false),
-                    CreatedById = table.Column<Guid>(nullable: false),
+                    CreatedById = table.Column<string>(maxLength: 36, nullable: false),
                     Date = table.Column<DateTime>(nullable: false),
                     HtmlContent = table.Column<string>(nullable: true),
                     IsAccepted = table.Column<bool>(nullable: false),
                     IsApproved = table.Column<bool>(nullable: false),
-                    ProjectId = table.Column<Guid>(nullable: false)
+                    ProjectId = table.Column<string>(maxLength: 36, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -104,9 +104,9 @@ namespace Wilson.Projects.Data.Migrations
                 schema: "Projects",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(nullable: false),
+                    Id = table.Column<string>(maxLength: 36, nullable: false),
                     Name = table.Column<string>(maxLength: 70, nullable: false),
-                    ProjectId = table.Column<Guid>(nullable: false)
+                    ProjectId = table.Column<string>(maxLength: 36, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -125,9 +125,9 @@ namespace Wilson.Projects.Data.Migrations
                 schema: "Projects",
                 columns: table => new
                 {
-                    StorehouseId = table.Column<Guid>(nullable: false),
-                    ItemId = table.Column<Guid>(nullable: false),
-                    Id = table.Column<Guid>(nullable: false),
+                    StorehouseId = table.Column<string>(maxLength: 36, nullable: false),
+                    ItemId = table.Column<string>(maxLength: 36, nullable: false),
+                    Id = table.Column<string>(maxLength: 36, nullable: false),
                     Price = table.Column<decimal>(nullable: false),
                     Quantity = table.Column<int>(nullable: false)
                 },
@@ -156,8 +156,8 @@ namespace Wilson.Projects.Data.Migrations
                 schema: "Projects",
                 columns: table => new
                 {
-                    StorehouseItemId = table.Column<Guid>(nullable: false),
-                    BillId = table.Column<Guid>(nullable: false)
+                    StorehouseItemId = table.Column<string>(maxLength: 36, nullable: false),
+                    BillId = table.Column<string>(maxLength: 36, nullable: false)
                 },
                 constraints: table =>
                 {

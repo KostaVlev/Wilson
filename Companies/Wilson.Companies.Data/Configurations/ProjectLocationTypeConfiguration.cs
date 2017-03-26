@@ -14,6 +14,7 @@ namespace Wilson.Companies.Data.Configurations
         public override void Map(EntityTypeBuilder<ProjectLocation> builder)
         {
             builder.HasKey(x => x.Id);
+            builder.Property(x => x.Id).HasMaxLength(36);
             builder.Property(x => x.Country).HasMaxLength(70);
             builder.Property(x => x.City).HasMaxLength(70).IsRequired();
             builder.Property(x => x.Street).HasMaxLength(70);

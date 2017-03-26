@@ -14,6 +14,9 @@ namespace Wilson.Projects.Data.Configurations
         public override void Map(EntityTypeBuilder<StorehouseItem> builder)
         {
             builder.HasKey(x => new { x.StorehouseId, x.ItemId });
+            builder.Property(x => x.Id).HasMaxLength(36);
+            builder.Property(x => x.StorehouseId).HasMaxLength(36);
+            builder.Property(x => x.ItemId).HasMaxLength(36);
             builder.Property(x => x.Id).IsRequired();
             builder.HasOne(x => x.Item).WithMany(x => x.Storehouses).HasForeignKey(x => x.ItemId);
             builder.HasOne(x => x.Storehouse).WithMany(x => x.Items).HasForeignKey(x => x.StorehouseId);

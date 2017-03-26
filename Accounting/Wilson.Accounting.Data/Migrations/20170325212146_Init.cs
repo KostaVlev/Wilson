@@ -12,11 +12,11 @@ namespace Wilson.Accounting.Data.Migrations
                 name: "Accounting");
 
             migrationBuilder.CreateTable(
-                name: "Addresss",
+                name: "Addresses",
                 schema: "Accounting",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(nullable: false),
+                    Id = table.Column<string>(maxLength: 36, nullable: false),
                     Country = table.Column<string>(maxLength: 70, nullable: false),
                     Floor = table.Column<int>(nullable: true),
                     Note = table.Column<string>(maxLength: 250, nullable: true),
@@ -28,7 +28,7 @@ namespace Wilson.Accounting.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Addresss", x => x.Id);
+                    table.PrimaryKey("PK_Addresses", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -36,7 +36,7 @@ namespace Wilson.Accounting.Data.Migrations
                 schema: "Accounting",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(nullable: false),
+                    Id = table.Column<string>(maxLength: 36, nullable: false),
                     Name = table.Column<string>(maxLength: 70, nullable: false),
                     Quantity = table.Column<int>(nullable: false),
                     Мeasure = table.Column<int>(nullable: false)
@@ -51,7 +51,7 @@ namespace Wilson.Accounting.Data.Migrations
                 schema: "Accounting",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(nullable: false),
+                    Id = table.Column<string>(maxLength: 36, nullable: false),
                     Name = table.Column<string>(maxLength: 70, nullable: false)
                 },
                 constraints: table =>
@@ -64,8 +64,8 @@ namespace Wilson.Accounting.Data.Migrations
                 schema: "Accounting",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(nullable: false),
-                    AddressId = table.Column<Guid>(nullable: false),
+                    Id = table.Column<string>(maxLength: 36, nullable: false),
+                    AddressId = table.Column<string>(maxLength: 36, nullable: false),
                     HasVatRegistration = table.Column<bool>(nullable: false),
                     IndetificationNumber = table.Column<string>(maxLength: 9, nullable: false),
                     Name = table.Column<string>(maxLength: 70, nullable: false),
@@ -75,10 +75,10 @@ namespace Wilson.Accounting.Data.Migrations
                 {
                     table.PrimaryKey("PK_Companies", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Companies_Addresss_AddressId",
+                        name: "FK_Companies_Addresses_AddressId",
                         column: x => x.AddressId,
                         principalSchema: "Accounting",
-                        principalTable: "Addresss",
+                        principalTable: "Addresses",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -88,8 +88,8 @@ namespace Wilson.Accounting.Data.Migrations
                 schema: "Accounting",
                 columns: table => new
                 {
-                    ItemId = table.Column<Guid>(nullable: false),
-                    StorehouseId = table.Column<Guid>(nullable: false)
+                    ItemId = table.Column<string>(maxLength: 36, nullable: false),
+                    StorehouseId = table.Column<string>(maxLength: 36, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -115,8 +115,8 @@ namespace Wilson.Accounting.Data.Migrations
                 schema: "Accounting",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(nullable: false),
-                    CompanyId = table.Column<Guid>(nullable: false),
+                    Id = table.Column<string>(maxLength: 36, nullable: false),
+                    CompanyId = table.Column<string>(maxLength: 36, nullable: false),
                     FirstName = table.Column<string>(maxLength: 70, nullable: false),
                     LastName = table.Column<string>(maxLength: 70, nullable: false)
                 },
@@ -137,8 +137,8 @@ namespace Wilson.Accounting.Data.Migrations
                 schema: "Accounting",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(nullable: false),
-                    CustomerId = table.Column<Guid>(nullable: false),
+                    Id = table.Column<string>(maxLength: 36, nullable: false),
+                    CustomerId = table.Column<string>(maxLength: 36, nullable: false),
                     Name = table.Column<string>(maxLength: 900, nullable: false)
                 },
                 constraints: table =>
@@ -158,12 +158,12 @@ namespace Wilson.Accounting.Data.Migrations
                 schema: "Accounting",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(nullable: false),
+                    Id = table.Column<string>(maxLength: 36, nullable: false),
                     Amount = table.Column<decimal>(type: "decimal(18,4)", nullable: false),
                     Date = table.Column<DateTime>(nullable: false),
                     HtmlContent = table.Column<string>(nullable: false),
-                    InvoiceId = table.Column<Guid>(nullable: false),
-                    ProjectId = table.Column<Guid>(nullable: false)
+                    InvoiceId = table.Column<string>(maxLength: 36, nullable: true),
+                    ProjectId = table.Column<string>(maxLength: 36, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -182,9 +182,9 @@ namespace Wilson.Accounting.Data.Migrations
                 schema: "Accounting",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(nullable: false),
-                    BillId = table.Column<Guid>(nullable: true),
-                    BuyerId = table.Column<Guid>(nullable: false),
+                    Id = table.Column<string>(maxLength: 36, nullable: false),
+                    BillId = table.Column<string>(maxLength: 36, nullable: true),
+                    BuyerId = table.Column<string>(maxLength: 36, nullable: false),
                     DateOfPayment = table.Column<DateTime>(nullable: true),
                     DaysOfDelayedPayment = table.Column<int>(nullable: false),
                     InvoicePaymentType = table.Column<int>(nullable: false),
@@ -194,7 +194,7 @@ namespace Wilson.Accounting.Data.Migrations
                     IssueDate = table.Column<DateTime>(nullable: false),
                     Number = table.Column<string>(maxLength: 10, nullable: false),
                     PayedAmount = table.Column<decimal>(nullable: false),
-                    SellerId = table.Column<Guid>(nullable: false),
+                    SellerId = table.Column<string>(maxLength: 36, nullable: false),
                     SubTotal = table.Column<decimal>(type: "decimal(18,4)", nullable: false),
                     Total = table.Column<decimal>(type: "decimal(18,4)", nullable: false),
                     Vat = table.Column<int>(nullable: false),
@@ -231,10 +231,10 @@ namespace Wilson.Accounting.Data.Migrations
                 schema: "Accounting",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(nullable: false),
+                    Id = table.Column<string>(maxLength: 36, nullable: false),
                     Date = table.Column<DateTime>(nullable: false),
-                    InvoiceId = table.Column<Guid>(nullable: false),
-                    PriceId = table.Column<Guid>(nullable: false)
+                    InvoiceId = table.Column<string>(maxLength: 36, nullable: false),
+                    PriceId = table.Column<string>(maxLength: 36, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -253,10 +253,10 @@ namespace Wilson.Accounting.Data.Migrations
                 schema: "Accounting",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(nullable: false),
+                    Id = table.Column<string>(maxLength: 36, nullable: false),
                     Amount = table.Column<decimal>(type: "decimal(18,4)", nullable: false),
-                    ItemId = table.Column<Guid>(nullable: true),
-                    PaymentId = table.Column<Guid>(nullable: true)
+                    ItemId = table.Column<string>(maxLength: 36, nullable: true),
+                    PaymentId = table.Column<string>(maxLength: 36, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -282,9 +282,9 @@ namespace Wilson.Accounting.Data.Migrations
                 schema: "Accounting",
                 columns: table => new
                 {
-                    InvoiceId = table.Column<Guid>(nullable: false),
-                    ItemId = table.Column<Guid>(nullable: false),
-                    PriceId = table.Column<Guid>(nullable: false),
+                    InvoiceId = table.Column<string>(maxLength: 36, nullable: false),
+                    ItemId = table.Column<string>(nullable: false),
+                    PriceId = table.Column<string>(maxLength: 36, nullable: false),
                     Quantity = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -441,7 +441,7 @@ namespace Wilson.Accounting.Data.Migrations
                 schema: "Accounting");
 
             migrationBuilder.DropTable(
-                name: "Addresss",
+                name: "Addresses",
                 schema: "Accounting");
         }
     }

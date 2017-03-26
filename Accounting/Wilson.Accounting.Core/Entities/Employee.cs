@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Wilson.Accounting.Core.Entities
+﻿namespace Wilson.Accounting.Core.Entities
 {
     public class Employee : Entity
     {
@@ -8,7 +6,7 @@ namespace Wilson.Accounting.Core.Entities
 
         public string LastName { get; set; }
 
-        public Guid CompanyId { get; set; }
+        public string CompanyId { get; set; }
 
         public virtual Company Company { get; set; }
     }

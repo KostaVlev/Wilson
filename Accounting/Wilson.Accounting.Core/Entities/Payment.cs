@@ -6,9 +6,9 @@ namespace Wilson.Accounting.Core.Entities
     {
         public DateTime Date { get; set; }
 
-        public Guid InvoiceId { get; set; }
+        public string InvoiceId { get; set; }
 
-        public Guid PriceId { get; set; }
+        public string PriceId { get; set; }
 
         public virtual Price Price { get; set; }
 

@@ -9,5 +9,9 @@ namespace Wilson.Companies.Core.Entities
         public string LastName { get; set; }
 
         public bool IsActive { get; set; }
+
+        public string EmployeeId { get; set; }
+
+        public virtual Employee Employee { get; set; }
     }
 }

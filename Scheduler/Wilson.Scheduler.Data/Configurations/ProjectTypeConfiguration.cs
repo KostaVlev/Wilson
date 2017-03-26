@@ -14,6 +14,7 @@ namespace Wilson.Scheduler.Data.Configurations
         public override void Map(EntityTypeBuilder<Project> builder)
         {
             builder.HasKey(x => x.Id);
+            builder.Property(x => x.Id).HasMaxLength(36);
             builder.Property(x => x.Name).HasMaxLength(900).IsRequired();
             builder.Property(x => x.ShortName).HasMaxLength(4).IsRequired();
         }

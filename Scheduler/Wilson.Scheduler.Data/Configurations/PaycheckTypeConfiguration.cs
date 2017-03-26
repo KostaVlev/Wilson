@@ -15,6 +15,8 @@ namespace Wilson.Scheduler.Data.Configurations
         public override void Map(EntityTypeBuilder<Paycheck> builder)
         {
             builder.HasKey(x => x.Id);
+            builder.Property(x => x.Id).HasMaxLength(36);
+            builder.Property(x => x.EmployeeId).HasMaxLength(36).IsRequired();
             builder.Property(x => x.PayForHours).HasPrecision(18, 4);
             builder.Property(x => x.PayForExtraHours).HasPrecision(18, 4);
             builder.Property(x => x.PayForHolidayHours).HasPrecision(18, 4);

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Wilson.Scheduler.Core.Enumerations;
 
 namespace Wilson.Scheduler.Core.Entities
@@ -12,7 +11,7 @@ namespace Wilson.Scheduler.Core.Entities
 
         public EmployeePosition EmployeePosition { get; set; }
 
-        public Guid PayRateId { get; set; }
+        public string PayRateId { get; set; }
 
         public virtual PayRate PayRate { get; set; }
 

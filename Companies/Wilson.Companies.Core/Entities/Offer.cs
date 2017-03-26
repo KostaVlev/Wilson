@@ -16,11 +16,11 @@ namespace Wilson.Companies.Core.Entities
 
         public DateTime? ApprovedAt { get; set; }
 
-        public Guid InquiryId { get; set; }
+        public string InquiryId { get; set; }
 
-        public Guid SentById { get; set; }
+        public string SentById { get; set; }
 
-        public Guid? ContractId { get; set; }
+        public string ContractId { get; set; }
 
         public virtual Inquiry Inquiry { get; set; }
 

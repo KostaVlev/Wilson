@@ -1,16 +1,14 @@
-﻿using System;
-
-namespace Wilson.Accounting.Core.Entities
+﻿namespace Wilson.Accounting.Core.Entities
 {
     public class InvoiceItem : IEntity, IValueObject<InvoiceItem>
     {
         public int Quantity { get; set; }
 
-        public Guid InvoiceId { get; set; }
+        public string InvoiceId { get; set; }
 
-        public Guid ItemId { get; set; }
+        public string ItemId { get; set; }
 
-        public Guid PriceId { get; set; }
+        public string PriceId { get; set; }
 
         public virtual Invoice Invoice { get; set; }
 

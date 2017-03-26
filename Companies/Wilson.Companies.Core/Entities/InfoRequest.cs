@@ -13,9 +13,9 @@ namespace Wilson.Companies.Core.Entities
 
         public string ResponseMessage { get; set; }
 
-        public Guid InquiryId { get; set; }
+        public string InquiryId { get; set; }
 
-        public Guid SentById { get; set; }
+        public string SentById { get; set; }
 
         public virtual Inquiry Inquiry { get; set; }
 

@@ -32,11 +32,11 @@ namespace Wilson.Accounting.Core.Entities
 
         public bool IsPayed { get; set; }
 
-        public Guid BuyerId { get; set; }
+        public string BuyerId { get; set; }
 
-        public Guid SellerId { get; set; }
+        public string SellerId { get; set; }
 
-        public Guid? BillId { get; set; }
+        public string BillId { get; set; }
 
         public virtual Company Buyer { get; set; }
 

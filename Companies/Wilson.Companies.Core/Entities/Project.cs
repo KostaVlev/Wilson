@@ -1,16 +1,14 @@
-﻿using System;
-
-namespace Wilson.Companies.Core.Entities
+﻿namespace Wilson.Companies.Core.Entities
 {
     public class Project : Entity
     {
         public string Name { get; set; }
 
-        public Guid LocationId { get; set; }
+        public string LocationId { get; set; }
 
-        public Guid CustomerId { get; set; }
+        public string CustomerId { get; set; }
 
-        public Guid ContractId { get; set; }
+        public string ContractId { get; set; }
 
         public virtual ProjectLocation Location { get; set; }
 

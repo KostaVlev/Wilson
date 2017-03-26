@@ -20,13 +20,16 @@ namespace Wilson.Projects.Data.Migrations
 
             modelBuilder.Entity("Wilson.Projects.Core.Entities.Bill", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(36);
 
                     b.Property<decimal>("Amount")
                         .HasColumnType("decimal(18,4)");
 
-                    b.Property<Guid>("CreatedById");
+                    b.Property<string>("CreatedById")
+                        .IsRequired()
+                        .HasMaxLength(36);
 
                     b.Property<DateTime>("Date");
 
@@ -36,7 +39,9 @@ namespace Wilson.Projects.Data.Migrations
 
                     b.Property<bool>("IsApproved");
 
-                    b.Property<Guid>("ProjectId");
+                    b.Property<string>("ProjectId")
+                        .IsRequired()
+                        .HasMaxLength(36);
 
                     b.HasKey("Id");
 
@@ -49,8 +54,9 @@ namespace Wilson.Projects.Data.Migrations
 
             modelBuilder.Entity("Wilson.Projects.Core.Entities.Employee", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(36);
 
                     b.Property<string>("FirstName")
                         .IsRequired()
@@ -67,8 +73,9 @@ namespace Wilson.Projects.Data.Migrations
 
             modelBuilder.Entity("Wilson.Projects.Core.Entities.Item", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(36);
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -83,8 +90,9 @@ namespace Wilson.Projects.Data.Migrations
 
             modelBuilder.Entity("Wilson.Projects.Core.Entities.Project", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(36);
 
                     b.Property<DateTime>("ActualEndDate");
 
@@ -94,7 +102,9 @@ namespace Wilson.Projects.Data.Migrations
 
                     b.Property<bool>("InProgress");
 
-                    b.Property<Guid>("ManagerId");
+                    b.Property<string>("ManagerId")
+                        .IsRequired()
+                        .HasMaxLength(36);
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -102,7 +112,9 @@ namespace Wilson.Projects.Data.Migrations
 
                     b.Property<DateTime>("StartDate");
 
-                    b.Property<Guid>("StorehouseId");
+                    b.Property<string>("StorehouseId")
+                        .IsRequired()
+                        .HasMaxLength(36);
 
                     b.HasKey("Id");
 
@@ -113,14 +125,17 @@ namespace Wilson.Projects.Data.Migrations
 
             modelBuilder.Entity("Wilson.Projects.Core.Entities.Storehouse", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(36);
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(70);
 
-                    b.Property<Guid>("ProjectId");
+                    b.Property<string>("ProjectId")
+                        .IsRequired()
+                        .HasMaxLength(36);
 
                     b.HasKey("Id");
 
@@ -132,11 +147,15 @@ namespace Wilson.Projects.Data.Migrations
 
             modelBuilder.Entity("Wilson.Projects.Core.Entities.StorehouseItem", b =>
                 {
-                    b.Property<Guid>("StorehouseId");
+                    b.Property<string>("StorehouseId")
+                        .HasMaxLength(36);
 
-                    b.Property<Guid>("ItemId");
+                    b.Property<string>("ItemId")
+                        .HasMaxLength(36);
 
-                    b.Property<Guid>("Id");
+                    b.Property<string>("Id")
+                        .IsRequired()
+                        .HasMaxLength(36);
 
                     b.Property<decimal>("Price");
 
@@ -151,9 +170,11 @@ namespace Wilson.Projects.Data.Migrations
 
             modelBuilder.Entity("Wilson.Projects.Core.Entities.StorehouseItemBill", b =>
                 {
-                    b.Property<Guid>("StorehouseItemId");
+                    b.Property<string>("StorehouseItemId")
+                        .HasMaxLength(36);
 
-                    b.Property<Guid>("BillId");
+                    b.Property<string>("BillId")
+                        .HasMaxLength(36);
 
                     b.HasKey("StorehouseItemId", "BillId");
 

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Wilson.Companies.Core.Enumerations;
 
 namespace Wilson.Companies.Core.Entities
@@ -18,9 +17,9 @@ namespace Wilson.Companies.Core.Entities
 
         public EmployeePosition EmployeePosition { get; set; }
 
-        public Guid CompanyId { get; set; }
+        public string CompanyId { get; set; }
 
-        public Guid? AddressId { get; set; }
+        public string AddressId { get; set; }
 
         public virtual Company Company { get; set; }
 

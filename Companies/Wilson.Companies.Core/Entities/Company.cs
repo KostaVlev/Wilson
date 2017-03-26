@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Wilson.Companies.Core.Entities
 {
@@ -15,9 +14,9 @@ namespace Wilson.Companies.Core.Entities
 
         public string OfficePhone { get; set; }
 
-        public Guid AddressId { get; set; }
+        public string AddressId { get; set; }
 
-        public Guid ShippingAddressId { get; set; }
+        public string ShippingAddressId { get; set; }
 
         public virtual Address Address { get; set; }
 

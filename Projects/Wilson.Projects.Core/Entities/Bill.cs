@@ -15,9 +15,9 @@ namespace Wilson.Projects.Core.Entities
 
         public bool IsAccepted { get; set; }
 
-        public Guid ProjectId { get; set; }
+        public string ProjectId { get; set; }
 
-        public Guid CreatedById { get; set; }
+        public string CreatedById { get; set; }
 
         public virtual Project Project { get; set; }
 

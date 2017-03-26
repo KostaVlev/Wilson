@@ -14,6 +14,7 @@ namespace Wilson.Accounting.Data.Configurations
         public override void Map(EntityTypeBuilder<Storehouse> builder)
         {
             builder.HasKey(x => x.Id);
+            builder.Property(x => x.Id).HasMaxLength(36);
             builder.Property(x => x.Name).HasMaxLength(70).IsRequired();
         }
     }

@@ -15,6 +15,9 @@ namespace Wilson.Companies.Data.Configurations
         public override void Map(EntityTypeBuilder<InfoRequest> builder)
         {
             builder.HasKey(x => x.Id);
+            builder.Property(x => x.Id).HasMaxLength(36);
+            builder.Property(x => x.InquiryId).HasMaxLength(36).IsRequired();
+            builder.Property(x => x.SentById).HasMaxLength(36).IsRequired();
             builder.Property(x => x.RequestMessage).HasMaxLength(900).IsRequired();
             builder.Property(x => x.ResponseMessage).HasMaxLength(900);
             builder.HasOne(x => x.Inquiry).WithMany(x => x.InfoRequests).HasForeignKey(x => x.InquiryId);
