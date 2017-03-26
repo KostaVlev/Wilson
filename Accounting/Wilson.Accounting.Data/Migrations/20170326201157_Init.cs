@@ -47,19 +47,6 @@ namespace Wilson.Accounting.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Storehouses",
-                schema: "Accounting",
-                columns: table => new
-                {
-                    Id = table.Column<string>(maxLength: 36, nullable: false),
-                    Name = table.Column<string>(maxLength: 70, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Storehouses", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Companies",
                 schema: "Accounting",
                 columns: table => new
@@ -79,33 +66,6 @@ namespace Wilson.Accounting.Data.Migrations
                         column: x => x.AddressId,
                         principalSchema: "Accounting",
                         principalTable: "Addresses",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "StorehouseItems",
-                schema: "Accounting",
-                columns: table => new
-                {
-                    ItemId = table.Column<string>(maxLength: 36, nullable: false),
-                    StorehouseId = table.Column<string>(maxLength: 36, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_StorehouseItems", x => new { x.ItemId, x.StorehouseId });
-                    table.ForeignKey(
-                        name: "FK_StorehouseItems_Storehouses_ItemId",
-                        column: x => x.ItemId,
-                        principalSchema: "Accounting",
-                        principalTable: "Storehouses",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_StorehouseItems_Items_StorehouseId",
-                        column: x => x.StorehouseId,
-                        principalSchema: "Accounting",
-                        principalTable: "Items",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -175,6 +135,27 @@ namespace Wilson.Accounting.Data.Migrations
                         principalTable: "Projects",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Storehouses",
+                schema: "Accounting",
+                columns: table => new
+                {
+                    Id = table.Column<string>(maxLength: 36, nullable: false),
+                    Name = table.Column<string>(maxLength: 70, nullable: false),
+                    ProjectId = table.Column<string>(maxLength: 36, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Storehouses", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Storehouses_Projects_ProjectId",
+                        column: x => x.ProjectId,
+                        principalSchema: "Accounting",
+                        principalTable: "Projects",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -282,14 +263,15 @@ namespace Wilson.Accounting.Data.Migrations
                 schema: "Accounting",
                 columns: table => new
                 {
+                    Id = table.Column<string>(maxLength: 36, nullable: false),
                     InvoiceId = table.Column<string>(maxLength: 36, nullable: false),
-                    ItemId = table.Column<string>(nullable: false),
+                    ItemId = table.Column<string>(nullable: true),
                     PriceId = table.Column<string>(maxLength: 36, nullable: false),
                     Quantity = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_InvoiceItems", x => new { x.InvoiceId, x.ItemId, x.PriceId });
+                    table.PrimaryKey("PK_InvoiceItems", x => x.Id);
                     table.ForeignKey(
                         name: "FK_InvoiceItems_Invoices_InvoiceId",
                         column: x => x.InvoiceId,
@@ -303,12 +285,39 @@ namespace Wilson.Accounting.Data.Migrations
                         principalSchema: "Accounting",
                         principalTable: "Items",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_InvoiceItems_Prices_PriceId",
                         column: x => x.PriceId,
                         principalSchema: "Accounting",
                         principalTable: "Prices",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "StorehouseItems",
+                schema: "Accounting",
+                columns: table => new
+                {
+                    InvoiceItemId = table.Column<string>(maxLength: 36, nullable: false),
+                    StorehouseId = table.Column<string>(maxLength: 36, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_StorehouseItems", x => new { x.InvoiceItemId, x.StorehouseId });
+                    table.ForeignKey(
+                        name: "FK_StorehouseItems_InvoiceItems_InvoiceItemId",
+                        column: x => x.InvoiceItemId,
+                        principalSchema: "Accounting",
+                        principalTable: "InvoiceItems",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_StorehouseItems_Storehouses_StorehouseId",
+                        column: x => x.StorehouseId,
+                        principalSchema: "Accounting",
+                        principalTable: "Storehouses",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -351,6 +360,12 @@ namespace Wilson.Accounting.Data.Migrations
                 column: "SellerId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_InvoiceItems_InvoiceId",
+                schema: "Accounting",
+                table: "InvoiceItems",
+                column: "InvoiceId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_InvoiceItems_ItemId",
                 schema: "Accounting",
                 table: "InvoiceItems",
@@ -388,6 +403,12 @@ namespace Wilson.Accounting.Data.Migrations
                 column: "CustomerId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Storehouses_ProjectId",
+                schema: "Accounting",
+                table: "Storehouses",
+                column: "ProjectId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_StorehouseItems_StorehouseId",
                 schema: "Accounting",
                 table: "StorehouseItems",
@@ -401,19 +422,19 @@ namespace Wilson.Accounting.Data.Migrations
                 schema: "Accounting");
 
             migrationBuilder.DropTable(
-                name: "InvoiceItems",
-                schema: "Accounting");
-
-            migrationBuilder.DropTable(
                 name: "StorehouseItems",
                 schema: "Accounting");
 
             migrationBuilder.DropTable(
-                name: "Prices",
+                name: "InvoiceItems",
                 schema: "Accounting");
 
             migrationBuilder.DropTable(
                 name: "Storehouses",
+                schema: "Accounting");
+
+            migrationBuilder.DropTable(
+                name: "Prices",
                 schema: "Accounting");
 
             migrationBuilder.DropTable(

@@ -13,11 +13,11 @@ namespace Wilson.Accounting.Data.Configurations
 
         public override void Map(EntityTypeBuilder<StorehouseItem> builder)
         {
-            builder.HasKey(x => new { x.ItemId, x.StorehouseId });
+            builder.HasKey(x => new { x.InvoiceItemId, x.StorehouseId });
             builder.Property(x => x.StorehouseId).HasMaxLength(36);
-            builder.Property(x => x.ItemId).HasMaxLength(36);
-            builder.HasOne(x => x.Storehouse).WithMany(x => x.Items).HasForeignKey(x => x.ItemId);
-            builder.HasOne(x => x.Item).WithMany(x => x.Storehouses).HasForeignKey(x => x.StorehouseId);
+            builder.Property(x => x.InvoiceItemId).HasMaxLength(36);
+            builder.HasOne(x => x.Storehouse).WithMany(x => x.Items).HasForeignKey(x => x.StorehouseId);
+            builder.HasOne(x => x.InvoiceItem).WithMany(x => x.Storehouses).HasForeignKey(x => x.InvoiceItemId);
         }
     }
 }

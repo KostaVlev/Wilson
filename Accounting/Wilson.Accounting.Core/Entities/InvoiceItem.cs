@@ -1,6 +1,8 @@
-﻿namespace Wilson.Accounting.Core.Entities
+﻿using System.Collections.Generic;
+
+namespace Wilson.Accounting.Core.Entities
 {
-    public class InvoiceItem : IEntity, IValueObject<InvoiceItem>
+    public class InvoiceItem : Entity, IValueObject<InvoiceItem>
     {
         public int Quantity { get; set; }
 
@@ -15,6 +17,8 @@
         public virtual Item Item { get; set; }
 
         public virtual Price Price { get; set; }
+
+        public IEnumerable<StorehouseItem> Storehouses { get; set; }
 
         public bool Equals(InvoiceItem other)
         {

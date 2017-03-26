@@ -200,17 +200,25 @@ namespace Wilson.Accounting.Data.Migrations
 
             modelBuilder.Entity("Wilson.Accounting.Core.Entities.InvoiceItem", b =>
                 {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(36);
+
                     b.Property<string>("InvoiceId")
+                        .IsRequired()
                         .HasMaxLength(36);
 
                     b.Property<string>("ItemId");
 
                     b.Property<string>("PriceId")
+                        .IsRequired()
                         .HasMaxLength(36);
 
                     b.Property<int>("Quantity");
 
-                    b.HasKey("InvoiceId", "ItemId", "PriceId");
+                    b.HasKey("Id");
+
+                    b.HasIndex("InvoiceId");
 
                     b.HasIndex("ItemId");
 
@@ -317,20 +325,25 @@ namespace Wilson.Accounting.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(70);
 
+                    b.Property<string>("ProjectId")
+                        .HasMaxLength(36);
+
                     b.HasKey("Id");
+
+                    b.HasIndex("ProjectId");
 
                     b.ToTable("Storehouses");
                 });
 
             modelBuilder.Entity("Wilson.Accounting.Core.Entities.StorehouseItem", b =>
                 {
-                    b.Property<string>("ItemId")
+                    b.Property<string>("InvoiceItemId")
                         .HasMaxLength(36);
 
                     b.Property<string>("StorehouseId")
                         .HasMaxLength(36);
 
-                    b.HasKey("ItemId", "StorehouseId");
+                    b.HasKey("InvoiceItemId", "StorehouseId");
 
                     b.HasIndex("StorehouseId");
 
@@ -385,8 +398,7 @@ namespace Wilson.Accounting.Data.Migrations
 
                     b.HasOne("Wilson.Accounting.Core.Entities.Item", "Item")
                         .WithMany("Invoices")
-                        .HasForeignKey("ItemId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("ItemId");
 
                     b.HasOne("Wilson.Accounting.Core.Entities.Price", "Price")
                         .WithMany()
@@ -421,15 +433,22 @@ namespace Wilson.Accounting.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
+            modelBuilder.Entity("Wilson.Accounting.Core.Entities.Storehouse", b =>
+                {
+                    b.HasOne("Wilson.Accounting.Core.Entities.Project", "Project")
+                        .WithMany()
+                        .HasForeignKey("ProjectId");
+                });
+
             modelBuilder.Entity("Wilson.Accounting.Core.Entities.StorehouseItem", b =>
                 {
-                    b.HasOne("Wilson.Accounting.Core.Entities.Storehouse", "Storehouse")
-                        .WithMany("Items")
-                        .HasForeignKey("ItemId")
+                    b.HasOne("Wilson.Accounting.Core.Entities.InvoiceItem", "InvoiceItem")
+                        .WithMany("Storehouses")
+                        .HasForeignKey("InvoiceItemId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("Wilson.Accounting.Core.Entities.Item", "Item")
-                        .WithMany("Storehouses")
+                    b.HasOne("Wilson.Accounting.Core.Entities.Storehouse", "Storehouse")
+                        .WithMany("Items")
                         .HasForeignKey("StorehouseId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
