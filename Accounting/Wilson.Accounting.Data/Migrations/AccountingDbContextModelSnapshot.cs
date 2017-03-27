@@ -24,6 +24,10 @@ namespace Wilson.Accounting.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasMaxLength(36);
 
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasMaxLength(70);
+
                     b.Property<string>("Country")
                         .IsRequired()
                         .HasMaxLength(70);
@@ -42,10 +46,6 @@ namespace Wilson.Accounting.Data.Migrations
                         .HasMaxLength(70);
 
                     b.Property<int>("StreetNumber");
-
-                    b.Property<string>("Town")
-                        .IsRequired()
-                        .HasMaxLength(70);
 
                     b.Property<string>("UnitNumber")
                         .HasMaxLength(6);

@@ -17,7 +17,7 @@ namespace Wilson.Accounting.Data.Configurations
             builder.Property(x => x.Id).HasMaxLength(36);
             builder.Property(x => x.Country).HasMaxLength(70).IsRequired();
             builder.Property(x => x.PostCode).HasMaxLength(10).IsRequired();
-            builder.Property(x => x.Town).HasMaxLength(70).IsRequired();
+            builder.Property(x => x.City).HasMaxLength(70).IsRequired();
             builder.Property(x => x.Street).HasMaxLength(70).IsRequired();
             builder.Property(x => x.UnitNumber).HasMaxLength(6);
             builder.Property(x => x.Note).HasMaxLength(250);

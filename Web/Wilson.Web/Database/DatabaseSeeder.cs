@@ -9,6 +9,7 @@ namespace Wilson.Web.Database
         {
             var services = (IServiceScopeFactory)host.Services.GetService(typeof(IServiceScopeFactory));
             AccountingDbSeeder.Seed(services);
+            CompaniesDbSeeder.Seed(services);
         }
     }
 }

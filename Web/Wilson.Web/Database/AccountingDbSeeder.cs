@@ -63,7 +63,7 @@ namespace Wilson.Web.Database
                     new Address()
                     {
                         Country = "Bulgaria",
-                        Town = "Plovdiv",
+                        City = "Plovdiv",
                         Street = "Porto Lagos",
                         StreetNumber = 43,
                         Floor = 4,
@@ -74,7 +74,7 @@ namespace Wilson.Web.Database
                     new Address()
                     {
                         Country = "Bulgaria",
-                        Town = "Sofia",
+                        City = "Sofia",
                         Street = "Vitoshka",
                         StreetNumber = 12,
                         Floor = 1,
@@ -85,7 +85,7 @@ namespace Wilson.Web.Database
                     new Address()
                     {
                         Country = "USA",
-                        Town = "Miami",
+                        City = "Miami",
                         Street = "NE 25th Rd",
                         StreetNumber = 3215,
                         Floor = 0,
@@ -96,7 +96,7 @@ namespace Wilson.Web.Database
                     new Address()
                     {
                         Country = "Bulgaria",
-                        Town = "Plovdiv",
+                        City = "Plovdiv",
                         Street = "Maria Luisa",
                         StreetNumber = 252,
                         Floor = 0,

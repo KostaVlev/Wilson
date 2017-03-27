@@ -17,13 +17,13 @@ namespace Wilson.Accounting.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(maxLength: 36, nullable: false),
+                    City = table.Column<string>(maxLength: 70, nullable: false),
                     Country = table.Column<string>(maxLength: 70, nullable: false),
                     Floor = table.Column<int>(nullable: true),
                     Note = table.Column<string>(maxLength: 250, nullable: true),
                     PostCode = table.Column<string>(maxLength: 10, nullable: false),
                     Street = table.Column<string>(maxLength: 70, nullable: false),
                     StreetNumber = table.Column<int>(nullable: false),
-                    Town = table.Column<string>(maxLength: 70, nullable: false),
                     UnitNumber = table.Column<string>(maxLength: 6, nullable: true)
                 },
                 constraints: table =>
