@@ -9,7 +9,7 @@ using Wilson.Companies.Core.Enumerations;
 namespace Wilson.Companies.Data.Migrations
 {
     [DbContext(typeof(CompanyDbContext))]
-    [Migration("20170327155101_Init")]
+    [Migration("20170327203739_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -267,7 +267,6 @@ namespace Wilson.Companies.Data.Migrations
                     b.Property<DateTime?>("LastRevisedAt");
 
                     b.Property<string>("ProjectId")
-                        .IsRequired()
                         .HasMaxLength(36);
 
                     b.Property<int>("Revision");

@@ -266,7 +266,6 @@ namespace Wilson.Companies.Data.Migrations
                     b.Property<DateTime?>("LastRevisedAt");
 
                     b.Property<string>("ProjectId")
-                        .IsRequired()
                         .HasMaxLength(36);
 
                     b.Property<int>("Revision");

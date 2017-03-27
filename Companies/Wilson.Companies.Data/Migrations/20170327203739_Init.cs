@@ -181,7 +181,7 @@ namespace Wilson.Companies.Data.Migrations
                     HtmlContent = table.Column<string>(nullable: true),
                     IsApproved = table.Column<bool>(nullable: false),
                     LastRevisedAt = table.Column<DateTime>(nullable: true),
-                    ProjectId = table.Column<string>(maxLength: 36, nullable: false),
+                    ProjectId = table.Column<string>(maxLength: 36, nullable: true),
                     Revision = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
