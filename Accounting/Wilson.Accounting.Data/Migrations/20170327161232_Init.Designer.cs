@@ -9,7 +9,7 @@ using Wilson.Accounting.Core.Enumerations;
 namespace Wilson.Accounting.Data.Migrations
 {
     [DbContext(typeof(AccountingDbContext))]
-    [Migration("20170327155132_Init")]
+    [Migration("20170327161232_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -96,13 +96,13 @@ namespace Wilson.Accounting.Data.Migrations
 
                     b.Property<bool>("HasVatRegistration");
 
-                    b.Property<string>("IndetificationNumber")
-                        .IsRequired()
-                        .HasMaxLength(9);
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(70);
+
+                    b.Property<string>("RegistrationNumber")
+                        .IsRequired()
+                        .HasMaxLength(9);
 
                     b.Property<string>("VatNumber")
                         .HasMaxLength(11);

@@ -6,7 +6,7 @@ namespace Wilson.Accounting.Core.Entities
     {
         public string Name { get; set; }
 
-        public string IndetificationNumber { get; set; }
+        public string RegistrationNumber { get; set; }
 
         public string VatNumber { get; set; }
 

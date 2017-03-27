@@ -95,13 +95,13 @@ namespace Wilson.Accounting.Data.Migrations
 
                     b.Property<bool>("HasVatRegistration");
 
-                    b.Property<string>("IndetificationNumber")
-                        .IsRequired()
-                        .HasMaxLength(9);
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(70);
+
+                    b.Property<string>("RegistrationNumber")
+                        .IsRequired()
+                        .HasMaxLength(9);
 
                     b.Property<string>("VatNumber")
                         .HasMaxLength(11);

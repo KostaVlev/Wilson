@@ -54,8 +54,8 @@ namespace Wilson.Accounting.Data.Migrations
                     Id = table.Column<string>(maxLength: 36, nullable: false),
                     AddressId = table.Column<string>(maxLength: 36, nullable: false),
                     HasVatRegistration = table.Column<bool>(nullable: false),
-                    IndetificationNumber = table.Column<string>(maxLength: 9, nullable: false),
                     Name = table.Column<string>(maxLength: 70, nullable: false),
+                    RegistrationNumber = table.Column<string>(maxLength: 9, nullable: false),
                     VatNumber = table.Column<string>(maxLength: 11, nullable: true)
                 },
                 constraints: table =>
