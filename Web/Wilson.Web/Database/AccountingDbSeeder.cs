@@ -24,6 +24,7 @@ namespace Wilson.Web.Database
         private static IEnumerable<Price> itemPrices;
         private static IEnumerable<Payment> payments;
         private static IEnumerable<StorehouseItem> storehouseItems;
+        private static IEnumerable<Bill> bills;
 
         /// <summary>
         /// Seeds the data for the Accounting module.
@@ -47,6 +48,7 @@ namespace Wilson.Web.Database
                 SeedInvoiceItems(db, !db.InvoiceItems.Any(), out invoiceItems);
                 SeedPaymets(db, !db.Payments.Any(), out payments);
                 SeedStorehouseItems(db, !db.StorehouseItems.Any(), out storehouseItems);
+                SeedBills(db, !db.Bills.Any(), out bills);
 
                 db.SaveChanges();
             }
@@ -604,6 +606,53 @@ namespace Wilson.Web.Database
             else
             {
                 storehouseItems = db.StorehouseItems.ToList();
+            }
+        }
+
+        private static void SeedBills(AccountingDbContext db, bool hasBills, out IEnumerable<Bill> bills)
+        {
+            if (hasBills)
+            {
+                bills = new List<Bill>()
+                {
+                    new Bill()
+                    {
+                        Date = new DateTime(2017, 2, 14),
+                        Amount = 10589.56M,
+                        HtmlContent = "Not implemented",
+                        InvoiceId = invoices.Where(x => x.SubTotal == 10589.56M).First().Id,
+                        ProjectId = projects.Where(x => x.Name.Equals("Office Building - Class A")).First().Id,
+                    },
+                    new Bill()
+                    {
+                        Date = new DateTime(2017, 3, 9),
+                        Amount = 5988M,
+                        HtmlContent = "Not implemented",
+                        InvoiceId = invoices.Where(x => x.SubTotal == 5988M).First().Id,
+                        ProjectId = projects.Where(x => x.Name.Equals("Apartment Complex - River View")).First().Id,
+                    },
+                    new Bill()
+                    {
+                        Date = new DateTime(2017, 4, 26),
+                        Amount = 4000M,
+                        HtmlContent = "Not implemented",
+                        InvoiceId = invoices.Where(x => x.SubTotal == 4000M).First().Id,
+                        ProjectId = projects.Where(x => x.Name.Equals("Apartment Complex - River View")).First().Id,
+                    },
+                    new Bill()
+                    {
+                        Date = new DateTime(2017, 4, 18),
+                        Amount = 8500M,
+                        HtmlContent = "Not implemented",
+                        ProjectId = projects.Where(x => x.Name.Equals("Head office renovation")).First().Id,
+                    },
+                };
+
+                db.Bills.AddRange(bills);
+            }
+            else
+            {
+                bills = db.Bills.ToList();
             }
         }
     }
