@@ -123,7 +123,7 @@ namespace Wilson.Web.Database
                     new Company()
                     {
                         Name = "MyCompany",
-                        IndetificationNumber = "16084783",
+                        RegistrationNumber = "16084783",
                         VatNumber = "BG160084783",
                         HasVatRegistration = true,
                         AddressId = addresses.Take(1).Last().Id
@@ -131,7 +131,7 @@ namespace Wilson.Web.Database
                     new Company()
                     {
                         Name = "Prefect Building LTD",
-                        IndetificationNumber = "256369520",
+                        RegistrationNumber = "256369520",
                         VatNumber = "BG256369520",
                         HasVatRegistration = true,
                         AddressId = addresses.Take(2).Last().Id
@@ -139,7 +139,7 @@ namespace Wilson.Web.Database
                     new Company()
                     {
                         Name = "Extreme Electrics LTD",
-                        IndetificationNumber = "369654852",
+                        RegistrationNumber = "369654852",
                         VatNumber = "US369654852",
                         HasVatRegistration = true,
                         AddressId = addresses.Take(3).Last().Id
@@ -147,7 +147,7 @@ namespace Wilson.Web.Database
                     new Company()
                     {
                         Name = "Top Supplies LTD",
-                        IndetificationNumber = "589896320",
+                        RegistrationNumber = "589896320",
                         VatNumber = "BG589896320",
                         HasVatRegistration = true,
                         AddressId = addresses.Take(4).Last().Id
