@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
-using Wilson.Companies.Data;
 using Wilson.Accounting.Data;
 using Wilson.Companies.Core.Entities;
 using Wilson.Companies.Core.Enumerations;
+using Wilson.Companies.Data;
 
 namespace Wilson.Web.Database
 {
@@ -22,6 +21,9 @@ namespace Wilson.Web.Database
         private static IEnumerable<ProjectLocation> projectLocations;
         private static IEnumerable<CompanyContract> companyContracts;
         private static IEnumerable<Project> projects;
+        private static IEnumerable<Inquiry> inquiries;
+        private static IEnumerable<InfoRequest> infoRequests;
+        private static IEnumerable<Offer> offers;
 
         /// <summary>
         /// Seeds the data for the Company module.
@@ -41,6 +43,9 @@ namespace Wilson.Web.Database
                 SeedProjectLocations(companyDb, companyDb.ProjectLocations.Any(), out projectLocations);
                 SeedCompanyContracts(companyDb, companyDb.CompanyContracts.Any(), out companyContracts);
                 SeedProjects(companyDb, accountingDb, companyDb.Projects.Any(), out projects);
+                SeedInquiries(companyDb, companyDb.Inquiries.Any(), out inquiries);
+                SeedInfoRequests(companyDb, companyDb.InfoRequests.Any(), out infoRequests);
+                SeedOffers(companyDb, companyDb.Offers.Any(), out offers);
 
                 companyDb.SaveChanges();
             }
@@ -262,6 +267,121 @@ namespace Wilson.Web.Database
             else
             {
                 projects = db.Projects.ToList();
+            }
+        }
+
+        private static void SeedInquiries(CompanyDbContext db, bool hasInquiries, out IEnumerable<Inquiry> inquiries)
+        {
+            if (!hasInquiries)
+            {
+                inquiries = new List<Inquiry>()
+                {
+                    new Inquiry()
+                    {
+                        ReceivedAt = new DateTime(2016, 9, 5),
+                        ClosedAt = new DateTime(2016, 10, 4),
+                        ReceivedById = employees.Take(1).Last().Id,
+                        CustomerId = companies.Take(2).Last().Id,
+                        Description = "New constructions needs electrics - Office Building - Class A"
+                    },
+                    new Inquiry()
+                    {
+                        ReceivedAt = new DateTime(2016, 11, 18),
+                        ReceivedById = employees.Take(2).Last().Id,
+                        CustomerId = companies.Take(3).Last().Id,
+                        Description = "Offer for part Electrical - Apartment Complex - River View"
+                    },
+                };
+
+                db.Inquiries.AddRange(inquiries);
+
+                // Update Many-To-Many relationship table InquiryEmployee
+                var inquiryEmployees = new List<InquiryEmployee>()
+                {
+                    new InquiryEmployee()
+                    {
+                        EmployeeId = employees.Take(1).Last().Id,
+                        InquiryId = inquiries.Take(1).Last().Id,
+                    },
+                    new InquiryEmployee()
+                    {
+                        EmployeeId = employees.Take(2).Last().Id,
+                        InquiryId = inquiries.Take(2).Last().Id,
+                    },
+                };
+
+                db.InquiryEmployee.AddRange(inquiryEmployees);
+            }
+            else
+            {
+                inquiries = db.Inquiries.ToList();
+            }
+        }
+
+        private static void SeedInfoRequests(CompanyDbContext db, bool hasInfoRequests, out IEnumerable<InfoRequest> infoRequests)
+        {
+            if (!hasInfoRequests)
+            {
+                infoRequests = new List<InfoRequest>()
+                {
+                    new InfoRequest()
+                    {
+                        SentAt = new DateTime(2016, 9, 6),
+                        ResponseReceivedAt = new DateTime(2016, 9, 6),
+                        RequestMessage = "Can we get bill of quantity for the project: Office Building - Class A.",
+                        ResponseMessage = "The bill of quantity should be somewhere in the project documentation.",
+                        SentById = employees.Take(1).Last().Id,
+                        InquiryId = inquiries.Where(x => x.ReceivedById == employees.Take(1).Last().Id).First().Id
+                    },
+                    new InfoRequest()
+                    {
+                        SentAt = new DateTime(2016, 9, 6),
+                        RequestMessage = "Can we get bill of quantity for the project: Office Building - Class A.",
+                        SentById = employees.Take(2).Last().Id,
+                        InquiryId = inquiries.Where(x => x.ReceivedById == employees.Take(2).Last().Id).First().Id
+                    },
+                };
+
+                db.InfoRequests.AddRange(infoRequests);
+            }
+            else
+            {
+                infoRequests = db.InfoRequests.ToList();
+            }
+        }
+
+        private static void SeedOffers(CompanyDbContext db, bool hasOffers, out IEnumerable<Offer> offers)
+        {
+            if (!hasOffers)
+            {
+                offers = new List<Offer>()
+                {
+                    new Offer()
+                    {
+                        SentAt = new DateTime(2016, 9, 15),
+                        Revision = 0,
+                        ApprovedAt = new DateTime(2016, 10, 5),
+                        IsApproved = true,
+                        ContractId = companyContracts.Where(x => x.IsApproved).Take(1).Last().Id,
+                        InquiryId = inquiries.Where(x => x.ReceivedById == employees.Take(1).Last().Id).First().Id,
+                        HtmlContent = "Not Implemented",
+                        SentById = employees.Take(1).Last().Id,
+                    },
+                    new Offer()
+                    {
+                        SentAt = new DateTime(2016, 9, 15),
+                        Revision = 0,
+                        InquiryId = inquiries.Where(x => x.ReceivedById == employees.Take(1).Last().Id).First().Id,
+                        HtmlContent = "Not Implemented",
+                        SentById = employees.Take(2).Last().Id,
+                    },
+                };
+
+                db.Offers.AddRange(offers);
+            }
+            else
+            {
+                offers = db.Offers.ToList();
             }
         }
     }
