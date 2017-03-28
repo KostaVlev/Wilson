@@ -370,10 +370,6 @@ namespace Wilson.Companies.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(900);
 
-                    b.Property<string>("ProjectId")
-                        .IsRequired()
-                        .HasMaxLength(36);
-
                     b.Property<DateTime>("ReceivedAt");
 
                     b.Property<string>("ReceivedById")
@@ -383,8 +379,6 @@ namespace Wilson.Companies.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CustomerId");
-
-                    b.HasIndex("ProjectId");
 
                     b.HasIndex("ReceivedById");
 
@@ -681,10 +675,6 @@ namespace Wilson.Companies.Data.Migrations
                     b.HasOne("Wilson.Companies.Core.Entities.Company", "Customer")
                         .WithMany()
                         .HasForeignKey("CustomerId");
-
-                    b.HasOne("Wilson.Companies.Core.Entities.Project", "Project")
-                        .WithMany()
-                        .HasForeignKey("ProjectId");
 
                     b.HasOne("Wilson.Companies.Core.Entities.Employee", "RecivedBy")
                         .WithMany()

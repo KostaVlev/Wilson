@@ -15,13 +15,9 @@ namespace Wilson.Companies.Core.Entities
 
         public string CustomerId { get; set; }
 
-        public string ProjectId { get; set; }
-
         public virtual Employee RecivedBy { get; set; }
 
         public virtual Company Customer { get; set; }
-
-        public virtual Project Project { get; set; }
 
         public virtual ICollection<Attachment> Attachmnets { get; set; } = new HashSet<Attachment>();
 
