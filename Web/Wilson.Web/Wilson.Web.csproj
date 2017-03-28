@@ -44,9 +44,14 @@
     <Folder Include="Areas\Admin\Views\Shared\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Accounting\Wilson.Accounting.Core\Wilson.Accounting.Core.csproj" />
     <ProjectReference Include="..\..\Accounting\Wilson.Accounting.Data\Wilson.Accounting.Data.csproj" />
+    <ProjectReference Include="..\..\Companies\Wilson.Companies.Core\Wilson.Companies.Core.csproj" />
     <ProjectReference Include="..\..\Companies\Wilson.Companies.Data\Wilson.Companies.Data.csproj" />
     <ProjectReference Include="..\..\Projects\Wilson.Projects.Core\Wilson.Projects.Core.csproj" />
+    <ProjectReference Include="..\..\Projects\Wilson.Projects.Data\Wilson.Projects.Data.csproj" />
+    <ProjectReference Include="..\..\Scheduler\Wilson.Scheduler.Core\Wilson.Scheduler.Core.csproj" />
+    <ProjectReference Include="..\..\Scheduler\Wilson.Scheduler.Data\Wilson.Scheduler.Data.csproj" />
   </ItemGroup>
 
 </Project>

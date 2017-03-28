@@ -15,6 +15,10 @@ using Wilson.Companies.Data;
 using Wilson.Companies.Data.DataAccess;
 using Wilson.Web.Configurations;
 using Wilson.Web.Services;
+using Wilson.Projects.Data;
+using Wilson.Scheduler.Data;
+using Wilson.Projects.Data.DataAccess;
+using Wilson.Scheduler.Data.DataAccess;
 
 namespace Wilson.Web
 {
@@ -44,9 +48,13 @@ namespace Wilson.Web
         {
             // Add framework services.
             services
-                .AddDbContext<CompanyDbContext>(options => 
+                .AddDbContext<CompanyDbContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")))
                 .AddDbContext<AccountingDbContext>(options =>
+                    options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")))
+                .AddDbContext<ProjectsDbContext>(options =>
+                    options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")))
+                .AddDbContext<SchedulerDbContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddIdentity<User, IdentityRole>()
@@ -66,6 +74,8 @@ namespace Wilson.Web
             // Add application work dbContexts
             services.AddTransient<ICompanyWorkData, CompanyWorkData>();
             services.AddTransient<IAccountingWorkData, AccountingWorkData>();
+            services.AddTransient<IProjectsWorkData, ProjectsWorkData>();
+            services.AddTransient<ISchedulerWorkData, SchedulerWorkData>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -102,6 +112,20 @@ namespace Wilson.Web
                     name: "default",
                     template: "{controller=Account}/{action=Login}/{id?}");
             });
+
+            // Create database if it doesn't exist and apply pending migrations.
+            using (var scope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            {
+                var accountingDb = scope.ServiceProvider.GetRequiredService<AccountingDbContext>();
+                var companiesDb = scope.ServiceProvider.GetRequiredService<CompanyDbContext>();
+                var projectsDb = scope.ServiceProvider.GetRequiredService<ProjectsDbContext>();
+                var schedulerDb = scope.ServiceProvider.GetRequiredService<SchedulerDbContext>();
+
+                accountingDb.Database.Migrate();
+                companiesDb.Database.Migrate();
+                projectsDb.Database.Migrate();
+                schedulerDb.Database.Migrate();
+            }
         }
     }
 }
