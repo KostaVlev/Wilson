@@ -18,7 +18,7 @@
         public static class Roles
         {
             public const string Administrator = "Admin";
-            public const string Accouter = "Accouter";
+            public const string Accouter = "Accounter";
             public const string User = "User";
         }
 

@@ -102,69 +102,6 @@ namespace Wilson.Web
                     name: "default",
                     template: "{controller=Account}/{action=Login}/{id?}");
             });
-
-            // Add default Admin user and roles.
-            this.CreateRolesAndAdmin(app).Wait();
-        }
-
-        // This method creates default Admin user and roles.
-        private async Task CreateRolesAndAdmin(IApplicationBuilder app)
-        {
-            var roleManager = app.ApplicationServices.GetService<RoleManager<IdentityRole>>();
-            var userManager = app.ApplicationServices.GetService<UserManager<User>>();
-
-
-            // Create Admin role and Admin if not exist.    
-            if (await roleManager.FindByNameAsync("Admin") == null)
-            {
-                // Create Admin role.   
-                var role = new IdentityRole()
-                {
-                    Name = "Admin"
-                };
-
-                await roleManager.CreateAsync(role);
-
-                // Create a Admin user.
-                var user = new User()
-                {
-                    FirstName = "Admin",
-                    LastName = "Admin",
-                    UserName = "admin@wilson.com",
-                    Email = "admin@wilson.com"
-                };
-
-                string password = "Q!w2e3r4";
-                var admin = await userManager.CreateAsync(user, password);
-
-                // Add Role Admin to the Admin.   
-                if (admin.Succeeded)
-                {
-                    await userManager.AddToRoleAsync(user, "Admin");
-                }
-            }
-
-            // Create User role.    
-            if (await roleManager.FindByNameAsync("User") == null)
-            {   
-                var role = new IdentityRole()
-                {
-                    Name = "User"
-                };
-
-                await roleManager.CreateAsync(role);                
-            }
-
-            // Create Accouter role.    
-            if (await roleManager.FindByNameAsync("Accouter") == null)
-            {
-                var role = new IdentityRole()
-                {
-                    Name = "Accouter"
-                };
-
-                await roleManager.CreateAsync(role);
-            }
         }
     }
 }
