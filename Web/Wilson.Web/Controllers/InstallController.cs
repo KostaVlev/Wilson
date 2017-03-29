@@ -1,21 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Logging;
+using Wilson.Companies.Core.Entities;
 using Wilson.Companies.Data.DataAccess;
 using Wilson.Web.Models.InstallViewModels;
-using Wilson.Companies.Core.Entities;
-using Microsoft.AspNetCore.Identity;
-using AutoMapper;
-using Microsoft.Extensions.Logging;
 using Wilson.Web.Seed;
 
 namespace Wilson.Web.Controllers
 {
-    
+
     public class InstallController : CompanyBaseController
     {
         private readonly UserManager<User> userManager;
@@ -51,7 +49,7 @@ namespace Wilson.Web.Controllers
             // be here and don't give explanations about the error.
             var query = await this.CompanyWorkData.Settings.GetAllAsync();
             var settings = query.FirstOrDefault();
-            if (settings != null && settings.IsDatabaseInstalled)
+            if (settings != null || settings.IsDatabaseInstalled)
             {
                 return View("Error");
             }
