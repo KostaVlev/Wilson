@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace Wilson.Web.Database
+namespace Wilson.Web.Seed
 {
     /// <summary>
     /// Static class to efficiently store the compiled delegate which can

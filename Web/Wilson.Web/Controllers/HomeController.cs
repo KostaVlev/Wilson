@@ -4,13 +4,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Wilson.Companies.Data.DataAccess;
+using AutoMapper;
 
 namespace Wilson.Web.Controllers
 {
     public class HomeController : CompanyBaseController
     {
-        public HomeController(ICompanyWorkData companyWorkData)
-            : base(companyWorkData)
+        public HomeController(ICompanyWorkData companyWorkData, IMapper mapper)
+            : base(companyWorkData, mapper)
         {
         }
 

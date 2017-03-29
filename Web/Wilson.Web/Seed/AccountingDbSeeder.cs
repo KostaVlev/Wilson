@@ -6,7 +6,7 @@ using Wilson.Accounting.Core.Entities;
 using Wilson.Accounting.Core.Enumerations;
 using Wilson.Accounting.Data;
 
-namespace Wilson.Web.Database
+namespace Wilson.Web.Seed
 {
     /// <summary>
     /// Contains the data which will be seeded for the Accounting module.

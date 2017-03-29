@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -38,6 +39,13 @@ namespace Wilson.Web.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Login(string returnUrl = null)
         {
+            // If the database is installed there will be at least one user, the admin user. If there are no users,
+            // that means the database is not installed and user is redirected to the Installation Wizard.
+            if (!userManager.Users.Any())
+            {
+                return RedirectToAction(nameof(InstallController.InstallDatabase), "Install");
+            }
+
             if (User.Identity.IsAuthenticated)
             {
                 return RedirectToAction(nameof(HomeController.Index), "Home");

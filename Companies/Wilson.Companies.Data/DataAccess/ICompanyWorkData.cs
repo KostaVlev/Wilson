@@ -10,6 +10,7 @@ namespace Wilson.Companies.Data.DataAccess
     {
         IRepository<InquiryAggregate> Inquiries { get; }
         IRepository<User> Users { get; }
+        IRepository<Settings> Settings { get; }
 
         DbSet<TEntity> Set<TEntity>() where TEntity : class;
 

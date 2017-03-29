@@ -19,6 +19,7 @@ using Wilson.Projects.Data;
 using Wilson.Scheduler.Data;
 using Wilson.Projects.Data.DataAccess;
 using Wilson.Scheduler.Data.DataAccess;
+using Wilson.Web.Seed;
 
 namespace Wilson.Web
 {
@@ -70,6 +71,8 @@ namespace Wilson.Web
 
             services.AddScoped<IMapper>(sp =>
                 new Mapper(new MapperConfiguration(cfg => cfg.AddProfile(new AutoMapperProfileConfiguration()))));
+            services.AddScoped<IDatabaseSeeder>(sp => new DatabaseSeeder());
+            services.AddScoped<IRolesSeder>(sp => new RolesSeeder());
 
             // Add application work dbContexts
             services.AddTransient<ICompanyWorkData, CompanyWorkData>();

@@ -46,7 +46,7 @@
             </div>
 
         }
-        else
+        else if(UserManager.Users.Any())
         {
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -61,6 +61,12 @@
                     <li><a asp-area="" asp-controller="Account" asp-action="Register">Registration Request</a></li>
                     <li><a asp-area="" asp-controller="Account" asp-action="ForgotPassword">Forgot your password?</a></li>
                 </ul>
+            </div>
+        }
+        else
+        {
+            <div class="navbar-header">
+                <div class="navbar-brand">Wilson Installation Wizard</div>
             </div>
         }
     </div>

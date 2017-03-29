@@ -7,7 +7,7 @@ using Wilson.Companies.Core.Entities;
 using Wilson.Companies.Core.Enumerations;
 using Wilson.Companies.Data;
 
-namespace Wilson.Web.Database
+namespace Wilson.Web.Seed
 {
     /// <summary>
     /// Contains the data which will be seeded for the Company module. Before seeding the Company module seed

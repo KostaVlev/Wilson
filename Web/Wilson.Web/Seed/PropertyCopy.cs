@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Wilson.Web.Database
+namespace Wilson.Web.Seed
 {
     /// <summary>
     /// Non-generic class allowing properties to be copied from one instance
