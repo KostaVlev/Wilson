@@ -26,6 +26,9 @@
                         <li>
                             <a asp-area="" asp-controller="Manage" asp-action="Index" title="Manage">Hello @UserManager.GetUserAsync(User).Result.FirstName!</a>
                         </li>
+                        <li>
+                            <a asp-area="Companies" asp-controller="Home" asp-action="Index">Company</a>
+                        </li>
                         @if (User.IsInRole("Admin") || User.IsInRole("Accouter"))
                         {
                             <li>
@@ -43,8 +46,7 @@
                         </li>
                     </ul>
                 </form>
-            </div>
-
+            </div>            
         }
         else if(UserManager.Users.Any())
         {

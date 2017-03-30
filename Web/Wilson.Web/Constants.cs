@@ -26,6 +26,7 @@
         {
             public const string Admin = "Admin";
             public const string Accounting = "Accounting";
+            public const string Companies = "Companies";
         }
     }
 }

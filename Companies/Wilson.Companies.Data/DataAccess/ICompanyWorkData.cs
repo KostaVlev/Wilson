@@ -8,7 +8,7 @@ namespace Wilson.Companies.Data.DataAccess
 {
     public interface ICompanyWorkData
     {
-        IRepository<InquiryAggregate> Inquiries { get; }
+        IRepository<Inquiry> Inquiries { get; }
         IRepository<User> Users { get; }
         IRepository<Settings> Settings { get; }
 

@@ -25,7 +25,7 @@ namespace Wilson.Companies.Data.DataAccess
             this.repositories = new Dictionary<Type, object>();
         }
 
-        public IRepository<InquiryAggregate> Inquiries => this.GetRepository<InquiryAggregate>();
+        public IRepository<Inquiry> Inquiries => this.GetRepository<Inquiry>();
 
         public IRepository<User> Users => this.GetRepository<User>();
 

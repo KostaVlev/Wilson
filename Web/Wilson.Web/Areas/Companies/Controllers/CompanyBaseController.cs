@@ -3,8 +3,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Wilson.Companies.Data.DataAccess;
 
-namespace Wilson.Web.Controllers
+namespace Wilson.Web.Areas.Companies.Controllers
 {
+    [Area(Constants.Areas.Companies)]
     [Authorize]
     public class CompanyBaseController : Controller
     {        

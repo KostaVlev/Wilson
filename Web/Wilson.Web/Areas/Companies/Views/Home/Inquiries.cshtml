@@ -1,0 +1,10 @@
+@model IEnumerable<InquiryViewModel>
+
+<table>
+    @foreach (var inquiry in Model)
+    {
+        <tr>
+            <td>@inquiry.Id</td>
+        </tr>
+    }
+</table>

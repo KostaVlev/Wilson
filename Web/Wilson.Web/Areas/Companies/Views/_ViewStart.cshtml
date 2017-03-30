@@ -1,0 +1,8 @@
+﻿@{
+    Layout = "_Layout";
+    @await Html.PartialAsync("_CompanyPartial")
+}
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

@@ -14,7 +14,7 @@ using Wilson.Web.Seed;
 namespace Wilson.Web.Controllers
 {
 
-    public class InstallController : CompanyBaseController
+    public class InstallController : BaseController
     {
         private readonly UserManager<User> userManager;
         private readonly ILogger logger;
