@@ -81,6 +81,19 @@ namespace Wilson.Companies.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Settings",
+                schema: "Companies",
+                columns: table => new
+                {
+                    Id = table.Column<string>(maxLength: 36, nullable: false),
+                    IsDatabaseInstalled = table.Column<bool>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Settings", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 schema: "Companies",
                 columns: table => new
@@ -731,6 +744,10 @@ namespace Wilson.Companies.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "Projects",
+                schema: "Companies");
+
+            migrationBuilder.DropTable(
+                name: "Settings",
                 schema: "Companies");
 
             migrationBuilder.DropTable(

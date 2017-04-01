@@ -689,7 +689,7 @@ namespace Wilson.Companies.Data.Migrations
                         .WithMany()
                         .HasForeignKey("CustomerId");
 
-                    b.HasOne("Wilson.Companies.Core.Entities.Employee", "RecivedBy")
+                    b.HasOne("Wilson.Companies.Core.Entities.Employee", "ReceivedBy")
                         .WithMany()
                         .HasForeignKey("ReceivedById");
                 });

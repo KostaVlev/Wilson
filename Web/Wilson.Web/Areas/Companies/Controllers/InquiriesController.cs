@@ -46,7 +46,7 @@ namespace Wilson.Web.Areas.Companies.Controllers
         public async Task<IActionResult> ShowAll()
         {
             var inquiries = await this.CompanyWorkData.Inquiries.GetAllAsync(i => i
-                .Include(r => r.RecivedBy)
+                .Include(r => r.ReceivedBy)
                 .Include(c => c.Customer)
                 .Include(ir => ir.InfoRequests)
                 .Include(a => a.Attachmnets)
@@ -66,16 +66,17 @@ namespace Wilson.Web.Areas.Companies.Controllers
         }
 
         //
-        // POST: Companies/Inquiries/FilterByDate
+        // POST: Companies/Inquiries/Filter
         [HttpPost]
+        [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> Filter(FilterBindingModel model)
         {
             if (ModelState.IsValid)
             {
-                var inquiries = await this.CompanyWorkData.Inquiries.FindAsync(x => 
+                var inquiries = await this.CompanyWorkData.Inquiries.FindAsync(x =>
                 (model.From <= x.ReceivedAt && model.To >= x.ReceivedAt),
                 i => i
-                .Include(x => x.RecivedBy)
+                .Include(x => x.ReceivedBy)
                 .Include(x => x.Assignees)
                 .Include(x => x.Customer)
                 .Include(x => x.InfoRequests)
@@ -106,6 +107,73 @@ namespace Wilson.Web.Areas.Companies.Controllers
             }
 
             return RedirectToAction(nameof(Index));
+        }
+
+        //
+        // GET: Companies/Inquiries/Create
+        [HttpGet]
+        public async Task<IActionResult> Create()
+        {
+            var companies = await this.CompanyWorkData.Companies.GetAllAsync();
+            var employees = await this.CompanyWorkData.Employees.GetAllAsync();
+
+            var companyModels = this.Mapper.Map<IEnumerable<Company>, IEnumerable<CompanyViewModel>>(companies);
+            var employeeModels = this.Mapper.Map<IEnumerable<Employee>, IEnumerable<EmployeeViewModel>>(employees);
+
+            var model = new CreateViewModel()
+            {
+                Customers = companyModels,
+                Assignees = employeeModels
+            };
+
+            return View(model);
+        }
+
+
+        //
+        // POST: Companies/Inquiries/Create
+        [HttpPost]
+        [AutoValidateAntiforgeryToken]
+        public async Task<IActionResult> Create(InquiryViewModel model)
+        {
+            //if (ModelState.IsValid)
+            //{
+            //    var inquiries = await this.CompanyWorkData.Inquiries.FindAsync(x =>
+            //    (model.From <= x.ReceivedAt && model.To >= x.ReceivedAt),
+            //    i => i
+            //    .Include(x => x.RecivedBy)
+            //    .Include(x => x.Assignees)
+            //    .Include(x => x.Customer)
+            //    .Include(x => x.InfoRequests)
+            //    .Include(x => x.Attachmnets)
+            //    .Include(x => x.Offers));
+
+            //    if (!string.IsNullOrEmpty(model.CustomerId) && !string.IsNullOrWhiteSpace(model.CustomerId))
+            //    {
+            //        inquiries = inquiries.Where(x => model.CustomerId == x.CustomerId);
+            //    }
+
+            //    if (!string.IsNullOrEmpty(model.AssigneeId) && !string.IsNullOrWhiteSpace(model.AssigneeId))
+            //    {
+            //        inquiries = inquiries.Where(x => x.Assignees.Any(a => model.AssigneeId == a.EmployeeId));
+            //    }
+
+            //    var assignees = await this.CompanyWorkData.InquiryEmployee
+            //        .FindAsync(x => inquiries.Any(i => i.Assignees.Any(a => a.EmployeeId == x.EmployeeId)), x => x.Include(e => e.Employee));
+
+            //    foreach (var inquiry in inquiries)
+            //    {
+            //        inquiry.Assignees = assignees.Where(x => x.InquiryId == inquiry.Id).ToArray();
+            //    }
+
+            //    var models = this.Mapper.Map<IEnumerable<Inquiry>, IEnumerable<InquiryViewModel>>(inquiries);
+
+            //    return View(models);
+            //}
+
+            //return RedirectToAction(nameof(Index));
+
+            return View(model);
         }
     }
 }

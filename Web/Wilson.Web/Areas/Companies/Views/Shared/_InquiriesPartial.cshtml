@@ -1,8 +1,9 @@
 @model FilterViewModel
 
-<h2>Inquiries Filter</h2>
-
 <form class="form-horizontal" asp-area=@Constants.Areas.Companies asp-controller="Inquiries" asp-action=@nameof(InquiriesController.Filter) method="post">
+    @Html.AntiForgeryToken()
+    <h4>Inquiries Filter</h4>
+    <hr />
     <div class="form-group">
         <label asp-for="From" class="col-md-2 control-label"></label>
         <div class="col-md-10">
@@ -43,10 +44,12 @@
         <div class="col-md-offset-2 col-md-10">
             <button type="submit" class="btn btn-default">Filter</button>
         </div>
-    </div>
+    </div>    
 </form>
 
-<a asp-area=@Constants.Areas.Companies asp-controller="Inquiries" asp-action=@nameof(InquiriesController.ShowAll)>Show All?</a>
+<a asp-area=@Constants.Areas.Companies asp-controller="Inquiries" asp-action=@nameof(InquiriesController.Create)>Create New</a>
+<hr/>
+<a asp-area=@Constants.Areas.Companies asp-controller="Inquiries" asp-action=@nameof(InquiriesController.ShowAll)>Show All</a>
 
 
 

@@ -11,6 +11,8 @@ namespace Wilson.Companies.Data.DataAccess
         IRepository<InquiryEmployee> InquiryEmployee { get; }
         IRepository<User> Users { get; }
         IRepository<Settings> Settings { get; }
+        IRepository<Company> Companies { get; }
+        IRepository<Employee> Employees { get; }
 
         DbSet<TEntity> Set<TEntity>() where TEntity : class;
 

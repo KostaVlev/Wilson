@@ -9,21 +9,28 @@ namespace Wilson.Web.Areas.Companies.Models.InquiriesViewModels
     {
         public string Id { get; set; }
 
-        [DisplayFormat(ApplyFormatInEditMode = true, ConvertEmptyStringToNull = true, DataFormatString = @"{0:dd/MM/yyyy}", NullDisplayText = "")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = @"{0:dd/MM/yyyy}")]
         [DataType(DataType.Date)]
         [Display(Name = "Received At")]
         public DateTime ReceivedAt { get; set; }
 
-        [DisplayFormat(ApplyFormatInEditMode = true, ConvertEmptyStringToNull = true, DataFormatString = @"{0:dd/MM/yyyy}", NullDisplayText = "")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = @"{0:dd/MM/yyyy}")]
         [DataType(DataType.Date)]
         [Display(Name = "Closed At")]
         public DateTime ClosedAt { get; set; }
 
+        [Required]
+        [StringLength(900, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 70)]
+        [DataType(DataType.Text)]
         [Display(Name = "Description")]
         public string Description { get; set; }
 
-        public EmployeeViewModel RecivedBy { get; set; }
+        [Required]
+        [Display(Name = "Received By")]
+        public EmployeeViewModel ReceivedBy { get; set; }
 
+        [Required]
+        [Display(Name = "Customer")]
         public CompanyViewModel Customer { get; set; }
 
         public IEnumerable<AttachmentViewModel> Attachmnets { get; set; }

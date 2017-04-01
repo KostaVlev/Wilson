@@ -15,7 +15,7 @@ namespace Wilson.Companies.Core.Entities
 
         public string CustomerId { get; set; }
 
-        public virtual Employee RecivedBy { get; set; }
+        public virtual Employee ReceivedBy { get; set; }
 
         public virtual Company Customer { get; set; }
 

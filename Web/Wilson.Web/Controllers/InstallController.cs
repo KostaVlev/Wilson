@@ -49,9 +49,12 @@ namespace Wilson.Web.Controllers
             // be here and don't give explanations about the error.
             var query = await this.CompanyWorkData.Settings.GetAllAsync();
             var settings = query.FirstOrDefault();
-            if (settings != null || settings.IsDatabaseInstalled)
+            if (settings != null)
             {
-                return View("Error");
+                if (!settings.IsDatabaseInstalled)
+                {
+                    return View("Error");
+                }                
             }
 
             return View();

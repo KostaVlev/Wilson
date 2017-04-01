@@ -33,6 +33,10 @@ namespace Wilson.Companies.Data.DataAccess
 
         public IRepository<Settings> Settings => this.GetRepository<Settings>();
 
+        public IRepository<Company> Companies => this.GetRepository<Company>();
+
+        public IRepository<Employee> Employees => this.GetRepository<Employee>();
+
         public int Complete()
         {
             return this.dbContext.SaveChanges();

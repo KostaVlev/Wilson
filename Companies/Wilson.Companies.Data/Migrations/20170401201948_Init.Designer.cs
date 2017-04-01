@@ -9,8 +9,8 @@ using Wilson.Companies.Core.Enumerations;
 namespace Wilson.Companies.Data.Migrations
 {
     [DbContext(typeof(CompanyDbContext))]
-    [Migration("20170328203247_AddSettingsEntity")]
-    partial class AddSettingsEntity
+    [Migration("20170401201948_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -690,7 +690,7 @@ namespace Wilson.Companies.Data.Migrations
                         .WithMany()
                         .HasForeignKey("CustomerId");
 
-                    b.HasOne("Wilson.Companies.Core.Entities.Employee", "RecivedBy")
+                    b.HasOne("Wilson.Companies.Core.Entities.Employee", "ReceivedBy")
                         .WithMany()
                         .HasForeignKey("ReceivedById");
                 });
