@@ -4,8 +4,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Wilson.Companies.Core.Entities;
-using Wilson.Companies.Data.DataAccess.Repositories;
 
 namespace Wilson.Companies.Data.DataAccess.Repositories
 {
@@ -18,11 +16,16 @@ namespace Wilson.Companies.Data.DataAccess.Repositories
         {
             this.Context = context;
             this.entities = this.Context.Set<TEntity>();
-        }
+        }       
 
         public async Task<IEnumerable<TEntity>> GetAllAsync()
         {
             return await this.entities.ToListAsync();
+        }
+
+        public async Task<IEnumerable<TEntity>> GetAllAsync(Func<IQueryable<TEntity>, IQueryable<TEntity>> func)
+        {
+            return await func(this.entities).ToArrayAsync();
         }
 
         public async Task<TEntity> GetById(string id)
@@ -39,7 +42,12 @@ namespace Wilson.Companies.Data.DataAccess.Repositories
         {
             return await this.entities.Where(predicate).ToListAsync();
         }
-            
+
+        public async Task<IEnumerable<TEntity>> FindAsync(Expression<Func<TEntity, bool>> predicate, Func<IQueryable<TEntity>, IQueryable<TEntity>> func)
+        {
+            return await func(this.entities.Where(predicate)).ToListAsync();
+        }
+
         public void Remove(TEntity entity)
         {
             this.entities.Remove(entity);
@@ -53,6 +61,6 @@ namespace Wilson.Companies.Data.DataAccess.Repositories
         public async Task<TEntity> SingleOrDefaultAsync(Expression<Func<TEntity, bool>> predicate)
         {
             return await this.entities.SingleOrDefaultAsync(predicate);
-        }            
+        }
     }
 }

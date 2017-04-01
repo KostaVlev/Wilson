@@ -2,12 +2,13 @@
 using Wilson.Companies.Core.Entities;
 using Wilson.Web.Areas.Admin.Models.ControlPanelViewModels;
 
-namespace Wilson.Web.Configurations
+namespace Wilson.Web.Areas.Admin.Configurations
 {
-    public class AutoMapperProfileConfiguration : Profile
+    public class AutoMapperAdminProfileConfiguration : Profile
     {
-        public AutoMapperProfileConfiguration()
+        public AutoMapperAdminProfileConfiguration()
         {
+            // Admin area mappings.
             CreateMap<User, UserViewModel>();
         }
     }

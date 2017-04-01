@@ -42,6 +42,7 @@
     <Folder Include="Areas\Accounting\Models\" />
     <Folder Include="Areas\Accounting\Views\Home\" />
     <Folder Include="Areas\Admin\Views\Shared\" />
+    <Folder Include="Areas\Companies\Views\Shared\DisplayTemplates\" />
     <Folder Include="Views\Install\" />
   </ItemGroup>
   <ItemGroup>

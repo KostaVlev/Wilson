@@ -27,6 +27,8 @@ namespace Wilson.Companies.Data.DataAccess
 
         public IRepository<Inquiry> Inquiries => this.GetRepository<Inquiry>();
 
+        public IRepository<InquiryEmployee> InquiryEmployee => this.GetRepository<InquiryEmployee>();
+
         public IRepository<User> Users => this.GetRepository<User>();
 
         public IRepository<Settings> Settings => this.GetRepository<Settings>();

@@ -1,0 +1,68 @@
+@model IEnumerable<InquiryViewModel>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Closed At</th>
+            <th>Revived By</th>
+            <th>Customer</th>
+            <th>Description</th>
+            <th>Assigned To</th>
+            <th>Attachments</th>
+            <th>Info Requests</th>
+            <th>Offers</th>
+            <th>Options</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var inquiry in Model)
+        {
+            <tr>
+                <td>@inquiry.ReceivedAt.ToString(Constants.DateTimeFormats.Short)</td>
+                <td>
+                    @if (inquiry.ClosedAt != default(DateTime))
+                    {
+                        @inquiry.ClosedAt.ToString(Constants.DateTimeFormats.Short);
+                    }
+                </td>
+                <td>@inquiry.RecivedBy.ToString()</td>
+                <td>@inquiry.Customer.Name</td>
+                <td>@inquiry.Description</td>
+                <td>
+                    @foreach (var inquiryEmployee in inquiry.Assignees)
+                    {
+                        <p>@inquiryEmployee.Employee.ToString()</p>
+                    }
+                </td>
+                <td>
+                    @foreach (var attachment in inquiry.Attachmnets)
+                    {
+                        <p>
+                            <a href="#">@attachment.ToString()</a>
+                        </p>
+                    }
+                </td>
+                <td>
+                    @foreach (var infoRequest in inquiry.InfoRequests)
+                    {
+                        <p>
+                            <a asp-area="" asp-controller="" asp-action="" asp-route-id="">
+                                @infoRequest.SentAt.ToString(Constants.DateTimeFormats.Short)
+                            </a>
+                        </p>
+                    }
+                </td>
+                <td>
+                    @foreach (var offer in inquiry.Offers)
+                    {
+                        <p>
+                            <a href="#">@offer.SentAt.ToString(Constants.DateTimeFormats.Short)</a>
+                        </p>
+                    }
+                </td>
+                <td><a href="#">Edit</a></td>
+            </tr>
+        }
+    </tbody>
+</table>

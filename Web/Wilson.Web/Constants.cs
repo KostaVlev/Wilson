@@ -28,5 +28,10 @@
             public const string Accounting = "Accounting";
             public const string Companies = "Companies";
         }
+
+        public static class DateTimeFormats
+        {
+            public const string Short = "dd-MMM-yyyy";
+        }
     }
 }

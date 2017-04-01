@@ -13,13 +13,13 @@ using Wilson.Accounting.Data.DataAccess;
 using Wilson.Companies.Core.Entities;
 using Wilson.Companies.Data;
 using Wilson.Companies.Data.DataAccess;
-using Wilson.Web.Configurations;
 using Wilson.Web.Services;
 using Wilson.Projects.Data;
 using Wilson.Scheduler.Data;
 using Wilson.Projects.Data.DataAccess;
 using Wilson.Scheduler.Data.DataAccess;
 using Wilson.Web.Seed;
+using System.Reflection;
 
 namespace Wilson.Web
 {
@@ -70,7 +70,7 @@ namespace Wilson.Web
             services.AddTransient<AutoMapper.IConfigurationProvider, MapperConfiguration>();
 
             services.AddScoped<IMapper>(sp =>
-                new Mapper(new MapperConfiguration(cfg => cfg.AddProfile(new AutoMapperProfileConfiguration()))));
+                new Mapper(new MapperConfiguration(cfg => cfg.AddProfiles(Assembly.GetEntryAssembly()))));
             services.AddScoped<IDatabaseSeeder>(sp => new DatabaseSeeder());
             services.AddScoped<IRolesSeder>(sp => new RolesSeeder());
 
