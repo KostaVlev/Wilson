@@ -22,6 +22,8 @@ namespace Wilson.Companies.Data.DataAccess.Repositories
 
         void Add(TEntity entity);
 
+        void AddRange(IEnumerable<TEntity> entities);
+
         void Remove(TEntity entity);
 
         void Remove(Expression<Func<TEntity, bool>> predicate);    

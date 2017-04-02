@@ -20,6 +20,7 @@ using Wilson.Projects.Data.DataAccess;
 using Wilson.Scheduler.Data.DataAccess;
 using Wilson.Web.Seed;
 using System.Reflection;
+using Wilson.Web.Areas.Companies.Utilities;
 
 namespace Wilson.Web
 {
@@ -61,13 +62,14 @@ namespace Wilson.Web
             services.AddIdentity<User, IdentityRole>()
                 .AddEntityFrameworkStores<CompanyDbContext>()
                 .AddDefaultTokenProviders();
-
+            
             services.AddMvc();
 
             // Add application services.
             services.AddTransient<IEmailSender, AuthMessageSender>();
             services.AddTransient<ISmsSender, AuthMessageSender>();
             services.AddTransient<AutoMapper.IConfigurationProvider, MapperConfiguration>();
+            services.AddTransient<IAttachmnetProcessor, AttachmentProcessor>();
 
             services.AddScoped<IMapper>(sp =>
                 new Mapper(new MapperConfiguration(cfg => cfg.AddProfiles(Assembly.GetEntryAssembly()))));
@@ -86,7 +88,7 @@ namespace Wilson.Web
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
-
+            
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

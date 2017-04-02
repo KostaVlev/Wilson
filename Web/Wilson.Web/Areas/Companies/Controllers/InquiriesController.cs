@@ -1,20 +1,25 @@
-using AutoMapper;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Wilson.Companies.Core.Entities;
 using Wilson.Companies.Data.DataAccess;
 using Wilson.Web.Areas.Companies.Models.InquiriesViewModels;
+using Wilson.Web.Areas.Companies.Utilities;
 
 namespace Wilson.Web.Areas.Companies.Controllers
 {
     public class InquiriesController : CompanyBaseController
     {
-        public InquiriesController(ICompanyWorkData companyWorkData, IMapper mapper)
+        private readonly IAttachmnetProcessor attachmnetProcessor;
+
+        public InquiriesController(ICompanyWorkData companyWorkData, IMapper mapper, IAttachmnetProcessor attachmnetProcessor)
             : base(companyWorkData, mapper)
         {
+            this.attachmnetProcessor = attachmnetProcessor;
         }
 
         //
@@ -114,19 +119,7 @@ namespace Wilson.Web.Areas.Companies.Controllers
         [HttpGet]
         public async Task<IActionResult> Create()
         {
-            var companies = await this.CompanyWorkData.Companies.GetAllAsync();
-            var employees = await this.CompanyWorkData.Employees.GetAllAsync();
-
-            var companyModels = this.Mapper.Map<IEnumerable<Company>, IEnumerable<CompanyViewModel>>(companies);
-            var employeeModels = this.Mapper.Map<IEnumerable<Employee>, IEnumerable<EmployeeViewModel>>(employees);
-
-            var model = new CreateViewModel()
-            {
-                Customers = companyModels,
-                Assignees = employeeModels
-            };
-
-            return View(model);
+            return View(await this.CreateCtreateViewModel(new CreateViewModel()));
         }
 
 
@@ -134,46 +127,60 @@ namespace Wilson.Web.Areas.Companies.Controllers
         // POST: Companies/Inquiries/Create
         [HttpPost]
         [AutoValidateAntiforgeryToken]
-        public async Task<IActionResult> Create(InquiryViewModel model)
+        public async Task<IActionResult> Create(CreateViewModel model)
         {
-            //if (ModelState.IsValid)
-            //{
-            //    var inquiries = await this.CompanyWorkData.Inquiries.FindAsync(x =>
-            //    (model.From <= x.ReceivedAt && model.To >= x.ReceivedAt),
-            //    i => i
-            //    .Include(x => x.RecivedBy)
-            //    .Include(x => x.Assignees)
-            //    .Include(x => x.Customer)
-            //    .Include(x => x.InfoRequests)
-            //    .Include(x => x.Attachmnets)
-            //    .Include(x => x.Offers));
+            if (ModelState.IsValid)
+            {
+                var inquiry = this.Mapper.Map<CreateViewModel, Inquiry>(model);
 
-            //    if (!string.IsNullOrEmpty(model.CustomerId) && !string.IsNullOrWhiteSpace(model.CustomerId))
-            //    {
-            //        inquiries = inquiries.Where(x => model.CustomerId == x.CustomerId);
-            //    }
+                // The current Inquiry is received by the current user.
+                inquiry.ReceivedById = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            //    if (!string.IsNullOrEmpty(model.AssigneeId) && !string.IsNullOrWhiteSpace(model.AssigneeId))
-            //    {
-            //        inquiries = inquiries.Where(x => x.Assignees.Any(a => model.AssigneeId == a.EmployeeId));
-            //    }
+                // Many-To-Many relationship schema has to be updated.
+                foreach (var assigneeId in model.AssigneesIds)
+                {
+                    this.CompanyWorkData.InquiryEmployee.Add(new InquiryEmployee() { EmployeeId = assigneeId, InquiryId = inquiry.Id });
+                }
 
-            //    var assignees = await this.CompanyWorkData.InquiryEmployee
-            //        .FindAsync(x => inquiries.Any(i => i.Assignees.Any(a => a.EmployeeId == x.EmployeeId)), x => x.Include(e => e.Employee));
+                // If there are attached files, update the Attachments schema.
+                if (model.Attachments != null && model.Attachments.Count() > 0)
+                {
+                    var attachments = await this.attachmnetProcessor.PrepareForUpload(model.Attachments);
+                    foreach (var attachment in attachments)
+                    {
+                        attachment.InquiryId = inquiry.Id;
+                    }
 
-            //    foreach (var inquiry in inquiries)
-            //    {
-            //        inquiry.Assignees = assignees.Where(x => x.InquiryId == inquiry.Id).ToArray();
-            //    }
+                    this.CompanyWorkData.Attachments.AddRange(attachments);
+                }
+                
+                this.CompanyWorkData.Inquiries.Add(inquiry);                
+                await this.CompanyWorkData.CompleteAsync();
 
-            //    var models = this.Mapper.Map<IEnumerable<Inquiry>, IEnumerable<InquiryViewModel>>(inquiries);
+                return RedirectToAction(nameof(Index));
+            }
+            
+            return View(await this.CreateCtreateViewModel(model));
+        }
 
-            //    return View(models);
-            //}
+        /// <summary>
+        /// Async method which populates the properties <see cref="CreateViewModel.Customers"/> and <see cref="CreateViewModel.Assignees"/>
+        /// with data for use of the Create View.
+        /// </summary>
+        /// <param name="model">The <see cref="CreateViewModel"/> which will be processed.</param>
+        /// <example>await CreateCtreateViewModel(...)</example>
+        private async Task<CreateViewModel> CreateCtreateViewModel(CreateViewModel model)
+        {
+            var companies = await this.CompanyWorkData.Companies.GetAllAsync();
+            var employees = await this.CompanyWorkData.Employees.GetAllAsync();            
 
-            //return RedirectToAction(nameof(Index));
+            var companyModels = this.Mapper.Map<IEnumerable<Company>, IEnumerable<CompanyViewModel>>(companies);
+            var employeeModels = this.Mapper.Map<IEnumerable<Employee>, IEnumerable<EmployeeViewModel>>(employees);
 
-            return View(model);
+            model.Customers = companyModels;
+            model.Assignees = employeeModels;
+
+            return model;
         }
     }
 }

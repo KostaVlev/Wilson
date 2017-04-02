@@ -1,7 +1,8 @@
 @model CreateViewModel
 
 
-<form asp-area=@Constants.Areas.Companies asp-controller="Inquiries" asp-action=@nameof(InquiriesController.Create) method="post" class="form-horizontal">
+<form asp-area=@Constants.Areas.Companies asp-controller="Inquiries" asp-action=@nameof(InquiriesController.Create) 
+      enctype="multipart/form-data" method="post" class="form-horizontal">
     @Html.AntiForgeryToken()
     <h4>Create new Inquiry</h4>
     <hr />
@@ -10,13 +11,6 @@
         <label asp-for="ReceivedAt" class="col-md-2 control-label"></label>
         <div class="col-md-10">
             <input asp-for="ReceivedAt" class="form-control" />
-        </div>
-    </div>
-    <div class="form-group">
-        <label asp-for="Description" class="col-md-2 control-label"></label>
-        <div class="col-md-10">
-            <input asp-for="Description" class="form-control" />
-            <span asp-validation-for="Description" class="text-danger"></span>
         </div>
     </div>
     <div class="form-group">
@@ -29,6 +23,7 @@
                     <option asp-for="CustomerId" value=@customer.Id>@customer.Name</option>
                 }
             </select>
+            <span asp-validation-for="CustomerId" class="text-danger"></span>
         </div>
     </div>
     <div class="form-group">
@@ -40,14 +35,22 @@
                     <option asp-for="AssigneesIds" value=@assignee.Id>@assignee.ToString()</option>
                 }
             </select>
+            <span asp-validation-for="AssigneesIds" class="text-danger"></span>
         </div>
     </div>
-
-
-
-
-
-
+    <div class="form-group">
+        <label asp-for="Description" class="col-md-2 control-label"></label>
+        <div class="col-md-10">
+            <textarea asp-for="Description" class="form-control"></textarea>
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <label asp-for="Attachments" class="col-md-2 control-label"></label>
+        <div class="col-md-10">
+            <input asp-for="Attachments" class="form-control" type="file" name="Attachments" multiple />
+        </div>
+    </div>
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
             <button type="submit" class="btn btn-default">Save</button>

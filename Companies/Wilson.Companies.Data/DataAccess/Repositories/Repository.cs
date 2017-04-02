@@ -38,6 +38,11 @@ namespace Wilson.Companies.Data.DataAccess.Repositories
             this.entities.Add(entity);
         }
 
+        public void AddRange(IEnumerable<TEntity> entities)
+        {
+            this.entities.AddRange(entities);
+        }
+
         public async Task<IEnumerable<TEntity>> FindAsync(Expression<Func<TEntity, bool>> predicate)
         {
             return await this.entities.Where(predicate).ToListAsync();
