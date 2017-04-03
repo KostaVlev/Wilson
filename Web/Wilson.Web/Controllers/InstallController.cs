@@ -68,25 +68,47 @@ namespace Wilson.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new User { FirstName = model.FirstName, LastName = model.LastName, UserName = model.Email, Email = model.Email };
+                var user = this.Mapper.Map<InstallDatabaseViewModel, User>(model);
+
+                // Set the Username!
+                user.UserName = model.Email;
+
+                // Create User.
                 var result = await this.userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
                     this.logger.LogInformation(3, "Admin was created.");
                     this.rolesSeeder.Seed(this.services);
                     this.logger.LogInformation(3, "Roles were seeded into the database.");
+
+                    // Make the user administrator.
                     await userManager.AddToRoleAsync(user, Constants.Roles.Administrator);
-                    this.logger.LogInformation(3, "Default roles were seeded into the database.");
+
+                    // Seed the database
                     if (model.SeedData)
                     {
                         this.dataSeeder.Seed(this.services);
                         this.logger.LogInformation(3, "Data was seeded into the database.");
                     }
+                    
+                    // Create home company.
+                    var company = this.Mapper.Map<InstallDatabaseViewModel, Company>(model);
+                    var companyAddress = this.Mapper.Map<InstallDatabaseViewModel, Address>(model);
 
-                    // Set database settings to installed.
-                    this.CompanyWorkData.Settings.Add(new Settings() { IsDatabaseInstalled = true });
+                    // Set the company address and the shipping address.
+                    company.AddressId = companyAddress.Id;
+                    company.ShippingAddressId = companyAddress.Id;
+
+                    this.CompanyWorkData.Companies.Add(company);
+                    this.CompanyWorkData.Addresses.Add(companyAddress);
+
+                    // Set database settings to installed and Save Home Company Id.
+                    this.CompanyWorkData.Settings.Add(new Settings() { IsDatabaseInstalled = true, HomeCompanyId = company.Id });
+
+                    // Save all changes.
                     await this.CompanyWorkData.CompleteAsync();
 
+                    this.logger.LogInformation(3, "The database was installed successfully.");
                     return RedirectToAction(nameof(AccountController.Login), "Account");
                 }
 

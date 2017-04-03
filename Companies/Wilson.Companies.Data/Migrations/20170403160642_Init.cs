@@ -86,6 +86,7 @@ namespace Wilson.Companies.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(maxLength: 36, nullable: false),
+                    HomeCompanyId = table.Column<string>(nullable: true),
                     IsDatabaseInstalled = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>

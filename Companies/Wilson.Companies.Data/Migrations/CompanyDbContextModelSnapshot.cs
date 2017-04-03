@@ -510,6 +510,8 @@ namespace Wilson.Companies.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasMaxLength(36);
 
+                    b.Property<string>("HomeCompanyId");
+
                     b.Property<bool>("IsDatabaseInstalled");
 
                     b.HasKey("Id");

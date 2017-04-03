@@ -25,8 +25,10 @@ namespace Wilson.Web.Areas.Companies.Controllers
         //
         // GET: Companies/Inquiries/Index
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string message)
         {
+            ViewData["StatusMessage"] = message ?? "";
+
             var inquiries = await this.CompanyWorkData.Inquiries.GetAllAsync(i => i.Include(c => c.Customer));
             var customers = inquiries.Select(x => x.Customer);
             var inquiryEmployee = await this.CompanyWorkData.InquiryEmployee
@@ -119,6 +121,11 @@ namespace Wilson.Web.Areas.Companies.Controllers
         [HttpGet]
         public async Task<IActionResult> Create()
         {
+            if (User.IsInRole(Constants.Roles.Administrator))
+            {
+                return RedirectToAction(nameof(Index), new { Message = Constants.InquiriesMessages.OnlyForEmployees }); ;
+            }
+
             return View(await this.CreateCtreateViewModel(new CreateViewModel()));
         }
 

@@ -39,6 +39,8 @@ namespace Wilson.Companies.Data.DataAccess
 
         public IRepository<Attachment> Attachments => this.GetRepository<Attachment>();
 
+        public IRepository<Address> Addresses => this.GetRepository<Address>();
+
         public int Complete()
         {
             return this.dbContext.SaveChanges();

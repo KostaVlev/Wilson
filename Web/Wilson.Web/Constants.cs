@@ -33,5 +33,10 @@
         {
             public const string Short = "dd-MMM-yyyy";
         }
+
+        public static class InquiriesMessages
+        {
+            public const string OnlyForEmployees = "You need to be employee to perform this operation.";
+        }
     }
 }

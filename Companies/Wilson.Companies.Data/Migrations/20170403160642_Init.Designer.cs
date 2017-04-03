@@ -9,7 +9,7 @@ using Wilson.Companies.Core.Enumerations;
 namespace Wilson.Companies.Data.Migrations
 {
     [DbContext(typeof(CompanyDbContext))]
-    [Migration("20170401201948_Init")]
+    [Migration("20170403160642_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -510,6 +510,8 @@ namespace Wilson.Companies.Data.Migrations
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
                         .HasMaxLength(36);
+
+                    b.Property<string>("HomeCompanyId");
 
                     b.Property<bool>("IsDatabaseInstalled");
 

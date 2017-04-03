@@ -1,7 +1,6 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Wilson.Companies.Core.Entities;
 using Wilson.Companies.Data.DataAccess;
 
 namespace Wilson.Web.Areas.Companies.Controllers
