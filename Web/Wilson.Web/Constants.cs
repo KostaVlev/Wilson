@@ -37,6 +37,13 @@
         public static class InquiriesMessages
         {
             public const string OnlyForEmployees = "You need to be employee to perform this operation.";
+            public const string Error = "Error! Please try again.";
+        }
+
+        public static class ExceptionMessages
+        {
+            public const string FileToLarge = "Maximum upload size is :";
+            public const string InvalidFile = "Invalid file.";
         }
     }
 }

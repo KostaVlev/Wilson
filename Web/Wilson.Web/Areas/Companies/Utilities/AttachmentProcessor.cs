@@ -10,9 +10,18 @@ namespace Wilson.Web.Areas.Companies.Utilities
 {
     public class AttachmentProcessor : IAttachmnetProcessor
     {
+        private const int MAX_UPLOAD_SIZE = 15000;
+
         public async Task<IEnumerable<Attachment>> PrepareForUpload(IEnumerable<IFormFile> formFiles)
-        {
+        {            
             long size = formFiles.Sum(f => f.Length);
+            if (size > MAX_UPLOAD_SIZE)
+            {
+                throw new ArgumentOutOfRangeException(
+                    nameof(formFiles), 
+                    string.Format("{0} {1}",Constants.ExceptionMessages.FileToLarge, MAX_UPLOAD_SIZE));
+            }
+
             var attachments = new List<Attachment>();
 
             // full path to file in temp location
@@ -20,6 +29,13 @@ namespace Wilson.Web.Areas.Companies.Utilities
 
             foreach (var formFile in formFiles)
             {
+                if (formFile.FileName.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0)
+                {
+                    throw new ArgumentException(
+                    "formFile",
+                    Constants.ExceptionMessages.InvalidFile);
+                }
+
                 if (formFile.Length > 0)
                 {
                     using (var stream = new MemoryStream())

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
@@ -119,11 +120,13 @@ namespace Wilson.Web.Areas.Companies.Controllers
         //
         // GET: Companies/Inquiries/Create
         [HttpGet]
-        public async Task<IActionResult> Create()
+        public async Task<IActionResult> Create(string message)
         {
+            ViewData["StatusMessage"] = message ?? "";
+
             if (User.IsInRole(Constants.Roles.Administrator))
             {
-                return RedirectToAction(nameof(Index), new { Message = Constants.InquiriesMessages.OnlyForEmployees }); ;
+                return RedirectToAction(nameof(Index), new { Message = Constants.InquiriesMessages.OnlyForEmployees });
             }
 
             return View(await this.CreateCtreateViewModel(new CreateViewModel()));
@@ -152,13 +155,26 @@ namespace Wilson.Web.Areas.Companies.Controllers
                 // If there are attached files, update the Attachments schema.
                 if (model.Attachments != null && model.Attachments.Count() > 0)
                 {
-                    var attachments = await this.attachmnetProcessor.PrepareForUpload(model.Attachments);
-                    foreach (var attachment in attachments)
+                    try
                     {
-                        attachment.InquiryId = inquiry.Id;
-                    }
+                        var attachments = await this.attachmnetProcessor.PrepareForUpload(model.Attachments);
+                        foreach (var attachment in attachments)
+                        {
+                            attachment.InquiryId = inquiry.Id;
+                        }
 
-                    this.CompanyWorkData.Attachments.AddRange(attachments);
+                        this.CompanyWorkData.Attachments.AddRange(attachments);
+                    }
+                    catch (ArgumentOutOfRangeException ex)
+                    {
+
+                        return RedirectToAction(nameof(Create), new { Message = ex.Message });
+                    }
+                    catch (ArgumentException ex)
+                    {
+
+                        return RedirectToAction(nameof(Create), new { Message = ex.Message });
+                    }                   
                 }
                 
                 this.CompanyWorkData.Inquiries.Add(inquiry);                
