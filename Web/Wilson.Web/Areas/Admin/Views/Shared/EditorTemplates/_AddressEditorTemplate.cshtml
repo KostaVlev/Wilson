@@ -1,0 +1,60 @@
+@model AddressViewModel
+
+<h4>Address</h4>
+<hr />
+<div class="form-group">
+    <label asp-for="Country" class="col-md-2 control-label"></label>
+    <div class="col-md-10">
+        <input asp-for="Country" class="form-control" />
+        <span asp-validation-for="Country" class="text-danger"></span>
+    </div>
+</div>
+<div class="form-group">
+    <label asp-for="PostCode" class="col-md-2 control-label"></label>
+    <div class="col-md-10">
+        <input asp-for="PostCode" class="form-control" />
+        <span asp-validation-for="PostCode" class="text-danger"></span>
+    </div>
+</div>
+<div class="form-group">
+    <label asp-for="City" class="col-md-2 control-label"></label>
+    <div class="col-md-10">
+        <input asp-for="City" class="form-control" />
+        <span asp-validation-for"="City" class="text-danger"></span>
+    </div>
+</div>
+<div class="form-group">
+    <label asp-for="Street" class="col-md-2 control-label"></label>
+    <div class="col-md-10">
+        <input asp-for="Street" class="form-control" />
+        <span asp-validation-for="Street" class="text-danger"></span>
+    </div>
+</div>
+<div class="form-group">
+    <label asp-for="StreetNumber" class="col-md-2 control-label"></label>
+    <div class="col-md-10">
+        <input asp-for="StreetNumber" class="form-control" />
+        <span asp-validation-for="StreetNumber" class="text-danger"></span>
+    </div>
+</div>
+<div class="form-group">
+    <label asp-for="Floor" class="col-md-2 control-label"></label>
+    <div class="col-md-10">
+        <input asp-for="Floor" class="form-control" />
+        <span asp-validation-for="Floor" class="text-danger"></span>
+    </div>
+</div>
+<div class="form-group">
+    <label asp-for="UnitNumber" class="col-md-2 control-label"></label>
+    <div class="col-md-10">
+        <input asp-for="UnitNumber" class="form-control" />
+        <span asp-validation-for="UnitNumber" class="text-danger"></span>
+    </div>
+</div>
+<div class="form-group">
+    <label asp-for="Note" class="col-md-2 control-label"></label>
+    <div class="col-md-10">
+        <textarea asp-for="Note" class="form-control"></textarea>
+        <span asp-validation-for="Note" class="text-danger"></span>
+    </div>
+</div>

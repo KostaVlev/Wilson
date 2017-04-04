@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using Wilson.Companies.Core.Entities;
 using Wilson.Companies.Data.DataAccess;
 using Wilson.Web.Areas.Admin.Models.ControlPanelViewModels;
+using Wilson.Web.Areas.Admin.Models.SharedViewModels;
 
 namespace Wilson.Web.Areas.Admin.Controllers
 {
@@ -38,29 +39,57 @@ namespace Wilson.Web.Areas.Admin.Controllers
         //
         // GET: /Admin/Register
         [HttpGet]
-        public IActionResult Register()
+        public IActionResult Register(string message)
         {
-            return View();
+            ViewData["StatusMessage"] = message ?? "";
+            return View(new RegisterViewModel() { User = new RegisterUserViewModel()});
         }
 
         //
         // POST: /Admin/Register
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Register(RegisterViewModel model, string returnUrl = null)
+        public async Task<IActionResult> Register(RegisterViewModel model)
         {
-            ViewData["ReturnUrl"] = returnUrl;
             if (ModelState.IsValid)
             {
-                var user = new User { FirstName = model.FirstName, LastName = model.LastName, UserName = model.Email, Email = model.Email };
-                var result = await this.userManager.CreateAsync(user, model.Password);
-                if (result.Succeeded)
-                {
-                    this.logger.LogInformation(3, "Admin created new User account with password.");
-                    return RedirectToAction(nameof(Index), new { Message = Constants.AccountManageMessagesEn.UserCreated });
-                }
+                var settings = await this.GetSettings();
 
-                this.AddErrors(result);
+                // Continue only if we have settings for the database.
+                if (settings != null && !string.IsNullOrEmpty(settings.HomeCompanyId) && settings.IsDatabaseInstalled)
+                {
+                    // Create User.
+                    var user = this.Mapper.Map<RegisterUserViewModel, User>(model.User);
+                    user.UserName = user.Email;
+
+                    // Create employee.
+                    var employee = this.Mapper.Map<RegisterUserViewModel, Employee>(model.User);
+
+                    // Make the user employee.
+                    user.EmployeeId = employee.Id;
+
+                    var employeeAddress = this.Mapper.Map<AddressViewModel, Address>(model.Address);
+                    employee.AddressId = employeeAddress.Id;
+                    employee.CompanyId = settings.HomeCompanyId;
+
+                    // Save the changes in the database.
+                    this.CompanyWorkData.Addresses.Add(employeeAddress);
+                    this.CompanyWorkData.Employees.Add(employee);
+                    await this.CompanyWorkData.CompleteAsync();
+
+                    var result = await this.userManager.CreateAsync(user, model.User.Password);
+                    if (result.Succeeded)
+                    {
+                        this.logger.LogInformation(3, "Admin created new User account with password.");  
+                        return RedirectToAction(nameof(Index), new { Message = Constants.AccountManageMessagesEn.UserCreated });
+                    }
+
+                    this.AddErrors(result);
+                }
+                else
+                {
+                    return RedirectToAction(nameof(Created), new { Message = Constants.ExceptionMessages.DatabaseNotInstalled });
+                }
             }
 
             // If we got this far, something failed, redisplay form

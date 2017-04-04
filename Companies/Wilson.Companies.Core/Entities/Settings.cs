@@ -1,6 +1,8 @@
-﻿namespace Wilson.Companies.Core.Entities
+﻿using Wilson.Companies.Core.Interfaces;
+
+namespace Wilson.Companies.Core.Entities
 {
-    public class Settings : Entity
+    public class Settings : Entity, ISettings
     {
         public bool IsDatabaseInstalled { get; set; }
 

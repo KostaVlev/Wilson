@@ -144,7 +144,9 @@ namespace Wilson.Web.Areas.Companies.Controllers
                 var inquiry = this.Mapper.Map<CreateViewModel, Inquiry>(model);
 
                 // The current Inquiry is received by the current user.
-                inquiry.ReceivedById = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var currentUser = await this.CompanyWorkData.Users.FindAsync(x => x.Id == currentUserId);
+                inquiry.ReceivedById = currentUser.FirstOrDefault().EmployeeId;
 
                 // Many-To-Many relationship schema has to be updated.
                 foreach (var assigneeId in model.AssigneesIds)

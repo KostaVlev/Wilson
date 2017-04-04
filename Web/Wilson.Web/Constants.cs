@@ -44,6 +44,7 @@
         {
             public const string FileToLarge = "Maximum upload size is :";
             public const string InvalidFile = "Invalid file.";
+            public const string DatabaseNotInstalled = "The database is not installed. Reinstall the application.";
         }
     }
 }

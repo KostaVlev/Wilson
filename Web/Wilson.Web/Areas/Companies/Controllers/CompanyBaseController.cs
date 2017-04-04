@@ -8,7 +8,7 @@ namespace Wilson.Web.Areas.Companies.Controllers
     [Area(Constants.Areas.Companies)]
     [Authorize]
     public class CompanyBaseController : Controller
-    {        
+    {
         public CompanyBaseController(ICompanyWorkData companyWorkData, IMapper mapper)
         {
             this.CompanyWorkData = companyWorkData;
