@@ -10,7 +10,7 @@
 
         public string Street { get; set; }
 
-        public int StreetNumber { get; set; }
+        public string StreetNumber { get; set; }
 
         public int? Floor { get; set; }
 

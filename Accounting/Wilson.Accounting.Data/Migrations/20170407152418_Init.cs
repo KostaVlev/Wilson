@@ -23,7 +23,7 @@ namespace Wilson.Accounting.Data.Migrations
                     Note = table.Column<string>(maxLength: 250, nullable: true),
                     PostCode = table.Column<string>(maxLength: 10, nullable: false),
                     Street = table.Column<string>(maxLength: 70, nullable: false),
-                    StreetNumber = table.Column<int>(nullable: false),
+                    StreetNumber = table.Column<string>(maxLength: 6, nullable: false),
                     UnitNumber = table.Column<string>(maxLength: 6, nullable: true)
                 },
                 constraints: table =>

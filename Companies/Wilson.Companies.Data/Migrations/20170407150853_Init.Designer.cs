@@ -9,7 +9,7 @@ using Wilson.Companies.Core.Enumerations;
 namespace Wilson.Companies.Data.Migrations
 {
     [DbContext(typeof(CompanyDbContext))]
-    [Migration("20170403160642_Init")]
+    [Migration("20170407150853_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -140,6 +140,9 @@ namespace Wilson.Companies.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(70);
 
+                    b.Property<string>("Discriminator")
+                        .IsRequired();
+
                     b.Property<int?>("Floor");
 
                     b.Property<string>("Note")
@@ -153,7 +156,9 @@ namespace Wilson.Companies.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(70);
 
-                    b.Property<int>("StreetNumber");
+                    b.Property<string>("StreetNumber")
+                        .IsRequired()
+                        .HasMaxLength(6);
 
                     b.Property<string>("UnitNumber")
                         .HasMaxLength(6);
@@ -161,6 +166,8 @@ namespace Wilson.Companies.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Addresses");
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("Address");
                 });
 
             modelBuilder.Entity("Wilson.Companies.Core.Entities.Attachment", b =>
@@ -401,6 +408,45 @@ namespace Wilson.Companies.Data.Migrations
                     b.ToTable("InquiryEmployee");
                 });
 
+            modelBuilder.Entity("Wilson.Companies.Core.Entities.Message", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(36);
+
+                    b.Property<string>("Body")
+                        .IsRequired()
+                        .HasMaxLength(900);
+
+                    b.Property<bool>("IsDeleted");
+
+                    b.Property<bool>("IsNew")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValue(true);
+
+                    b.Property<int>("MessageCategory");
+
+                    b.Property<string>("RecipientId");
+
+                    b.Property<DateTime?>("RecivedAt");
+
+                    b.Property<string>("SenderId");
+
+                    b.Property<DateTime>("SentAt");
+
+                    b.Property<string>("Subject")
+                        .IsRequired()
+                        .HasMaxLength(70);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RecipientId");
+
+                    b.HasIndex("SenderId");
+
+                    b.ToTable("Message");
+                });
+
             modelBuilder.Entity("Wilson.Companies.Core.Entities.Offer", b =>
                 {
                     b.Property<string>("Id")
@@ -587,6 +633,39 @@ namespace Wilson.Companies.Data.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
+            modelBuilder.Entity("Wilson.Companies.Core.Entities.RegistrationRequestMessage", b =>
+                {
+                    b.HasBaseType("Wilson.Companies.Core.Entities.Address");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasMaxLength(70);
+
+                    b.Property<bool>("IsDeleted");
+
+                    b.Property<bool>("IsNew")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValue(true);
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasMaxLength(70);
+
+                    b.Property<string>("PrivatePhone");
+
+                    b.Property<DateTime?>("ReceivedAt");
+
+                    b.Property<string>("RecipientId");
+
+                    b.Property<DateTime>("SendAt");
+
+                    b.HasIndex("RecipientId");
+
+                    b.ToTable("RegistrationRequestMessage");
+
+                    b.HasDiscriminator().HasValue("RegistrationRequestMessage");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityRole")
@@ -709,6 +788,17 @@ namespace Wilson.Companies.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
+            modelBuilder.Entity("Wilson.Companies.Core.Entities.Message", b =>
+                {
+                    b.HasOne("Wilson.Companies.Core.Entities.User", "Recipient")
+                        .WithMany("ReceivedMessages")
+                        .HasForeignKey("RecipientId");
+
+                    b.HasOne("Wilson.Companies.Core.Entities.User", "Sender")
+                        .WithMany("SentMessages")
+                        .HasForeignKey("SenderId");
+                });
+
             modelBuilder.Entity("Wilson.Companies.Core.Entities.Offer", b =>
                 {
                     b.HasOne("Wilson.Companies.Core.Entities.CompanyContract", "Contract")
@@ -747,6 +837,13 @@ namespace Wilson.Companies.Data.Migrations
                     b.HasOne("Wilson.Companies.Core.Entities.Employee", "Employee")
                         .WithMany()
                         .HasForeignKey("EmployeeId");
+                });
+
+            modelBuilder.Entity("Wilson.Companies.Core.Entities.RegistrationRequestMessage", b =>
+                {
+                    b.HasOne("Wilson.Companies.Core.Entities.User", "Recipient")
+                        .WithMany("RegistrationRequestMessages")
+                        .HasForeignKey("RecipientId");
                 });
         }
     }

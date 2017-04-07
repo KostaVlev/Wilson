@@ -102,7 +102,7 @@ namespace Wilson.Web.Seed
                     City = "Plovdiv",
                     PostCode = "4000",
                     Street = "Tzar Boris III",
-                    StreetNumber = 25
+                    StreetNumber = "25"
                 };
 
                 first.EmployeePosition = EmployeePosition.Manager;

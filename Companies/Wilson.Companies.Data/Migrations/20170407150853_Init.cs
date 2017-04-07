@@ -43,26 +43,6 @@ namespace Wilson.Companies.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Addresses",
-                schema: "Companies",
-                columns: table => new
-                {
-                    Id = table.Column<string>(maxLength: 36, nullable: false),
-                    City = table.Column<string>(maxLength: 70, nullable: false),
-                    Country = table.Column<string>(maxLength: 70, nullable: false),
-                    Floor = table.Column<int>(nullable: true),
-                    Note = table.Column<string>(maxLength: 250, nullable: true),
-                    PostCode = table.Column<string>(maxLength: 10, nullable: false),
-                    Street = table.Column<string>(maxLength: 70, nullable: false),
-                    StreetNumber = table.Column<int>(nullable: false),
-                    UnitNumber = table.Column<string>(maxLength: 6, nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Addresses", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "ProjectLocations",
                 schema: "Companies",
                 columns: table => new
@@ -118,6 +98,26 @@ namespace Wilson.Companies.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "AspNetUserRoles",
+                schema: "Companies",
+                columns: table => new
+                {
+                    UserId = table.Column<string>(nullable: false),
+                    RoleId = table.Column<string>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetUserRoles", x => new { x.UserId, x.RoleId });
+                    table.ForeignKey(
+                        name: "FK_AspNetUserRoles_AspNetRoles_RoleId",
+                        column: x => x.RoleId,
+                        principalSchema: "Companies",
+                        principalTable: "AspNetRoles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Companies",
                 schema: "Companies",
                 columns: table => new
@@ -134,20 +134,6 @@ namespace Wilson.Companies.Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Companies", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Companies_Addresses_AddressId",
-                        column: x => x.AddressId,
-                        principalSchema: "Companies",
-                        principalTable: "Addresses",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Companies_Addresses_ShippingAddressId",
-                        column: x => x.ShippingAddressId,
-                        principalSchema: "Companies",
-                        principalTable: "Addresses",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -168,13 +154,6 @@ namespace Wilson.Companies.Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Employees", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Employees_Addresses_AddressId",
-                        column: x => x.AddressId,
-                        principalSchema: "Companies",
-                        principalTable: "Addresses",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Employees_Companies_CompanyId",
                         column: x => x.CompanyId,
@@ -462,30 +441,74 @@ namespace Wilson.Companies.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "AspNetUserRoles",
+                name: "Addresses",
                 schema: "Companies",
                 columns: table => new
                 {
-                    UserId = table.Column<string>(nullable: false),
-                    RoleId = table.Column<string>(nullable: false)
+                    Id = table.Column<string>(maxLength: 36, nullable: false),
+                    City = table.Column<string>(maxLength: 70, nullable: false),
+                    Country = table.Column<string>(maxLength: 70, nullable: false),
+                    Discriminator = table.Column<string>(nullable: false),
+                    Floor = table.Column<int>(nullable: true),
+                    Note = table.Column<string>(maxLength: 250, nullable: true),
+                    PostCode = table.Column<string>(maxLength: 10, nullable: false),
+                    Street = table.Column<string>(maxLength: 70, nullable: false),
+                    StreetNumber = table.Column<string>(maxLength: 6, nullable: false),
+                    UnitNumber = table.Column<string>(maxLength: 6, nullable: true),
+                    FirstName = table.Column<string>(maxLength: 70, nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: true),
+                    IsNew = table.Column<bool>(nullable: true, defaultValue: true),
+                    LastName = table.Column<string>(maxLength: 70, nullable: true),
+                    PrivatePhone = table.Column<string>(nullable: true),
+                    ReceivedAt = table.Column<DateTime>(nullable: true),
+                    RecipientId = table.Column<string>(nullable: true),
+                    SendAt = table.Column<DateTime>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AspNetUserRoles", x => new { x.UserId, x.RoleId });
+                    table.PrimaryKey("PK_Addresses", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_AspNetUserRoles_AspNetRoles_RoleId",
-                        column: x => x.RoleId,
-                        principalSchema: "Companies",
-                        principalTable: "AspNetRoles",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_AspNetUserRoles_AspNetUsers_UserId",
-                        column: x => x.UserId,
+                        name: "FK_Addresses_AspNetUsers_RecipientId",
+                        column: x => x.RecipientId,
                         principalSchema: "Companies",
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Message",
+                schema: "Companies",
+                columns: table => new
+                {
+                    Id = table.Column<string>(maxLength: 36, nullable: false),
+                    Body = table.Column<string>(maxLength: 900, nullable: false),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    IsNew = table.Column<bool>(nullable: false, defaultValue: true),
+                    MessageCategory = table.Column<int>(nullable: false),
+                    RecipientId = table.Column<string>(nullable: true),
+                    RecivedAt = table.Column<DateTime>(nullable: true),
+                    SenderId = table.Column<string>(nullable: true),
+                    SentAt = table.Column<DateTime>(nullable: false),
+                    Subject = table.Column<string>(maxLength: 70, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Message", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Message_AspNetUsers_RecipientId",
+                        column: x => x.RecipientId,
+                        principalSchema: "Companies",
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Message_AspNetUsers_SenderId",
+                        column: x => x.SenderId,
+                        principalSchema: "Companies",
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -566,6 +589,12 @@ namespace Wilson.Companies.Data.Migrations
                 schema: "Companies",
                 table: "AspNetUserRoles",
                 column: "RoleId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Addresses_RecipientId",
+                schema: "Companies",
+                table: "Addresses",
+                column: "RecipientId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Attachments_ContractId",
@@ -652,6 +681,18 @@ namespace Wilson.Companies.Data.Migrations
                 column: "EmployeeId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Message_RecipientId",
+                schema: "Companies",
+                table: "Message",
+                column: "RecipientId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Message_SenderId",
+                schema: "Companies",
+                table: "Message",
+                column: "SenderId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Offers_ContractId",
                 schema: "Companies",
                 table: "Offers",
@@ -707,10 +748,55 @@ namespace Wilson.Companies.Data.Migrations
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
                 unique: true);
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_AspNetUserRoles_AspNetUsers_UserId",
+                schema: "Companies",
+                table: "AspNetUserRoles",
+                column: "UserId",
+                principalSchema: "Companies",
+                principalTable: "AspNetUsers",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Cascade);
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Companies_Addresses_AddressId",
+                schema: "Companies",
+                table: "Companies",
+                column: "AddressId",
+                principalSchema: "Companies",
+                principalTable: "Addresses",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Restrict);
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Companies_Addresses_ShippingAddressId",
+                schema: "Companies",
+                table: "Companies",
+                column: "ShippingAddressId",
+                principalSchema: "Companies",
+                principalTable: "Addresses",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Restrict);
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Employees_Addresses_AddressId",
+                schema: "Companies",
+                table: "Employees",
+                column: "AddressId",
+                principalSchema: "Companies",
+                principalTable: "Addresses",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Restrict);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropForeignKey(
+                name: "FK_Addresses_AspNetUsers_RecipientId",
+                schema: "Companies",
+                table: "Addresses");
+
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims",
                 schema: "Companies");
@@ -740,6 +826,10 @@ namespace Wilson.Companies.Data.Migrations
                 schema: "Companies");
 
             migrationBuilder.DropTable(
+                name: "Message",
+                schema: "Companies");
+
+            migrationBuilder.DropTable(
                 name: "Offers",
                 schema: "Companies");
 
@@ -756,10 +846,6 @@ namespace Wilson.Companies.Data.Migrations
                 schema: "Companies");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers",
-                schema: "Companies");
-
-            migrationBuilder.DropTable(
                 name: "InfoRequests",
                 schema: "Companies");
 
@@ -773,6 +859,10 @@ namespace Wilson.Companies.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "Inquiries",
+                schema: "Companies");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUsers",
                 schema: "Companies");
 
             migrationBuilder.DropTable(

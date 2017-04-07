@@ -9,7 +9,7 @@ using Wilson.Accounting.Core.Enumerations;
 namespace Wilson.Accounting.Data.Migrations
 {
     [DbContext(typeof(AccountingDbContext))]
-    [Migration("20170327161232_Init")]
+    [Migration("20170407152418_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -46,7 +46,9 @@ namespace Wilson.Accounting.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(70);
 
-                    b.Property<int>("StreetNumber");
+                    b.Property<string>("StreetNumber")
+                        .IsRequired()
+                        .HasMaxLength(6);
 
                     b.Property<string>("UnitNumber")
                         .HasMaxLength(6);

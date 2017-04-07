@@ -24,8 +24,10 @@ namespace Wilson.Web.Areas.Admin.Models.SharedViewModels
         [Display(Name = "Street")]
         public string Street { get; set; }
 
+        [Required]
+        [StringLength(6, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 1)]
         [Display(Name = "Street Number")]
-        public int StreetNumber { get; set; }
+        public string StreetNumber { get; set; }
 
         [Display(Name = "Floor")]
         public int? Floor { get; set; }

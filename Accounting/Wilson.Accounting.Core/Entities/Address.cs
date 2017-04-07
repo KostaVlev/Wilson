@@ -1,7 +1,4 @@
-﻿using System;
-using System.Reflection;
-
-namespace Wilson.Accounting.Core.Entities
+﻿namespace Wilson.Accounting.Core.Entities
 {
     public class Address : Entity, IValueObject<Address>
     {
@@ -13,7 +10,7 @@ namespace Wilson.Accounting.Core.Entities
 
         public string Street { get; set; }
 
-        public int StreetNumber { get; set; }
+        public string StreetNumber { get; set; }
 
         public int? Floor { get; set; }
 

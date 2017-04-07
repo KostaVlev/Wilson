@@ -45,7 +45,9 @@ namespace Wilson.Accounting.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(70);
 
-                    b.Property<int>("StreetNumber");
+                    b.Property<string>("StreetNumber")
+                        .IsRequired()
+                        .HasMaxLength(6);
 
                     b.Property<string>("UnitNumber")
                         .HasMaxLength(6);
