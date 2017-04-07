@@ -10,6 +10,7 @@ using Wilson.Companies.Core.Entities;
 using Wilson.Companies.Data.DataAccess;
 using Wilson.Web.Models.InstallViewModels;
 using Wilson.Web.Seed;
+using Wilson.Web.Models.SharedViewModels;
 
 namespace Wilson.Web.Controllers
 {
@@ -68,13 +69,13 @@ namespace Wilson.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = this.Mapper.Map<InstallDatabaseViewModel, User>(model);
+                var user = this.Mapper.Map<UserViewModel, User>(model.User);
 
                 // Set the Username!
-                user.UserName = model.Email;
+                user.UserName = model.User.Email;
 
                 // Create User.
-                var result = await this.userManager.CreateAsync(user, model.Password);
+                var result = await this.userManager.CreateAsync(user, model.User.Password);
                 if (result.Succeeded)
                 {
                     this.logger.LogInformation(3, "Admin was created.");
@@ -92,8 +93,8 @@ namespace Wilson.Web.Controllers
                     }
                     
                     // Create home company.
-                    var company = this.Mapper.Map<InstallDatabaseViewModel, Company>(model);
-                    var companyAddress = this.Mapper.Map<InstallDatabaseViewModel, Address>(model);
+                    var company = this.Mapper.Map<CompanyViewModel, Company>(model.Company);
+                    var companyAddress = this.Mapper.Map<AddressViewModel, Address>(model.Company.Address);
 
                     // Set the company address and the shipping address.
                     company.AddressId = companyAddress.Id;

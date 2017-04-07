@@ -1,155 +1,21 @@
 @model InstallDatabaseViewModel
 
-@{ 
+@{
     var curentController = this.ViewContext.RouteData.Values["controller"].ToString();
 }
 
 <form asp-controller=@curentController asp-action=@nameof(InstallController.InstallDatabase) method="post" class="form-horizontal">
-    <hr />
     <div asp-validation-summary="All" class="text-danger"></div>
-    <h3>Create Administrator</h3>    
-    @* User data inputs *@
-    <div class="form-group">
-        <label asp-for="FirstName" class="col-md-2 control-label"></label>
-        <div class="col-md-10">
-            <input asp-for="FirstName" class="form-control" />
-            <span asp-validation-for="FirstName" class="text-danger"></span>
-        </div>
-    </div>
-    <div class="form-group">
-        <label asp-for="LastName" class="col-md-2 control-label"></label>
-        <div class="col-md-10">
-            <input asp-for="LastName" class="form-control" />
-            <span asp-validation-for="LastName" class="text-danger"></span>
-        </div>
-    </div>
-    <div class="form-group">
-        <label asp-for="Email" class="col-md-2 control-label"></label>
-        <div class="col-md-10">
-            <input asp-for="Email" class="form-control" />
-            <span asp-validation-for"="Email" class="text-danger"></span>
-        </div>
-    </div>
-    <div class="form-group">
-        <label asp-for="Password" class="col-md-2 control-label"></label>
-        <div class="col-md-10">
-            <input asp-for="Password" class="form-control" />
-            <span asp-validation-for="Password" class="text-danger"></span>
-        </div>
-    </div>
-    <div class="form-group">
-        <label asp-for="ConfirmPassword" class="col-md-2 control-label"></label>
-        <div class="col-md-10">
-            <input asp-for="ConfirmPassword" class="form-control" />
-            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
-        </div>
-    </div>   
+    @Html.EditorFor(x => x.User, "_AdminUserEdirorTemplate")
     <hr />
-    @* Database seed input *@
     <h3>Seed data into the database.</h3>
-    <div class="form-group">   
+    <div class="form-group">
         <label asp-for="SeedData" class="col-md-2 control-label"></label>
-        <div class="col-md-10">           
+        <div class="col-md-10">
             <input asp-for="SeedData" class="checkbox" type="checkbox" checked />
-        </div>        
-    </div>
-    <hr />
-    @* Home company inputs *@
-    <h3>Create Home Company</h3>
-    <div class="form-group">
-        <label asp-for="Name" class="col-md-2 control-label"></label>
-        <div class="col-md-10">
-            <input asp-for="Name" class="form-control" />
-            <span asp-validation-for="Name" class="text-danger"></span>
         </div>
     </div>
-    <div class="form-group">
-        <label asp-for="RegistrationNumber" class="col-md-2 control-label"></label>
-        <div class="col-md-10">
-            <input asp-for="RegistrationNumber" class="form-control" />
-            <span asp-validation-for="RegistrationNumber" class="text-danger"></span>
-        </div>
-    </div>
-    <div class="form-group">
-        <label asp-for="VatNumber" class="col-md-2 control-label"></label>
-        <div class="col-md-10">
-            <input asp-for="VatNumber" class="form-control" />
-            <span asp-validation-for"="VatNumber" class="text-danger"></span>
-        </div>
-    </div>
-    <div class="form-group">
-        <label asp-for="OfficeEmail" class="col-md-2 control-label"></label>
-        <div class="col-md-10">
-            <input asp-for="OfficeEmail" class="form-control" />
-            <span asp-validation-for="OfficeEmail" class="text-danger"></span>
-        </div>
-    </div>
-    <div class="form-group">
-        <label asp-for="OfficePhone" class="col-md-2 control-label"></label>
-        <div class="col-md-10">
-            <input asp-for="OfficePhone" class="form-control" />
-            <span asp-validation-for="OfficePhone" class="text-danger"></span>
-        </div>
-    </div>
-    <hr />
-    @* Home company address inputs *@
-    <h3>Home Company Address</h3>
-    <div class="form-group">
-        <label asp-for="Country" class="col-md-2 control-label"></label>
-        <div class="col-md-10">
-            <input asp-for="Country" class="form-control" />
-            <span asp-validation-for="Country" class="text-danger"></span>
-        </div>
-    </div>
-    <div class="form-group">
-        <label asp-for="PostCode" class="col-md-2 control-label"></label>
-        <div class="col-md-10">
-            <input asp-for="PostCode" class="form-control" />
-            <span asp-validation-for="PostCode" class="text-danger"></span>
-        </div>
-    </div>
-    <div class="form-group">
-        <label asp-for="City" class="col-md-2 control-label"></label>
-        <div class="col-md-10">
-            <input asp-for="City" class="form-control" />
-            <span asp-validation-for"="City" class="text-danger"></span>
-        </div>
-    </div>
-    <div class="form-group">
-        <label asp-for="Street" class="col-md-2 control-label"></label>
-        <div class="col-md-10">
-            <input asp-for="Street" class="form-control" />
-            <span asp-validation-for="Street" class="text-danger"></span>
-        </div>
-    </div>
-    <div class="form-group">
-        <label asp-for="StreetNumber" class="col-md-2 control-label"></label>
-        <div class="col-md-10">
-            <input asp-for="StreetNumber" class="form-control" />
-            <span asp-validation-for="StreetNumber" class="text-danger"></span>
-        </div>
-    </div>
-    <div class="form-group">
-        <label asp-for="Floor" class="col-md-2 control-label"></label>
-        <div class="col-md-10">
-            <input asp-for="Floor" class="form-control" />
-            <span asp-validation-for="Floor" class="text-danger"></span>
-        </div>
-    </div>
-    <div class="form-group">
-        <label asp-for="UnitNumber" class="col-md-2 control-label"></label>
-        <div class="col-md-10">
-            <input asp-for="UnitNumber" class="form-control" />
-            <span asp-validation-for="UnitNumber" class="text-danger"></span>
-        </div>
-    </div>
-    <div class="form-group">
-        <label asp-for="Note" class="col-md-2 control-label"></label>
-        <div class="col-md-10">
-            <textarea asp-for="Note" class="form-control"></textarea>
-            <span asp-validation-for="Note" class="text-danger"></span>
-        </div>
-    </div>
+    @Html.EditorFor(x => x.Company, "_CompanyEditorTemplate")
     <hr />
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
