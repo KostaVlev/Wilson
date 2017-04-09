@@ -11,5 +11,7 @@ namespace Wilson.Web.Models.InstallViewModels
         public bool SeedData { get; set; }
         
         public CompanyViewModel Company { get; set; }
+
+        public PayRateViewModel PayRate { get; set; }
     }
 }

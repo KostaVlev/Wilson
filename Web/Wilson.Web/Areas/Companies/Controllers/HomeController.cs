@@ -12,7 +12,7 @@ namespace Wilson.Web.Areas.Companies.Controllers
         }
 
         //
-        // GET: Companies/Company/Index
+        // GET: Companies/Home/Index
         [HttpGet]
         public IActionResult Index()
         {

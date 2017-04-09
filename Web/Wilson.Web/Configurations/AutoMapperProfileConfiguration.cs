@@ -11,6 +11,9 @@ namespace Wilson.Web.Configurations
             CreateMap<UserViewModel, User>();
             CreateMap<CompanyViewModel, Company>();
             CreateMap<AddressViewModel, Address>();
+            CreateMap<Employee, Scheduler.Core.Entities.Employee>();
+            CreateMap<PayRateViewModel, Scheduler.Core.Entities.PayRate>();
+            CreateMap<Project, Scheduler.Core.Entities.Project>();
         }
     }
 }

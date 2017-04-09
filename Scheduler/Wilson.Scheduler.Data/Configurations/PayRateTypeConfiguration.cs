@@ -18,6 +18,8 @@ namespace Wilson.Scheduler.Data.Configurations
             builder.Property(x => x.Id).HasMaxLength(36);
             builder.Property(x => x.Hour).HasPrecision(18, 4);
             builder.Property(x => x.ExtraHour).HasPrecision(18, 4);
+            builder.Property(x => x.HoidayHour).HasPrecision(18, 4);
+            builder.Property(x => x.BusinessTripHour).HasPrecision(18, 4);
         }
     }
 }

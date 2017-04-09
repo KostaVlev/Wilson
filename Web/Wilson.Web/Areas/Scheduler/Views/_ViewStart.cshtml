@@ -1,0 +1,9 @@
+﻿@{
+    Layout = "_Layout";
+    @await Html.PartialAsync("_ShedulerPartial")
+}
+<p class="lead text-info well-lg">@ViewData["StatusMessage"]</p>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

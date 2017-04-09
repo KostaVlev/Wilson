@@ -265,6 +265,7 @@ namespace Wilson.Companies.Data.Migrations
                     Id = table.Column<string>(maxLength: 36, nullable: false),
                     ContractId = table.Column<string>(maxLength: 36, nullable: false),
                     CustomerId = table.Column<string>(maxLength: 36, nullable: false),
+                    IsActive = table.Column<bool>(nullable: false, defaultValue: true),
                     LocationId = table.Column<string>(maxLength: 36, nullable: false),
                     Name = table.Column<string>(maxLength: 900, nullable: false)
                 },

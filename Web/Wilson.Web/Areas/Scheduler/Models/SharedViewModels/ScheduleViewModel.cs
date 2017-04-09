@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace Wilson.Scheduler.Core.Entities
+namespace Wilson.Web.Areas.Scheduler.Models.SharedViewModels
 {
-    public class Schedule : Entity
+    public class ScheduleViewModel
     {
         public DateTime Date { get; set; }
 
@@ -20,12 +20,8 @@ namespace Wilson.Scheduler.Core.Entities
 
         public int ExtraWorkHours { get; set; }
 
-        public string EmployeeId { get; set; }
-
         public string ProjectId { get; set; }
 
-        public virtual Employee Employee { get; set; }
-
-        public virtual Project Project { get; set; }
+        public ProjectViewModel Project { get; set; }
     }
 }

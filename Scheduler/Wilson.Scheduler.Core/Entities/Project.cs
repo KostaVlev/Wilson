@@ -6,6 +6,8 @@
 
         public string ShortName { get; set; }
 
+        public bool IsActive { get; set; }
+
         public bool Equals(Project other)
         {
             if (this.Name.Equals(other.Name))

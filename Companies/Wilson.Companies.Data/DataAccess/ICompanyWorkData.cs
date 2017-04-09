@@ -15,6 +15,7 @@ namespace Wilson.Companies.Data.DataAccess
         IRepository<Employee> Employees { get; }
         IRepository<Attachment> Attachments { get; }
         IRepository<Address> Addresses { get; }
+        IRepository<Project> Projects { get; }
 
         DbSet<TEntity> Set<TEntity>() where TEntity : class;
 

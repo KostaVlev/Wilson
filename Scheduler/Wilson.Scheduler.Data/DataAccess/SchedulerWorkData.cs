@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Wilson.Scheduler.Core.Aggregates;
 using Wilson.Scheduler.Data.DataAccess.Repositories;
+using Wilson.Scheduler.Core.Entities;
 
 namespace Wilson.Scheduler.Data.DataAccess
 {
@@ -24,16 +24,22 @@ namespace Wilson.Scheduler.Data.DataAccess
             this.repositories = new Dictionary<Type, object>();
         }
 
-        public IRepository<EmployeeAggregate> Employees => this.GetRepository<EmployeeAggregate>();
+        public IRepository<Employee> Employees => this.GetRepository<Employee>();
+
+        public IRepository<Schedule> Schedules => this.GetRepository<Schedule>();
+
+        public IRepository<Project> Projects => this.GetRepository<Project>();
+
+        public IRepository<PayRate> PayRates => this.GetRepository<PayRate>();
 
         public int Complete()
         {
             return this.dbContext.SaveChanges();
         }
 
-        public async Task CompleteAsync()
+        public async Task<int> CompleteAsync()
         {
-            await this.dbContext.SaveChangesAsync();
+            return await this.dbContext.SaveChangesAsync();
         }
 
         public DbSet<TEntity> Set<TEntity>() where TEntity : class

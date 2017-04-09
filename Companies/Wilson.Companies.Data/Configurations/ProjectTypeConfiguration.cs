@@ -16,6 +16,7 @@ namespace Wilson.Companies.Data.Configurations
         {
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Id).HasMaxLength(36);
+            builder.Property(x => x.IsActive).HasDefaultValue(true);
             builder.Property(x => x.LocationId).HasMaxLength(36).IsRequired();
             builder.Property(x => x.CustomerId).HasMaxLength(36).IsRequired();
             builder.Property(x => x.ContractId).HasMaxLength(36).IsRequired();

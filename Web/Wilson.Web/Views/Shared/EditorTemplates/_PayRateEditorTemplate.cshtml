@@ -1,0 +1,32 @@
+@model PayRateViewModel
+
+<hr />
+<h3>Base Pay Rate</h3>
+<div class="form-group">
+    <label asp-for="Hour" class="col-md-2 control-label"></label>
+    <div class="col-md-10">
+        <input asp-for="Hour" class="form-control" />
+        <span asp-validation-for="Hour" class="text-danger"></span>
+    </div>
+</div>
+<div class="form-group">
+    <label asp-for="ExtraHour" class="col-md-2 control-label"></label>
+    <div class="col-md-10">
+        <input asp-for="ExtraHour" class="form-control" />
+        <span asp-validation-for="ExtraHour" class="text-danger"></span>
+    </div>
+</div>
+<div class="form-group">
+    <label asp-for="HoidayHour" class="col-md-2 control-label"></label>
+    <div class="col-md-10">
+        <input asp-for="HoidayHour" class="form-control" />
+        <span asp-validation-for"="HoidayHour" class="text-danger"></span>
+    </div>
+</div>
+<div class="form-group">
+    <label asp-for="BusinessTripHour" class="col-md-2 control-label"></label>
+    <div class="col-md-10">
+        <input asp-for="BusinessTripHour" class="form-control" />
+        <span asp-validation-for"="BusinessTripHour" class="text-danger"></span>
+    </div>
+</div>

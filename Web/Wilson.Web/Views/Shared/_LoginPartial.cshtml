@@ -15,30 +15,54 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">My Company</a>
+                <a asp-area="" 
+                   asp-controller="Home" 
+                   asp-action=@nameof(HomeController.Index) class="navbar-brand">My Company</a>
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
+                    <li><a asp-area="" 
+                           asp-controller="Home" 
+                           asp-action=@nameof(HomeController.Index)>Home</a>
+                    </li>
+                    <li>
+                        <a asp-area=""
+                           asp-controller="Home"
+                           asp-action=@nameof(HomeController.Sync)>Sync</a>
+                    </li>
                 </ul>
-                <form asp-area="" asp-controller="Account" asp-action="Logout" method="post" id="logoutForm" class="navbar-right">
+                <form asp-area="" asp-controller="Account" asp-action=@nameof(AccountController.Logout)method="post" id="logoutForm" class="navbar-right">
                     <ul class="nav navbar-nav navbar-right">
                         <li>
-                            <a asp-area="" asp-controller="Manage" asp-action="Index" title="Manage">Hello @UserManager.GetUserAsync(User).Result.FirstName!</a>
+                            <a asp-area="" 
+                               asp-controller="Manage" 
+                               asp-action=@nameof(ManageController.Index) 
+                               title="Manage">Hello @UserManager.GetUserAsync(User).Result.FirstName!</a>
                         </li>
                         <li>
-                            <a asp-area="Companies" asp-controller="Home" asp-action="Index">Company</a>
+                            <a asp-area=@Constants.Areas.Companies 
+                               asp-controller="Home" 
+                               asp-action=@nameof(Wilson.Web.Areas.Companies.Controllers.HomeController.Index)>Company</a>
+                        </li>
+                        <li>
+                            <a asp-area=@Constants.Areas.Scheduler 
+                               asp-controller="Home" 
+                               asp-action=@nameof(Wilson.Web.Areas.Scheduler.Controllers.HomeController.Index)>Scheduler</a>
                         </li>
                         @if (User.IsInRole("Admin") || User.IsInRole("Accouter"))
                         {
                             <li>
-                                <a asp-area="Accounting" asp-controller="Home" asp-action="Index">Accounting</a>
+                                <a asp-area=@Constants.Areas.Accounting a
+                                   sp-controller=@nameof(Wilson.Web.Areas.Accounting.Controllers.HomeController.Index) 
+                                   asp-action="Index">Accounting</a>
                             </li>
                         }                        
                         @if (User.IsInRole("Admin"))
                         {
                             <li>
-                                <a asp-area="Admin" asp-controller="ControlPanel" asp-action="Index">Admin Panel</a>
+                                <a asp-area=@Constants.Areas.Admin 
+                                   asp-controller="ControlPanel" 
+                                   asp-action=@nameof(Wilson.Web.Areas.Admin.Controllers.ControlPanelController.Index)>Admin Panel</a>
                             </li>
                         }
                         <li>                            

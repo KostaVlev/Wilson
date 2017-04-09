@@ -41,6 +41,8 @@ namespace Wilson.Companies.Data.DataAccess
 
         public IRepository<Address> Addresses => this.GetRepository<Address>();
 
+        public IRepository<Project> Projects => this.GetRepository<Project>();
+
         public int Complete()
         {
             return this.dbContext.SaveChanges();

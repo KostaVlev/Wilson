@@ -27,6 +27,7 @@
             public const string Admin = "Admin";
             public const string Accounting = "Accounting";
             public const string Companies = "Companies";
+            public const string Scheduler = "Scheduler";
         }
 
         public static class DateTimeFormats
@@ -45,6 +46,12 @@
             public const string FileToLarge = "Maximum upload size is :";
             public const string InvalidFile = "Invalid file.";
             public const string DatabaseNotInstalled = "The database is not installed. Reinstall the application.";
+            public const string DatabaseUpdateError = "En error occurred while trying to update the data.";
+        }
+
+        public static class SuccessMessages
+        {
+            public const string DatabaseUpdateSuccess = "The data is updated.";
         }
     }
 }

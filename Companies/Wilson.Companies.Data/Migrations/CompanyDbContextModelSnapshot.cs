@@ -501,6 +501,10 @@ namespace Wilson.Companies.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(36);
 
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValue(true);
+
                     b.Property<string>("LocationId")
                         .IsRequired()
                         .HasMaxLength(36);

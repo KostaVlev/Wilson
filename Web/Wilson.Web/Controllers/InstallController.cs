@@ -11,6 +11,7 @@ using Wilson.Companies.Data.DataAccess;
 using Wilson.Web.Models.InstallViewModels;
 using Wilson.Web.Seed;
 using Wilson.Web.Models.SharedViewModels;
+using Wilson.Scheduler.Data.DataAccess;
 
 namespace Wilson.Web.Controllers
 {
@@ -25,13 +26,14 @@ namespace Wilson.Web.Controllers
 
         public InstallController(
             UserManager<User> userManager, 
-            ICompanyWorkData companyWorkData, 
+            ICompanyWorkData companyWorkData,
+            ISchedulerWorkData schedulerWorkData,
             IMapper mapper, 
             ILoggerFactory loggerFactory,
             IDatabaseSeeder dataSeeder,
             IRolesSeder rolesSeeder,
             IServiceScopeFactory services) 
-            : base(companyWorkData, mapper)
+            : base(companyWorkData, schedulerWorkData, mapper)
         {
             this.userManager = userManager;
             this.dataSeeder = dataSeeder;
@@ -103,11 +105,18 @@ namespace Wilson.Web.Controllers
                     this.CompanyWorkData.Companies.Add(company);
                     this.CompanyWorkData.Addresses.Add(companyAddress);
 
+                    // Set company Base Pay Rate
+                    var payRate = this.Mapper.Map<PayRateViewModel, Scheduler.Core.Entities.PayRate>(model.PayRate);
+                    payRate.IsBaseRate = true;
+
+                    this.SchedulerWorkData.PayRates.Add(payRate);
+
                     // Set database settings to installed and Save Home Company Id.
                     this.CompanyWorkData.Settings.Add(new Settings() { IsDatabaseInstalled = true, HomeCompanyId = company.Id });
 
                     // Save all changes.
                     await this.CompanyWorkData.CompleteAsync();
+                    await this.SchedulerWorkData.CompleteAsync();
 
                     this.logger.LogInformation(3, "The database was installed successfully.");
                     return RedirectToAction(nameof(AccountController.Login), "Account");

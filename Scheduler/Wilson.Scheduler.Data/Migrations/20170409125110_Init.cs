@@ -17,9 +17,11 @@ namespace Wilson.Scheduler.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(maxLength: 36, nullable: false),
+                    BusinessTripHour = table.Column<decimal>(type: "decimal(18,4)", nullable: false),
                     ExtraHour = table.Column<decimal>(type: "decimal(18,4)", nullable: false),
-                    HoidayHour = table.Column<decimal>(nullable: false),
-                    Hour = table.Column<decimal>(type: "decimal(18,4)", nullable: false)
+                    HoidayHour = table.Column<decimal>(type: "decimal(18,4)", nullable: false),
+                    Hour = table.Column<decimal>(type: "decimal(18,4)", nullable: false),
+                    IsBaseRate = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -32,6 +34,7 @@ namespace Wilson.Scheduler.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(maxLength: 36, nullable: false),
+                    IsActive = table.Column<bool>(nullable: false, defaultValue: true),
                     Name = table.Column<string>(maxLength: 900, nullable: false),
                     ShortName = table.Column<string>(maxLength: 4, nullable: false)
                 },
@@ -106,6 +109,7 @@ namespace Wilson.Scheduler.Data.Migrations
                     Date = table.Column<DateTime>(nullable: false),
                     EmployeeId = table.Column<string>(maxLength: 36, nullable: false),
                     ExtraWorkHours = table.Column<int>(nullable: false),
+                    IsBusinessTrip = table.Column<bool>(nullable: false),
                     IsHoliday = table.Column<bool>(nullable: false),
                     IsPaidDayOff = table.Column<bool>(nullable: false),
                     IsSickDayOff = table.Column<bool>(nullable: false),

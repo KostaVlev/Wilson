@@ -101,13 +101,19 @@ namespace Wilson.Scheduler.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasMaxLength(36);
 
+                    b.Property<decimal>("BusinessTripHour")
+                        .HasColumnType("decimal(18,4)");
+
                     b.Property<decimal>("ExtraHour")
                         .HasColumnType("decimal(18,4)");
 
-                    b.Property<decimal>("HoidayHour");
+                    b.Property<decimal>("HoidayHour")
+                        .HasColumnType("decimal(18,4)");
 
                     b.Property<decimal>("Hour")
                         .HasColumnType("decimal(18,4)");
+
+                    b.Property<bool>("IsBaseRate");
 
                     b.HasKey("Id");
 
@@ -119,6 +125,10 @@ namespace Wilson.Scheduler.Data.Migrations
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
                         .HasMaxLength(36);
+
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValue(true);
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -146,6 +156,8 @@ namespace Wilson.Scheduler.Data.Migrations
                         .HasMaxLength(36);
 
                     b.Property<int>("ExtraWorkHours");
+
+                    b.Property<bool>("IsBusinessTrip");
 
                     b.Property<bool>("IsHoliday");
 

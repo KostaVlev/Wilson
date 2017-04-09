@@ -4,6 +4,8 @@
     {
         public string Name { get; set; }
 
+        public bool IsActive { get; set; }
+
         public string LocationId { get; set; }
 
         public string CustomerId { get; set; }
