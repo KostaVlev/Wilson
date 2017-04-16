@@ -1,0 +1,15 @@
+@model IList<EmployeeViewModel>
+
+<table class="table table-striped">
+    <tbody>
+        @for (int i = 0; i < Model.Count(); i++)
+        {
+            <tr>
+                <td>@Model[i].ToString()</td>
+                <td>
+                    @Html.EditorFor(x => x[i].NewSchedule, "_ScheduleEdirorTemplate")
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

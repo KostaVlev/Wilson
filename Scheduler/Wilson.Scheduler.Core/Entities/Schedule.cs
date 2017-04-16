@@ -1,4 +1,5 @@
 ﻿using System;
+using Wilson.Scheduler.Core.Enumerations;
 
 namespace Wilson.Scheduler.Core.Entities
 {
@@ -6,15 +7,7 @@ namespace Wilson.Scheduler.Core.Entities
     {
         public DateTime Date { get; set; }
 
-        public bool IsHoliday { get; set; }
-
-        public bool IsPaidDayOff { get; set; }
-
-        public bool IsUnpaidDayOff { get; set; }
-
-        public bool IsSickDayOff { get; set; }
-
-        public bool IsBusinessTrip { get; set; }
+        public ScheduleOption ScheduleOption { get; set; }
 
         public int WorkHours { get; set; }
 

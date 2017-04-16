@@ -1,9 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Reflection;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Wilson.Companies.Core.Enumerations;
 
 namespace Wilson.Web.Areas.Admin.Models.ControlPanelViewModels
@@ -48,21 +45,6 @@ namespace Wilson.Web.Areas.Admin.Models.ControlPanelViewModels
         [Display(Name = "Employee Position")]
         public EmployeePosition EmployeePosition { get; set; }
 
-        public List<SelectListItem> EmployeePositions { get; set; } = GetEmployeePositions();
-
-        private static List<SelectListItem> GetEmployeePositions()
-        {
-            var positions = Enum.GetValues(typeof(EmployeePosition)).Cast<EmployeePosition>().Select(x => new SelectListItem
-            {
-                // Try to get the Employee position name from the DisplayAttribute.
-                Text = x.GetType()
-                        .GetMember(x.ToString())
-                        .FirstOrDefault()
-                        .GetCustomAttribute<DisplayAttribute>().Name ?? x.ToString(),
-                Value = ((int)x).ToString()
-            }).ToList();
-
-            return positions;
-        }
+        public List<SelectListItem> EmployeePositions { get; set; }
     }
 }

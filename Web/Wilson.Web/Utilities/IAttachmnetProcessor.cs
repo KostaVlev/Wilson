@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Wilson.Companies.Core.Entities;
 
-namespace Wilson.Web.Areas.Companies.Utilities
+namespace Wilson.Web.Utilities
 {
     /// <summary>
     /// Takes care of files/Attachments that will be uploaded to the database.

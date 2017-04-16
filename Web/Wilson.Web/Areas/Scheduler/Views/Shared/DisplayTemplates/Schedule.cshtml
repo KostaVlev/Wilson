@@ -1,0 +1,38 @@
+@model IDictionary<EmployeeConciseViewModel, List<ScheduleViewModel>>
+
+<table class="table table-responsive">
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Scheduled As</th>
+            <th>Project</th>            
+            <th>Work Hours</th>
+            <th>Extra Work Hours</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var groupOfSchedules in Model)
+        {    
+            <tr>
+                <td class="text-danger success" colspan="5">@groupOfSchedules.Key.ToString()</td>
+            </tr>
+            foreach (var employeeSchedule in groupOfSchedules.Value)
+            {
+                <tr>
+                    <td>@employeeSchedule.Date.ToString(Constants.DateTimeFormats.Short)</td>
+                    <td>@employeeSchedule.ScheduleOptionName</td>
+                    @if (employeeSchedule.Project != null)
+                    {
+                        <td>@employeeSchedule.Project.ShortName</td>
+                    }
+                    else
+                    {
+                        <td></td>
+                    }                    
+                    <td>@employeeSchedule.WorkHours</td>
+                    <td>@employeeSchedule.ExtraWorkHours</td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>

@@ -109,12 +109,8 @@ namespace Wilson.Scheduler.Data.Migrations
                     Date = table.Column<DateTime>(nullable: false),
                     EmployeeId = table.Column<string>(maxLength: 36, nullable: false),
                     ExtraWorkHours = table.Column<int>(nullable: false),
-                    IsBusinessTrip = table.Column<bool>(nullable: false),
-                    IsHoliday = table.Column<bool>(nullable: false),
-                    IsPaidDayOff = table.Column<bool>(nullable: false),
-                    IsSickDayOff = table.Column<bool>(nullable: false),
-                    IsUnpaidDayOff = table.Column<bool>(nullable: false),
-                    ProjectId = table.Column<string>(maxLength: 36, nullable: false),
+                    ProjectId = table.Column<string>(maxLength: 36, nullable: true),
+                    ScheduleOption = table.Column<int>(nullable: false),
                     WorkHours = table.Column<int>(nullable: false)
                 },
                 constraints: table =>

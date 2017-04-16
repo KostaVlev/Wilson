@@ -1,10 +1,16 @@
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
 using Wilson.Companies.Core.Entities;
+using Wilson.Companies.Core.Enumerations;
 using Wilson.Companies.Data.DataAccess;
 using Wilson.Web.Areas.Admin.Models.ControlPanelViewModels;
 using Wilson.Web.Areas.Admin.Models.SharedViewModels;
@@ -42,7 +48,8 @@ namespace Wilson.Web.Areas.Admin.Controllers
         public IActionResult Register(string message)
         {
             ViewData["StatusMessage"] = message ?? "";
-            return View(new RegisterViewModel() { User = new RegisterUserViewModel()});
+            var employeePosiotions = this.GetEmployeePositions();
+            return View(new RegisterViewModel() { User = new RegisterUserViewModel() { EmployeePositions = employeePosiotions } });
         }
 
         //
@@ -204,6 +211,21 @@ namespace Wilson.Web.Areas.Admin.Controllers
             }
 
             return RedirectToAction(nameof(ShowAllUsers), new { Message = Constants.AccountManageMessagesEn.Error });
+        }
+
+        private List<SelectListItem> GetEmployeePositions()
+        {
+            var positions = Enum.GetValues(typeof(EmployeePosition)).Cast<EmployeePosition>().Select(x => new SelectListItem
+            {
+                // Try to get the Employee position name from the DisplayAttribute.
+                Text = x.GetType()
+                        .GetMember(x.ToString())
+                        .FirstOrDefault()
+                        .GetCustomAttribute<DisplayAttribute>().Name ?? x.ToString(),
+                Value = ((int)x).ToString()
+            }).ToList();
+
+            return positions;
         }
     }
 }

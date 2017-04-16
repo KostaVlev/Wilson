@@ -1,8 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using System.Reflection;
 using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -13,14 +12,13 @@ using Wilson.Accounting.Data.DataAccess;
 using Wilson.Companies.Core.Entities;
 using Wilson.Companies.Data;
 using Wilson.Companies.Data.DataAccess;
-using Wilson.Web.Services;
 using Wilson.Projects.Data;
-using Wilson.Scheduler.Data;
 using Wilson.Projects.Data.DataAccess;
+using Wilson.Scheduler.Data;
 using Wilson.Scheduler.Data.DataAccess;
 using Wilson.Web.Seed;
-using System.Reflection;
-using Wilson.Web.Areas.Companies.Utilities;
+using Wilson.Web.Services;
+using Wilson.Web.Utilities;
 
 namespace Wilson.Web
 {

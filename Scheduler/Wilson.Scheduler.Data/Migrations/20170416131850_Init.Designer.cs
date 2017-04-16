@@ -9,7 +9,7 @@ using Wilson.Scheduler.Core.Enumerations;
 namespace Wilson.Scheduler.Data.Migrations
 {
     [DbContext(typeof(SchedulerDbContext))]
-    [Migration("20170409125110_Init")]
+    [Migration("20170416131850_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -158,19 +158,10 @@ namespace Wilson.Scheduler.Data.Migrations
 
                     b.Property<int>("ExtraWorkHours");
 
-                    b.Property<bool>("IsBusinessTrip");
-
-                    b.Property<bool>("IsHoliday");
-
-                    b.Property<bool>("IsPaidDayOff");
-
-                    b.Property<bool>("IsSickDayOff");
-
-                    b.Property<bool>("IsUnpaidDayOff");
-
                     b.Property<string>("ProjectId")
-                        .IsRequired()
                         .HasMaxLength(36);
+
+                    b.Property<int>("ScheduleOption");
 
                     b.Property<int>("WorkHours");
 

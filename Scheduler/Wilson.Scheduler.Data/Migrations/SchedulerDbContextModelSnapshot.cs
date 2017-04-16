@@ -157,19 +157,10 @@ namespace Wilson.Scheduler.Data.Migrations
 
                     b.Property<int>("ExtraWorkHours");
 
-                    b.Property<bool>("IsBusinessTrip");
-
-                    b.Property<bool>("IsHoliday");
-
-                    b.Property<bool>("IsPaidDayOff");
-
-                    b.Property<bool>("IsSickDayOff");
-
-                    b.Property<bool>("IsUnpaidDayOff");
-
                     b.Property<string>("ProjectId")
-                        .IsRequired()
                         .HasMaxLength(36);
+
+                    b.Property<int>("ScheduleOption");
 
                     b.Property<int>("WorkHours");
 

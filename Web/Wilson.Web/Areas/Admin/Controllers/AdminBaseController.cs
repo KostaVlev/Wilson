@@ -1,12 +1,9 @@
+using System.Linq;
+using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Wilson.Companies.Core.Entities;
 using Wilson.Companies.Core.Interfaces;
 using Wilson.Companies.Data.DataAccess;
 

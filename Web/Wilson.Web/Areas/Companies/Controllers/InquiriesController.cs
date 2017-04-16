@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Wilson.Companies.Core.Entities;
 using Wilson.Companies.Data.DataAccess;
 using Wilson.Web.Areas.Companies.Models.InquiriesViewModels;
-using Wilson.Web.Areas.Companies.Utilities;
+using Wilson.Web.Utilities;
 
 namespace Wilson.Web.Areas.Companies.Controllers
 {

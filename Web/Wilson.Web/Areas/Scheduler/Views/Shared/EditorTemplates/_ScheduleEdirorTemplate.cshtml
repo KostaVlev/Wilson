@@ -1,0 +1,28 @@
+@model ScheduleViewModel
+
+<td>
+    <input asp-for="EmployeeId" type="hidden" value="@Model.Employee.Id" />
+    <div class="form-group-sm">
+        <label asp-for="ProjectId" class="col-md-6 control-label"></label>
+        <div class="col-md-6">
+            <select class="form-control" asp-for="ProjectId">
+                <option value="">Select Project</option>
+                @foreach (var projectOptions in Model.ProjectOptions)
+                {
+                    <option value=@projectOptions.Value>@projectOptions.Text</option>
+                }
+            </select>
+        </div>
+    </div>
+    <div class="form-group-sm">
+        <label asp-for="ScheduleOption" class="col-md-6 control-label"></label>
+        <div class="col-md-6">
+            <select class="form-control" asp-for="ScheduleOption">
+                @foreach (var shceduleOption in Model.ScheduleOptions)
+                {
+                    <option value=@shceduleOption.Value>@shceduleOption.Text</option>
+                }
+            </select>
+        </div>
+    </div>
+</td>

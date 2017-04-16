@@ -1,12 +1,12 @@
-﻿using Microsoft.AspNetCore.Http;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Wilson.Companies.Core.Entities;
 
-namespace Wilson.Web.Areas.Companies.Utilities
+namespace Wilson.Web.Utilities
 {
     public class AttachmentProcessor : IAttachmnetProcessor
     {
