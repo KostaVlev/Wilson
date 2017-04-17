@@ -1,21 +1,28 @@
 @model EmployeesShceduleViewModel
 
-@{
-    var today = DateTime.Now.ToString(Constants.DateTimeFormats.Short);
-}
-
 @Html.DisplayFor(m => m.EmployeesShcedules, "Schedule")
 <hr />
 
-<form asp-area=@Constants.Areas.Scheduler asp-controller="Home" asp-action=@nameof(HomeController.EmployeesScheduler)
-      method="post" class="form-horizontal">
-    @Html.AntiForgeryToken()
-    <p class="lead text-danger">Create Schedule for @today</p>
-    <div asp-validation-summary="All" class="text-danger"></div>
-    @Html.EditorFor(m => m.Employees, "_EmployeeScheduleEdirorTemplate")
-    <div class="form-group">
-        <div class="col-md-10">
-            <button type="submit" class="btn btn-warning">Save Schedule</button>
+@if (!Model.IsTodayScheduleCreated)
+{
+    <form asp-area=@Constants.Areas.Scheduler asp-controller="Home" asp-action=@nameof(HomeController.EmployeesScheduler)
+          method="post" class="form-horizontal">
+        @Html.AntiForgeryToken()
+        <p class="lead text-danger">Create Schedule for @Model.Today</p>
+        <div asp-validation-summary="All" class="text-danger"></div>
+        @Html.EditorFor(m => m.Employees, "_EmployeeScheduleEdirorTemplate")
+        <div class="form-group">
+            <div class="col-md-10">
+                <button type="submit" class="btn btn-warning">Save Schedule</button>
+            </div>
         </div>
-    </div>
-</form>
+    </form>
+}
+else
+{
+    <p class="lead text-danger">Schedule for @Model.Today has been already created.</p>
+    <a asp-area=@Constants.Areas.Scheduler
+       asp-controller="Home"
+       asp-action=@nameof(HomeController.EditSchedules)
+       asp-route-dateTime=@Model.Today>Edit @Model.Today Schedule?</a>
+}

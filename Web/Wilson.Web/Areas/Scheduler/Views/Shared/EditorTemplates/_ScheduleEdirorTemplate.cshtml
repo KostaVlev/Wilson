@@ -2,6 +2,10 @@
 
 <td>
     <input asp-for="EmployeeId" type="hidden" value="@Model.EmployeeId" />
+    <input asp-for="Employee.FirstName" type="hidden" value="@Model.Employee.FirstName" />
+    <input asp-for="Employee.LastName" type="hidden" value="@Model.Employee.FirstName" />
+    <input asp-for="Date" type="hidden" value="@Model.Date" />
+    <input asp-for="Id" type="hidden" value="@Model.Id" />
     <div class="form-group-sm">
         <label asp-for="ProjectId" class="col-md-6 control-label"></label>
         <div class="col-md-6">
@@ -23,6 +27,18 @@
                     <option value=@shceduleOption.Value>@shceduleOption.Text</option>
                 }
             </select>
+        </div>
+    </div>
+    <div class="form-group-sm">
+        <label asp-for="WorkHours" class="col-md-6 control-label"></label>
+        <div class="col-md-6">
+            <input asp-for="WorkHours" class="form-control" type="number"/>
+        </div>
+    </div>
+    <div class="form-group-sm">
+        <label asp-for="ExtraWorkHours" class="col-md-6 control-label"></label>
+        <div class="col-md-6">
+            <input asp-for="ExtraWorkHours" class="form-control" type="number" />
         </div>
     </div>
 </td>

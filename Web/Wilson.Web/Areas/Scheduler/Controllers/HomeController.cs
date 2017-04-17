@@ -34,35 +34,10 @@ namespace Wilson.Web.Areas.Scheduler.Controllers
         //
         // GET: Scheduler/Home/EmployeesScheduler
         [HttpGet]
-        public async Task<IActionResult> EmployeesScheduler()
+        public async Task<IActionResult> EmployeesScheduler(string message)
         {
-            // Get schedules for the last 7 days.
-            var sevenDaysAgo = DateTime.Now.AddDays(-7);
-            var schedules = await this.SchedulerWorkData.Schedules.FindAsync(s => s.Date >= sevenDaysAgo, x => x
-            .Include(e => e.Employee)
-            .Include(p => p.Project));
-
-            schedules.OrderBy(s => s.Date);
-
-            var scheduleModels = this.Mapper.Map<IEnumerable<Schedule>, IEnumerable<ScheduleViewModel>>(schedules);
-            foreach (var schedule in scheduleModels)
-            {
-                schedule.ScheduleOptionName = this.GetShceduleOptionName(schedule.ScheduleOption);
-            }
-
-            // Get all the employees to schedule.
-            var employees = await this.SchedulerWorkData.Employees.GetAllAsync();
-            var employeeModels = this.Mapper.Map<IEnumerable<Employee>, IEnumerable<EmployeeViewModel>>(employees).ToList();
-
-            await this.SetupEmployeeNewSchedule(employeeModels);
-
-            // Group the schedules by employee.
-            var groupedSchedulesByEmployee = scheduleModels
-                .GroupBy(e => e.Employee.Id)
-                .Select(grp => new { Key = grp.FirstOrDefault().Employee, Value = grp.ToList() })
-                .ToDictionary(x => x.Key, x => x.Value);
-
-            return View(new EmployeesShceduleViewModel() { EmployeesShcedules = groupedSchedulesByEmployee, Employees = employeeModels });
+            ViewData["StatusMessage"] = message ?? "";
+            return View(await this.PrepareEmployeesShceduleViewModel());
         }
 
         //
@@ -71,12 +46,18 @@ namespace Wilson.Web.Areas.Scheduler.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EmployeesScheduler(EmployeesShceduleViewModel model)
         {
+            if (model == null)
+            {
+                return BadRequest();
+            }
+
             if (ModelState.IsValid)
             {
                 var employeeModels = model.Employees;
                 foreach (var employee in employeeModels)
                 {
                     var schedule = this.Mapper.Map<ScheduleViewModel, Schedule>(employee.NewSchedule);
+                    schedule.Id = Guid.NewGuid().ToString();
 
                     // Since this is the today schedule we assign today to the Date property.
                     schedule.Date = DateTime.Now;
@@ -93,7 +74,67 @@ namespace Wilson.Web.Areas.Scheduler.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            return RedirectToAction(nameof(EmployeesScheduler));
+            model = await this.PrepareEmployeesShceduleViewModel();
+            return View(model);
+        }
+
+        //
+        // GET: Scheduler/Home/EmployeesScheduler
+        [HttpGet]
+        public async Task<IActionResult> EditSchedules(string dateTime)
+        {
+            if (dateTime == null)
+            {
+                return BadRequest();
+            }
+
+            DateTime date = Convert.ToDateTime(dateTime);
+            string dateFormat = Constants.DateTimeFormats.Short;
+            var shrotDate = date.ToString(dateFormat);
+            var schedules = await this.SchedulerWorkData.Schedules.FindAsync(s => s.Date.ToString(dateFormat) == shrotDate, x => x
+            .Include(e => e.Employee)
+            .Include(p => p.Project));
+                      
+            var scheduleModels = this.Mapper.Map<IEnumerable<Schedule>, IEnumerable<ScheduleViewModel>>(schedules);
+            await this.SetupScheduleModelsForEdit(scheduleModels);
+
+            return View(scheduleModels);
+        }
+
+        //
+        // POST: Scheduler/Home/EmployeesScheduler
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditSchedules(IEnumerable<ScheduleViewModel> models)
+        {
+            if (models == null)
+            {
+                return BadRequest();
+            }
+
+            if (ModelState.IsValid)
+            {
+                var schedules = await this.SchedulerWorkData.Schedules.FindAsync(x => models.Any(s => s.Id == x.Id));
+                foreach (var schedule in schedules)
+                {
+                    var model = models.FirstOrDefault(x => x.Id == schedule.Id);
+                    schedule.ProjectId = model.ProjectId;
+                    schedule.ScheduleOption = model.ScheduleOption;
+                    schedule.WorkHours = model.WorkHours;
+                    schedule.ExtraWorkHours = model.ExtraWorkHours;
+                }
+
+                var success = await this.SchedulerWorkData.CompleteAsync();
+
+                if (success != 0)
+                {
+                    return RedirectToAction(nameof(EmployeesScheduler), new { Message = Constants.SuccessMessages.DatabaseUpdateSuccess });
+                }
+            }
+
+            ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists, see your system administrator.");
+            await this.SetupScheduleModelsForEdit(models);
+            return View(models);
         }
 
         //
@@ -160,6 +201,65 @@ namespace Wilson.Web.Areas.Scheduler.Controllers
                 employee.NewSchedule.ScheduleOptions = scheduleOptions;
                 employee.NewSchedule.ScheduleOptionName = scheduleOptions[(int)employee.NewSchedule.ScheduleOption].Text;
             }
+        }
+
+        private async Task SetupScheduleModelsForEdit(IEnumerable<ScheduleViewModel> scheduleModels)
+        {
+            var projects = await this.SchedulerWorkData.Projects.FindAsync(x => x.IsActive);
+            var projectModels = this.Mapper.Map<IEnumerable<Project>, IEnumerable<ProjectViewModel>>(projects);
+
+            var projectOptions = this.GetProjectOptions(projectModels);
+            var scheduleOptions = this.GetScheduleOptions();
+
+            foreach (var scheduleModel in scheduleModels)
+            {
+                scheduleModel.ProjectOptions = projectOptions;
+                scheduleModel.ScheduleOptions = scheduleOptions;
+            }
+        }
+
+        private async Task<EmployeesShceduleViewModel> PrepareEmployeesShceduleViewModel()
+        {
+            // Get schedules for the last 7 days.
+            var sevenDaysAgo = DateTime.Now.AddDays(-7);
+            var schedules = await this.SchedulerWorkData.Schedules.FindAsync(s => s.Date >= sevenDaysAgo, x => x
+            .Include(e => e.Employee)
+            .Include(p => p.Project));
+
+            schedules.OrderBy(s => s.Date);
+
+            var scheduleModels = this.Mapper.Map<IEnumerable<Schedule>, IEnumerable<ScheduleViewModel>>(schedules);
+            foreach (var schedule in scheduleModels)
+            {
+                schedule.ScheduleOptionName = this.GetShceduleOptionName(schedule.ScheduleOption);
+            }
+
+            // Get all the employees to schedule.
+            var employees = await this.SchedulerWorkData.Employees.GetAllAsync();
+            var employeeModels = this.Mapper.Map<IEnumerable<Employee>, IEnumerable<EmployeeViewModel>>(employees).ToList();
+
+            // Check if today's schedule was created.
+            var today = DateTime.Now.ToString(Constants.DateTimeFormats.Short);
+            var todaySchedule = schedules.Where(x => x.Date.ToString(Constants.DateTimeFormats.Short) == today).FirstOrDefault();
+            bool isTodayShceduleCreated = todaySchedule != null;
+
+            if (!isTodayShceduleCreated)
+            {
+                await this.SetupEmployeeNewSchedule(employeeModels);
+            }
+
+            // Group the schedules by employee.
+            var groupedSchedulesByEmployee = scheduleModels
+                .GroupBy(e => e.Employee.Id)
+                .Select(grp => new { Key = grp.FirstOrDefault().Employee, Value = grp.ToList() })
+                .ToDictionary(x => x.Key, x => x.Value);
+
+            return new EmployeesShceduleViewModel() {
+                EmployeesShcedules = groupedSchedulesByEmployee,
+                Employees = employeeModels,
+                IsTodayScheduleCreated = isTodayShceduleCreated,
+                Today = today
+            };
         }
     }
 }

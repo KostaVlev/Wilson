@@ -57,7 +57,7 @@
         public static class ValidationMessages
         {
             public const string Error = "Something went wrong!!! Try gain.";
-            public const string Range = "The {0} must be at least {2} and at max {1}.";
+            public const string Range = "The {0} must be at min {1} and max {2}.";
         }
     }
 }
