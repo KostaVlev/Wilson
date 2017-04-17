@@ -1,0 +1,33 @@
+@model ScheduleViewModel
+
+<form asp-area=@Constants.Areas.Scheduler asp-controller="Home" asp-action=@nameof(HomeController.EditSchedule)
+      method="post" class="form-horizontal">
+    @Html.AntiForgeryToken()
+    <p class="lead text-danger">Edit Schedule for @Model.Date.ToString(Constants.DateTimeFormats.Short)</p>
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <table class="table table-striped">
+        <tbody>
+            <tr>
+                <td>@Model.Employee.ToString()</td>
+                <td>
+                    @Html.EditorFor(x => x, "_ScheduleEdirorTemplate")
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="form-group">
+        <div class="col-md-10">
+            <button type="submit" class="btn btn-warning">Save Changes</button>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-10">
+            <a class="btn btn-info"
+               asp-area=@Constants.Areas.Scheduler
+               asp-controller="Home"
+               asp-action=@nameof(HomeController.EmployeesScheduler)>Cancel
+            </a>
+        </div>
+    </div>
+</form>
+

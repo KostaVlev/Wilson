@@ -2,7 +2,10 @@
     Layout = "_Layout";
     @await Html.PartialAsync("_CompanyPartial")
 }
-<p class="lead text-info well-lg">@ViewData["StatusMessage"]</p>
+
+<div class="container-fluid">
+    <h4 class="text-primary">@ViewData["StatusMessage"]</h4>
+</div>
 
 @section Scripts {
     @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }

@@ -79,7 +79,7 @@ namespace Wilson.Web.Areas.Scheduler.Controllers
         }
 
         //
-        // GET: Scheduler/Home/EmployeesScheduler
+        // GET: Scheduler/Home/EditSchedules
         [HttpGet]
         public async Task<IActionResult> EditSchedules(string dateTime)
         {
@@ -94,15 +94,15 @@ namespace Wilson.Web.Areas.Scheduler.Controllers
             var schedules = await this.SchedulerWorkData.Schedules.FindAsync(s => s.Date.ToString(dateFormat) == shrotDate, x => x
             .Include(e => e.Employee)
             .Include(p => p.Project));
-                      
+
             var scheduleModels = this.Mapper.Map<IEnumerable<Schedule>, IEnumerable<ScheduleViewModel>>(schedules);
-            await this.SetupScheduleModelsForEdit(scheduleModels);
+            await this.SetupScheduleModelForEdit(scheduleModels);
 
             return View(scheduleModels);
         }
 
         //
-        // POST: Scheduler/Home/EmployeesScheduler
+        // POST: Scheduler/Home/EditSchedules
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditSchedules(IEnumerable<ScheduleViewModel> models)
@@ -118,23 +118,75 @@ namespace Wilson.Web.Areas.Scheduler.Controllers
                 foreach (var schedule in schedules)
                 {
                     var model = models.FirstOrDefault(x => x.Id == schedule.Id);
-                    schedule.ProjectId = model.ProjectId;
-                    schedule.ScheduleOption = model.ScheduleOption;
-                    schedule.WorkHours = model.WorkHours;
-                    schedule.ExtraWorkHours = model.ExtraWorkHours;
+                    this.UpdateSchedule(model, schedule);
                 }
 
-                var success = await this.SchedulerWorkData.CompleteAsync();
+                var updateSuccess = await this.SchedulerWorkData.CompleteAsync();
 
-                if (success != 0)
+                if (updateSuccess != 0)
                 {
                     return RedirectToAction(nameof(EmployeesScheduler), new { Message = Constants.SuccessMessages.DatabaseUpdateSuccess });
                 }
             }
 
-            ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists, see your system administrator.");
-            await this.SetupScheduleModelsForEdit(models);
+            ModelState.AddModelError("", Constants.ExceptionMessages.DatabaseUpdateError);
+            await this.SetupScheduleModelForEdit(models);
             return View(models);
+        }
+
+        //
+        // GET: Scheduler/Home/EditSchedules
+        [HttpGet]
+        public async Task<IActionResult> EditSchedule(string id)
+        {
+            if (id == null)
+            {
+                return BadRequest();
+            }
+
+            var schedules = await this.SchedulerWorkData.Schedules.FindAsync(s => s.Id == id, x => x
+            .Include(e => e.Employee)
+            .Include(p => p.Project));
+
+            if (schedules == null || schedules.Count() == 0)
+            {
+                return NotFound();
+            }
+
+            var scheduleModels = this.Mapper.Map<IEnumerable<Schedule>, IEnumerable<ScheduleViewModel>>(schedules);
+            await this.SetupScheduleModelForEdit(scheduleModels);
+
+            return View(scheduleModels.FirstOrDefault());
+        }
+
+        //
+        // POST: Scheduler/Home/EditSchedules
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditSchedule(ScheduleViewModel model)
+        {
+            if (model == null)
+            {
+                return BadRequest();
+            }
+
+            if (ModelState.IsValid)
+            {
+                var schedules = await this.SchedulerWorkData.Schedules.FindAsync(s => s.Id == model.Id);
+                var schedule = schedules.FirstOrDefault();
+                this.UpdateSchedule(model, schedule);
+
+                var updateSuccess = await this.SchedulerWorkData.CompleteAsync();
+
+                if (updateSuccess != 0)
+                {
+                    return RedirectToAction(nameof(EmployeesScheduler), new { Message = Constants.SuccessMessages.DatabaseUpdateSuccess });
+                }
+            }
+
+            ModelState.AddModelError("", Constants.ExceptionMessages.DatabaseUpdateError);
+            await this.SetupScheduleModelForEdit(model);
+            return View(model);
         }
 
         //
@@ -173,7 +225,7 @@ namespace Wilson.Web.Areas.Scheduler.Controllers
 
         private List<SelectListItem> GetProjectOptions(IEnumerable<ProjectViewModel> projectModels)
         {
-            return projectModels.Select(x => new SelectListItem() { Value = x.Id, Text = x.ShortName }).ToList();            
+            return projectModels.Select(x => new SelectListItem() { Value = x.Id, Text = x.ShortName }).ToList();
         }
 
         private async Task SetupEmployeeNewSchedule(IEnumerable<EmployeeViewModel> employeeModels)
@@ -203,7 +255,7 @@ namespace Wilson.Web.Areas.Scheduler.Controllers
             }
         }
 
-        private async Task SetupScheduleModelsForEdit(IEnumerable<ScheduleViewModel> scheduleModels)
+        private async Task SetupScheduleModelForEdit(IEnumerable<ScheduleViewModel> scheduleModels)
         {
             var projects = await this.SchedulerWorkData.Projects.FindAsync(x => x.IsActive);
             var projectModels = this.Mapper.Map<IEnumerable<Project>, IEnumerable<ProjectViewModel>>(projects);
@@ -216,6 +268,18 @@ namespace Wilson.Web.Areas.Scheduler.Controllers
                 scheduleModel.ProjectOptions = projectOptions;
                 scheduleModel.ScheduleOptions = scheduleOptions;
             }
+        }
+
+        private async Task SetupScheduleModelForEdit(ScheduleViewModel scheduleModel)
+        {
+            var projects = await this.SchedulerWorkData.Projects.FindAsync(x => x.IsActive);
+            var projectModels = this.Mapper.Map<IEnumerable<Project>, IEnumerable<ProjectViewModel>>(projects);
+
+            var projectOptions = this.GetProjectOptions(projectModels);
+            var scheduleOptions = this.GetScheduleOptions();
+
+            scheduleModel.ProjectOptions = projectOptions;
+            scheduleModel.ScheduleOptions = scheduleOptions;
         }
 
         private async Task<EmployeesShceduleViewModel> PrepareEmployeesShceduleViewModel()
@@ -254,12 +318,21 @@ namespace Wilson.Web.Areas.Scheduler.Controllers
                 .Select(grp => new { Key = grp.FirstOrDefault().Employee, Value = grp.ToList() })
                 .ToDictionary(x => x.Key, x => x.Value);
 
-            return new EmployeesShceduleViewModel() {
+            return new EmployeesShceduleViewModel()
+            {
                 EmployeesShcedules = groupedSchedulesByEmployee,
                 Employees = employeeModels,
                 IsTodayScheduleCreated = isTodayShceduleCreated,
                 Today = today
             };
+        }
+
+        private void UpdateSchedule(ScheduleViewModel source, Schedule target)
+        {
+            target.ProjectId = source.ProjectId;
+            target.ScheduleOption = source.ScheduleOption;
+            target.WorkHours = source.WorkHours;
+            target.ExtraWorkHours = source.ExtraWorkHours;
         }
     }
 }

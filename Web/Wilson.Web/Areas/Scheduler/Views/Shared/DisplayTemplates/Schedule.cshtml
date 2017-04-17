@@ -8,13 +8,14 @@
             <th>Project</th>            
             <th>Work Hours</th>
             <th>Extra Work Hours</th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
         @foreach (var groupOfSchedules in Model)
         {    
             <tr>
-                <td class="text-danger success" colspan="5">@groupOfSchedules.Key.ToString()</td>
+                <td class="text-danger success" colspan="6">@groupOfSchedules.Key.ToString()</td>
             </tr>
             foreach (var employeeSchedule in groupOfSchedules.Value)
             {
@@ -31,8 +32,15 @@
                     }                    
                     <td>@employeeSchedule.WorkHours</td>
                     <td>@employeeSchedule.ExtraWorkHours</td>
+                    <td>
+                        <a asp-area=@Constants.Areas.Scheduler
+                           asp-controller="Home"
+                           asp-action=@nameof(HomeController.EditSchedule)
+                           asp-route-id="@employeeSchedule.Id">Edit
+                        </a>
+                    </td>
                 </tr>
-            }
+            }            
         }
     </tbody>
 </table>
