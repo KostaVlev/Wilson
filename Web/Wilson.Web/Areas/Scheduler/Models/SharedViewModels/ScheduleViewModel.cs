@@ -26,9 +26,11 @@ namespace Wilson.Web.Areas.Scheduler.Models.SharedViewModels
         [Display(Name = "Extra Hours")]
         public int ExtraWorkHours { get; set; }
 
-        [Required(ErrorMessage = Constants.ValidationMessages.Error)]
+        [StringLength(36)]
+        [Required(ErrorMessage = Constants.ValidationMessages.Error)]        
         public string EmployeeId { get; set; }
 
+        [StringLength(36)]
         [Display(Name = "Project")]
         public string ProjectId { get; set; }
 
@@ -38,6 +40,6 @@ namespace Wilson.Web.Areas.Scheduler.Models.SharedViewModels
 
         public IEnumerable<SelectListItem> ProjectOptions { get; set; }
 
-        public IEnumerable<SelectListItem> ScheduleOptions { get; set; }
+        public IEnumerable<SelectListItem> ScheduleOptions { get; set; }        
     }
 }

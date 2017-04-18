@@ -190,9 +190,44 @@ namespace Wilson.Web.Areas.Scheduler.Controllers
         }
 
         //
-        // GET: Scheduler/Home/Employees
+        // GET: Scheduler/Home/Search
         [HttpGet]
-        public IActionResult PayRates()
+        public async Task<IActionResult> Search()
+        {            
+            return View(await this.SetupSearchModel());
+        }
+
+        //
+        // POST: Scheduler/Home/Search
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Search(SearchViewModel model)
+        {
+            if (model == null)
+            {
+                return BadRequest();
+            }
+
+            if (ModelState.IsValid)
+            {
+                var employeesScgedulesModel = await this.GetSchedulesGroupedByEmployee(model.From, model.To, model.EmployeeId, model.ProjectId);
+                if (employeesScgedulesModel != null)
+                {
+                    var returnModel = await this.SetupSearchModel();
+                    returnModel.EmployeesShcedules = employeesScgedulesModel;
+
+                    return View(returnModel);
+                }
+            }
+
+            ModelState.AddModelError("", Constants.ValidationMessages.Error);
+            return View(await this.SetupSearchModel());
+        }
+
+        //
+        // GET: Scheduler/Home/PayRolls
+        [HttpGet]
+        public IActionResult PayRolls()
         {
             return View();
         }
@@ -226,6 +261,11 @@ namespace Wilson.Web.Areas.Scheduler.Controllers
         private List<SelectListItem> GetProjectOptions(IEnumerable<ProjectViewModel> projectModels)
         {
             return projectModels.Select(x => new SelectListItem() { Value = x.Id, Text = x.ShortName }).ToList();
+        }
+
+        private List<SelectListItem> GetEmployeeOptions(IEnumerable<EmployeeConciseViewModel> employeeModels)
+        {
+            return employeeModels.Select(x => new SelectListItem() { Value = x.Id, Text = x.ToString() }).ToList();
         }
 
         private async Task SetupEmployeeNewSchedule(IEnumerable<EmployeeViewModel> employeeModels)
@@ -284,19 +324,8 @@ namespace Wilson.Web.Areas.Scheduler.Controllers
 
         private async Task<EmployeesShceduleViewModel> PrepareEmployeesShceduleViewModel()
         {
-            // Get schedules for the last 7 days.
-            var sevenDaysAgo = DateTime.Now.AddDays(-7);
-            var schedules = await this.SchedulerWorkData.Schedules.FindAsync(s => s.Date >= sevenDaysAgo, x => x
-            .Include(e => e.Employee)
-            .Include(p => p.Project));
-
-            schedules.OrderBy(s => s.Date);
-
-            var scheduleModels = this.Mapper.Map<IEnumerable<Schedule>, IEnumerable<ScheduleViewModel>>(schedules);
-            foreach (var schedule in scheduleModels)
-            {
-                schedule.ScheduleOptionName = this.GetShceduleOptionName(schedule.ScheduleOption);
-            }
+            // Group the schedules by employee.
+            var groupedSchedulesByEmployee = await this.GetSchedulesGroupedByEmployee();
 
             // Get all the employees to schedule.
             var employees = await this.SchedulerWorkData.Employees.GetAllAsync();
@@ -304,19 +333,12 @@ namespace Wilson.Web.Areas.Scheduler.Controllers
 
             // Check if today's schedule was created.
             var today = DateTime.Now.ToString(Constants.DateTimeFormats.Short);
-            var todaySchedule = schedules.Where(x => x.Date.ToString(Constants.DateTimeFormats.Short) == today).FirstOrDefault();
-            bool isTodayShceduleCreated = todaySchedule != null;
+            bool isTodayShceduleCreated = groupedSchedulesByEmployee.Values.Any(s => s.Any(x => x.Date.ToString(Constants.DateTimeFormats.Short) == today));
 
             if (!isTodayShceduleCreated)
             {
                 await this.SetupEmployeeNewSchedule(employeeModels);
             }
-
-            // Group the schedules by employee.
-            var groupedSchedulesByEmployee = scheduleModels
-                .GroupBy(e => e.Employee.Id)
-                .Select(grp => new { Key = grp.FirstOrDefault().Employee, Value = grp.ToList() })
-                .ToDictionary(x => x.Key, x => x.Value);
 
             return new EmployeesShceduleViewModel()
             {
@@ -327,12 +349,91 @@ namespace Wilson.Web.Areas.Scheduler.Controllers
             };
         }
 
+        private async Task<IDictionary<EmployeeConciseViewModel, List<ScheduleViewModel>>> GetSchedulesGroupedByEmployee(
+            DateTime? from = null, DateTime? to = null, string employeeId = null, string projectId = null)
+        {
+            IEnumerable<Schedule> schedules;
+            if (from == null && to == null && employeeId == null && projectId == null)
+            {
+                // Get schedules for the last 7 days.
+                var sevenDaysAgo = DateTime.Now.AddDays(-7);
+                schedules = await this.SchedulerWorkData.Schedules.FindAsync(s => s.Date >= sevenDaysAgo, x => x
+                .Include(e => e.Employee)
+                .Include(p => p.Project));
+            }
+            else if (from != null && to != null && employeeId == null && projectId == null)
+            {
+                schedules = await this.SchedulerWorkData.Schedules.FindAsync(
+                    s => s.Date >= from && s.Date <= to, x => x
+                   .Include(e => e.Employee)
+                   .Include(p => p.Project));
+            }
+            else if (from != null && to != null && employeeId != null && projectId == null)
+            {
+                schedules = await this.SchedulerWorkData.Schedules.FindAsync(
+                    s => s.Date >= from && s.Date <= to && s.EmployeeId == employeeId, x => x
+                   .Include(e => e.Employee)
+                   .Include(p => p.Project));
+            }
+            else if (from != null && to != null && employeeId == null && projectId != null)
+            {
+                schedules = await this.SchedulerWorkData.Schedules.FindAsync(
+                    s => s.Date >= from && s.Date <= to && s.ProjectId == projectId, x => x
+                   .Include(e => e.Employee)
+                   .Include(p => p.Project));
+            }
+            else if (from != null && to != null && employeeId != null && projectId != null)
+            {
+                schedules = await this.SchedulerWorkData.Schedules.FindAsync(
+                    s => s.Date >= from && s.Date <= to && s.ProjectId == projectId && s.EmployeeId == employeeId, x => x
+                   .Include(e => e.Employee)
+                   .Include(p => p.Project));
+            }
+            else
+            {
+                throw new InvalidOperationException("Get Schedules Grouped By Employee cannot be completed. Check the method parameters.");
+            }
+
+            schedules.OrderBy(s => s.Date);
+
+            var scheduleModels = this.Mapper.Map<IEnumerable<Schedule>, IEnumerable<ScheduleViewModel>>(schedules);
+            foreach (var schedule in scheduleModels)
+            {
+                schedule.ScheduleOptionName = this.GetShceduleOptionName(schedule.ScheduleOption);
+            }
+
+            // Group the schedules by employee.
+            var groupedSchedulesByEmployee = scheduleModels
+                .GroupBy(e => e.Employee.Id)
+                .Select(grp => new { Key = grp.FirstOrDefault().Employee, Value = grp.ToList() })
+                .ToDictionary(x => x.Key, x => x.Value);
+
+            return groupedSchedulesByEmployee;
+        }
+
         private void UpdateSchedule(ScheduleViewModel source, Schedule target)
         {
             target.ProjectId = source.ProjectId;
             target.ScheduleOption = source.ScheduleOption;
             target.WorkHours = source.WorkHours;
             target.ExtraWorkHours = source.ExtraWorkHours;
+        }
+
+        private async Task<SearchViewModel> SetupSearchModel()
+        {
+            var projects = await this.SchedulerWorkData.Projects.FindAsync(x => x.IsActive);
+            var employees = await this.SchedulerWorkData.Employees.GetAllAsync();
+
+            var projectModels = this.Mapper.Map<IEnumerable<Project>, IEnumerable<ProjectViewModel>>(projects);
+            var employeeModels = this.Mapper.Map<IEnumerable<Employee>, IEnumerable<EmployeeConciseViewModel>>(employees);
+
+            var projectOptions = this.GetProjectOptions(projectModels);
+            var employeeOptions = this.GetEmployeeOptions(employeeModels);
+
+            var to = DateTime.Now;
+            var from = to.AddDays(-7);
+
+            return new SearchViewModel() { From = from, To = to, ProjectOptions = projectOptions, EmployeeOptions = employeeOptions };
         }
     }
 }

@@ -5,17 +5,11 @@
                 <a asp-area=@Constants.Areas.Scheduler asp-controller="Home" asp-action=@nameof(HomeController.EmployeesScheduler) role="tab" ata-toggle="tab">Employees Scheduler</a>
             </li>
             <li role="presentation">
-                <a asp-area=@Constants.Areas.Scheduler asp-controller="Home" asp-action=@nameof(HomeController.PayRates) role="tab" data-toggle="tab">Pay Rates</a>
+                <a asp-area=@Constants.Areas.Scheduler asp-controller="Home" asp-action=@nameof(HomeController.Search) role="tab" ata-toggle="tab">Search</a>
             </li>
             <li role="presentation">
-                <a href="#" aria-controls="" role="tab" data-toggle="tab">Projects</a>
-            </li>
-            <li role="presentation">
-                <a href="#" aria-controls="" role="tab" data-toggle="tab">Schedule</a>
-            </li>
-            <li role="presentation">
-                <a href="#" aria-controls="" role="tab" data-toggle="tab">Payrolls</a>
-            </li>
+                <a asp-area=@Constants.Areas.Scheduler asp-controller="Home" asp-action=@nameof(HomeController.PayRolls) role="tab" ata-toggle="tab">Pay Rolls</a>
+            </li>  
         </ul>
     </div>
 </nav>
