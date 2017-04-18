@@ -1,3 +1,5 @@
+@using Wilson.Scheduler.Core.Enumerations
+
 @model IDictionary<EmployeeConciseViewModel, List<ScheduleViewModel>>
 
 <table class="table table-responsive">
@@ -15,7 +17,7 @@
         @foreach (var groupOfSchedules in Model)
         {    
             <tr>
-                <td class="text-danger success" colspan="6">@groupOfSchedules.Key.ToString()</td>
+                <td class="text-primary success" colspan="6">@groupOfSchedules.Key.ToString()</td>
             </tr>
             foreach (var employeeSchedule in groupOfSchedules.Value)
             {
@@ -30,8 +32,16 @@
                     {
                         <td></td>
                     }                    
-                    <td>@employeeSchedule.WorkHours</td>
-                    <td>@employeeSchedule.ExtraWorkHours</td>
+                    @if (employeeSchedule.ScheduleOption == ScheduleOption.AtWork)
+                    {
+                        <td>@employeeSchedule.WorkHours</td>
+                        <td>@employeeSchedule.ExtraWorkHours</td>
+                    }
+                    else
+                    {
+                        <td></td>
+                        <td></td>
+                    }
                     <td>
                         <a asp-area=@Constants.Areas.Scheduler
                            asp-controller="Home"

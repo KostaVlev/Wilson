@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Wilson.Web.Areas.Scheduler.Models.SharedViewModels;
+using Wilson.Scheduler.Core.Enumerations;
 
 namespace Wilson.Web.Areas.Scheduler.Models.HomeViewModels
 {
@@ -20,9 +21,14 @@ namespace Wilson.Web.Areas.Scheduler.Models.HomeViewModels
         [Display(Name = "Project")]
         public string ProjectId { get; set; }
 
+        [Display(Name = "Scheduled As")]
+        public ScheduleOption? ScheduleOption { get; set; }
+
         public IEnumerable<SelectListItem> EmployeeOptions { get; set; }
 
         public IEnumerable<SelectListItem> ProjectOptions { get; set; }
+
+        public IEnumerable<SelectListItem> ScheduleOptions { get; set; }
 
         public IDictionary<EmployeeConciseViewModel, List<ScheduleViewModel>> EmployeesShcedules { get; set; }
     }

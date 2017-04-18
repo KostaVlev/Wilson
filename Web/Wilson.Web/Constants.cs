@@ -58,6 +58,7 @@
         {
             public const string Error = "Something went wrong!!! Try gain.";
             public const string Range = "The {0} must be at min {1} and max {2}.";
+            public const string IncorectDate = "Select correct dates.";
         }
     }
 }

@@ -8,7 +8,7 @@
     <form asp-area=@Constants.Areas.Scheduler asp-controller="Home" asp-action=@nameof(HomeController.EmployeesScheduler)
           method="post" class="form-horizontal">
         @Html.AntiForgeryToken()
-        <p class="lead text-danger">Create Schedule for @Model.Today</p>
+        <p class="lead text-primary">Create Schedule for @Model.Today</p>
         <div asp-validation-summary="All" class="text-danger"></div>
         @Html.EditorFor(m => m.Employees, "_EmployeeScheduleEdirorTemplate")
         <div class="form-group">
@@ -20,7 +20,7 @@
 }
 else
 {
-    <p class="lead text-danger">Schedule for @Model.Today has been already created.</p>
+    <p class="lead text-primary">Schedule for @Model.Today has been already created.</p>
     <a asp-area=@Constants.Areas.Scheduler
        asp-controller="Home"
        asp-action=@nameof(HomeController.EditSchedules)
