@@ -1,39 +1,103 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Wilson.Scheduler.Core.Enumerations;
 
 namespace Wilson.Scheduler.Core.Entities
 {
-    public class Paycheck : Entity
+    public class Paycheck : Entity, IValueObject<Paycheck>
     {
-        public DateTime Date { get; set; }
+        public DateTime Date { get; private set; }
 
-        public DateTime From { get; set; }
+        public DateTime From { get; private set; }
 
-        public DateTime To { get; set; }
+        public DateTime To { get; private set; }
 
-        public int Hours { get; set; }
+        public int Hours { get; private set; }
 
-        public int HourOnHolidays { get; set; }
+        public int HourOnBusinessTrip { get; private set; }
 
-        public int ExtraHours { get; set; }
+        public int HourOnHolidays { get; private set; }
 
-        public int PaidDaysOff { get; set; }
+        public int ExtraHours { get; private set; }
 
-        public int UnpaidDaysOff { get; set; }
+        public int PaidDaysOff { get; private set; }
 
-        public int SickDaysOff { get; set; }
+        public int UnpaidDaysOff { get; private set; }
 
-        public decimal PayForHours { get; set; }
+        public int SickDaysOff { get; private set; }
 
-        public decimal PayForExtraHours { get; set; }
+        public decimal PayForHours { get; private set; }
 
-        public decimal PayForHolidayHours { get; set; }
+        public decimal PayBusinessTrip { get; private set; }
 
-        public decimal PayForPayedDaysOff { get; set; }
+        public decimal PayForExtraHours { get; private set; }
 
-        public decimal Total { get; set; }
+        public decimal PayForHolidayHours { get; private set; }
 
-        public string EmployeeId { get; set; }
+        public decimal PayForPayedDaysOff { get; private set; }
 
-        public virtual Employee Employee { get; set; }
+        public decimal Total { get; private set; }
+
+        public string EmployeeId { get; private set; }
+
+        public virtual Employee Employee { get; private set; }
+
+        public static Paycheck Create(Employee employee, DateTime issuingDate)
+        {
+            var paycheck =  new Paycheck() { EmployeeId = employee.Id };
+            
+            SetPaycheckDates(paycheck, issuingDate);
+            CalculateHours(paycheck, employee.Schedules);
+            CalculatePayments(paycheck, employee.PayRate);
+
+            return paycheck;
+        }
+
+        private static void SetPaycheckDates(Paycheck paycheck, DateTime issuingDate)
+        {
+            var firstDayOfPreviousMonth = new DateTime(issuingDate.Year, issuingDate.AddMonths(-1).Month, 1);
+            var lastDayOfPreviousMonth = firstDayOfPreviousMonth.AddMonths(1).AddDays(-1).AddTicks(-1);
+
+            paycheck.Date = issuingDate;
+            paycheck.From = firstDayOfPreviousMonth;
+            paycheck.To = lastDayOfPreviousMonth;
+        }
+
+        private static void CalculateHours(Paycheck paycheck, IEnumerable<Schedule> schedules)
+        {
+            paycheck.PaidDaysOff = schedules.Where(x => x.ScheduleOption == ScheduleOption.PaidDayOff).Count();
+            paycheck.UnpaidDaysOff = schedules.Where(x => x.ScheduleOption == ScheduleOption.UnpaidDayOff).Count();
+            paycheck.SickDaysOff = schedules.Where(x => x.ScheduleOption == ScheduleOption.UnpaidDayOff).Count();
+            paycheck.HourOnBusinessTrip = schedules.Where(x => x.ScheduleOption == ScheduleOption.BusinessTrip).Sum(x => x.WorkHours);
+            paycheck.HourOnHolidays = schedules.Where(x => x.ScheduleOption == ScheduleOption.Holiday).Sum(x => x.WorkHours);
+            paycheck.Hours = schedules.Where(x => x.ScheduleOption == ScheduleOption.AtWork).Sum(x => x.WorkHours);
+            paycheck.ExtraHours = schedules.Where(x =>
+                x.ScheduleOption == ScheduleOption.Holiday ||
+                x.ScheduleOption == ScheduleOption.AtWork ||
+                x.ScheduleOption == ScheduleOption.BusinessTrip)
+                .Sum(x => x.ExtraWorkHours);
+        }
+
+        private static void CalculatePayments(Paycheck paycheck, PayRate payRate)
+        {
+            paycheck.PayForPayedDaysOff = paycheck.PaidDaysOff * 8 * payRate.Hour;
+            paycheck.PayBusinessTrip = paycheck.HourOnBusinessTrip * payRate.BusinessTripHour;
+            paycheck.PayForHolidayHours = paycheck.HourOnHolidays * payRate.HoidayHour;
+            paycheck.PayForHours = paycheck.Hours * payRate.HoidayHour;
+            paycheck.PayForExtraHours = paycheck.ExtraHours * payRate.ExtraHour;
+
+            paycheck.Total = paycheck.PayForPayedDaysOff + paycheck.PayBusinessTrip + paycheck.PayForHolidayHours + paycheck.PayForHours + paycheck.PayForExtraHours;
+        }
+
+        public bool Equals(Paycheck other)
+        {
+            if (other == null)
+            {
+                return false;
+            }
+
+            return this.From == other.From && this.To == other.To && this.EmployeeId == other.EmployeeId;
+        }
     }
 }

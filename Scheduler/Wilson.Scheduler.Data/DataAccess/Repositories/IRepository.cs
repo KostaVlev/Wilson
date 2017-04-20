@@ -20,6 +20,8 @@ namespace Wilson.Scheduler.Data.DataAccess.Repositories
 
         Task<TEntity> SingleOrDefaultAsync(Expression<Func<TEntity, bool>> predicate);
 
+        Task<TEntity> SingleOrDefaultAsync(Expression<Func<TEntity, bool>> predicate, Func<IQueryable<TEntity>, IQueryable<TEntity>> func);
+
         void Add(TEntity entity);
 
         void AddRange(IEnumerable<TEntity> entities);

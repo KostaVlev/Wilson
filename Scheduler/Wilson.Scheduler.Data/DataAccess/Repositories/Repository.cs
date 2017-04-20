@@ -67,5 +67,10 @@ namespace Wilson.Scheduler.Data.DataAccess.Repositories
         {
             return await this.entities.SingleOrDefaultAsync(predicate);
         }
+
+        public async Task<TEntity> SingleOrDefaultAsync(Expression<Func<TEntity, bool>> predicate, Func<IQueryable<TEntity>, IQueryable<TEntity>> func)
+        {
+            return await func(this.entities.Where(predicate)).SingleOrDefaultAsync();
+        }
     }
 }

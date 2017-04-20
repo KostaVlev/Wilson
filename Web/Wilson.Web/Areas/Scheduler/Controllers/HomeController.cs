@@ -53,20 +53,19 @@ namespace Wilson.Web.Areas.Scheduler.Controllers
 
             if (ModelState.IsValid)
             {
-                var employeeModels = model.Employees;
-                foreach (var employee in employeeModels)
+                var employees = await this.SchedulerWorkData.Employees.FindAsync(
+                    e => model.Employees.Any(me => me.NewSchedule.EmployeeId == e.Id), 
+                    x => x.Include(s => s.Schedules));
+
+                foreach (var employee in employees)
                 {
-                    var schedule = this.Mapper.Map<ScheduleViewModel, Schedule>(employee.NewSchedule);
-                    schedule.Id = Guid.NewGuid().ToString();
+                    var scheduleModel = model.Employees.Where(e => e.NewSchedule.EmployeeId == employee.Id).FirstOrDefault().NewSchedule;
 
                     // Since this is the today schedule we assign today to the Date property.
-                    schedule.Date = DateTime.Now;
-                    if (schedule.ScheduleOption != ScheduleOption.AtWork)
-                    {
-                        schedule.ProjectId = null;
-                    }
+                    scheduleModel.Date = DateTime.Now;
 
-                    this.SchedulerWorkData.Schedules.Add(schedule);
+                    var schedule = this.Mapper.Map<ScheduleViewModel, Schedule>(scheduleModel);
+                    employee.AddNewSchedule(schedule);
                 }
 
                 await this.SchedulerWorkData.CompleteAsync();
@@ -89,11 +88,21 @@ namespace Wilson.Web.Areas.Scheduler.Controllers
             }
 
             DateTime date = Convert.ToDateTime(dateTime);
+            if (date == null)
+            {
+                return NotFound();
+            }
+
             string dateFormat = Constants.DateTimeFormats.Short;
             var shrotDate = date.ToString(dateFormat);
             var schedules = await this.SchedulerWorkData.Schedules.FindAsync(s => s.Date.ToString(dateFormat) == shrotDate, x => x
             .Include(e => e.Employee)
             .Include(p => p.Project));
+            
+            if (schedules == null || schedules.Count() == 0)
+            {
+                return NotFound();
+            }
 
             var scheduleModels = this.Mapper.Map<IEnumerable<Schedule>, IEnumerable<ScheduleViewModel>>(schedules);
             await this.SetupScheduleModelForEdit(scheduleModels);
@@ -118,7 +127,7 @@ namespace Wilson.Web.Areas.Scheduler.Controllers
                 foreach (var schedule in schedules)
                 {
                     var model = models.FirstOrDefault(x => x.Id == schedule.Id);
-                    this.UpdateSchedule(model, schedule);
+                    schedule.Update(model.WorkHours, model.ExtraWorkHours, model.ScheduleOption, model.ProjectId);
                 }
 
                 var updateSuccess = await this.SchedulerWorkData.CompleteAsync();
@@ -131,6 +140,7 @@ namespace Wilson.Web.Areas.Scheduler.Controllers
 
             ModelState.AddModelError("", Constants.ExceptionMessages.DatabaseUpdateError);
             await this.SetupScheduleModelForEdit(models);
+
             return View(models);
         }
 
@@ -144,19 +154,16 @@ namespace Wilson.Web.Areas.Scheduler.Controllers
                 return BadRequest();
             }
 
-            var schedules = await this.SchedulerWorkData.Schedules.FindAsync(s => s.Id == id, x => x
-            .Include(e => e.Employee)
-            .Include(p => p.Project));
-
-            if (schedules == null || schedules.Count() == 0)
+            var schedule = await this.FindSchedule(id);
+            if (schedule == null)
             {
                 return NotFound();
             }
 
-            var scheduleModels = this.Mapper.Map<IEnumerable<Schedule>, IEnumerable<ScheduleViewModel>>(schedules);
-            await this.SetupScheduleModelForEdit(scheduleModels);
+            var scheduleModel = this.Mapper.Map<Schedule, ScheduleViewModel>(schedule);
+            await this.SetupScheduleModelForEdit(scheduleModel);
 
-            return View(scheduleModels.FirstOrDefault());
+            return View(scheduleModel);
         }
 
         //
@@ -172,9 +179,13 @@ namespace Wilson.Web.Areas.Scheduler.Controllers
 
             if (ModelState.IsValid)
             {
-                var schedules = await this.SchedulerWorkData.Schedules.FindAsync(s => s.Id == model.Id);
-                var schedule = schedules.FirstOrDefault();
-                this.UpdateSchedule(model, schedule);
+                var schedule = await this.FindSchedule(model.Id);
+                if (schedule == null)
+                {
+                    return NotFound();
+                }
+
+                schedule.Update(model.WorkHours, model.ExtraWorkHours, model.ScheduleOption, model.ProjectId);
 
                 var updateSuccess = await this.SchedulerWorkData.CompleteAsync();
 
@@ -238,6 +249,25 @@ namespace Wilson.Web.Areas.Scheduler.Controllers
             return View();
         }
 
+        /// <summary>
+        /// Asynchronous method that finds Schedule by given ID.
+        /// </summary>
+        /// <param name="id">ID to search.</param>
+        /// <returns><see cref="Schedule"/></returns>
+        /// <example>await FindSchedule(...)</example>
+        private async Task<Schedule> FindSchedule(string id)
+        {
+            var employees = await this.SchedulerWorkData.Employees.GetAllAsync(e => e.Include(s => s.Schedules));
+            var schedule = employees.FirstOrDefault(e => e.Schedules.Any(s => s.Id == id)).Schedules.FirstOrDefault(s => s.Id == id);
+
+            return schedule;
+        }
+
+        /// <summary>
+        /// Gets the schedule options form <see cref="ScheduleOption"/> which are used for drop-down lists.
+        /// </summary>
+        /// <returns><see cref="List{T}"/> where {T} is <see cref="SelectListItem"/> with value equal to the
+        /// <see cref="ScheduleOption"/> value and text taken the <see cref="DisplayAttribute"/></returns>
         private List<SelectListItem> GetScheduleOptions()
         {
             var scheduleOptions = Enum.GetValues(typeof(ScheduleOption)).Cast<ScheduleOption>().Select(x => new SelectListItem
@@ -253,6 +283,11 @@ namespace Wilson.Web.Areas.Scheduler.Controllers
             return scheduleOptions;
         }
 
+        /// <summary>
+        /// Gets the <see cref="ScheduleOption"/> name from the <see cref="DisplayAttribute"/>.
+        /// </summary>
+        /// <param name="scheduleOption"></param>
+        /// <returns>The name as <see cref="string"/>.</returns>
         private string GetShceduleOptionName(ScheduleOption scheduleOption)
         {
             string name = scheduleOption
@@ -264,16 +299,33 @@ namespace Wilson.Web.Areas.Scheduler.Controllers
             return name;
         }
 
+        /// <summary>
+        /// Creates Collection of Project as options for drop-down lists.
+        /// </summary>
+        /// <param name="projectModels">Collection of <see cref="ProjectViewModel"/> that will be used.</param>
+        /// <returns><see cref="List{T}"/> where {T} is <see cref="SelectListItem"/> with 
+        /// value the <see cref="ProjectViewModel.Id"/> and text <see cref="ProjectViewModel.ShortName"/></returns>
         private List<SelectListItem> GetProjectOptions(IEnumerable<ProjectViewModel> projectModels)
         {
             return projectModels.Select(x => new SelectListItem() { Value = x.Id, Text = x.ShortName }).ToList();
         }
 
+        /// <summary>
+        /// Creates Collection of Employees as options for drop-down lists.
+        /// </summary>
+        /// <param name="employeeModels">Collection of <see cref="EmployeeConciseViewModel"/> that will be used.</param>
+        /// <returns><see cref="List{T}"/> where {T} is <see cref="SelectListItem"/> with 
+        /// value the <see cref="EmployeeConciseViewModel.Id"/> and text <see cref="EmployeeConciseViewModel.ToString()"/></returns>
         private List<SelectListItem> GetEmployeeOptions(IEnumerable<EmployeeConciseViewModel> employeeModels)
         {
             return employeeModels.Select(x => new SelectListItem() { Value = x.Id, Text = x.ToString() }).ToList();
         }
 
+        /// <summary>
+        /// Asynchronous method that populates <see cref="EmployeeViewModel.NewSchedule"/> property.
+        /// </summary>
+        /// <param name="employeeModels">Collection of <see cref="EmployeeViewModel"/> which will be processed.</param>
+        /// <example>await SetupEmployeeNewSchedule(...)</example>
         private async Task SetupEmployeeNewSchedule(IEnumerable<EmployeeViewModel> employeeModels)
         {
             // Make collection of ProjectViewModels that will be used for drop-down list. Select only active Projects.
@@ -301,6 +353,11 @@ namespace Wilson.Web.Areas.Scheduler.Controllers
             }
         }
 
+        /// <summary>
+        /// Asynchronous method that prepares <see cref="ScheduleViewModel"/> for displaying.
+        /// </summary>
+        /// <param name="employeeModels">Collection of <see cref="ScheduleViewModel"/> which will be processed.</param>
+        /// <example>await SetupScheduleModelForEdit(...)</example>
         private async Task SetupScheduleModelForEdit(IEnumerable<ScheduleViewModel> scheduleModels)
         {
             var projects = await this.SchedulerWorkData.Projects.FindAsync(x => x.IsActive);
@@ -316,6 +373,11 @@ namespace Wilson.Web.Areas.Scheduler.Controllers
             }
         }
 
+        /// <summary>
+        /// Asynchronous method that prepares <see cref="ScheduleViewModel"/> for displaying.
+        /// </summary>
+        /// <param name="employeeModel"><see cref="ScheduleViewModel"/> model which will be processed.</param>
+        /// <example>await SetupScheduleModelForEdit(...)</example>
         private async Task SetupScheduleModelForEdit(ScheduleViewModel scheduleModel)
         {
             var projects = await this.SchedulerWorkData.Projects.FindAsync(x => x.IsActive);
@@ -328,6 +390,10 @@ namespace Wilson.Web.Areas.Scheduler.Controllers
             scheduleModel.ScheduleOptions = scheduleOptions;
         }
 
+        /// <summary>
+        /// Asynchronous method that creates <see cref="EmployeesShceduleViewModel"/> ready for displaying.
+        /// </summary>
+        /// <example>await PrepareEmployeesShceduleViewModel()</example>
         private async Task<EmployeesShceduleViewModel> PrepareEmployeesShceduleViewModel()
         {
             // Group the schedules by employee.
@@ -355,6 +421,17 @@ namespace Wilson.Web.Areas.Scheduler.Controllers
             };
         }
 
+        /// <summary>
+        /// Asynchronous method that creates collection of <see cref="ScheduleViewModel"/> for each Employee in order to
+        /// meet the requirements of given parameters.
+        /// </summary>
+        /// <param name="from">Start date. Default start date is 7 days ago. Null will select all dates.</param>
+        /// <param name="to">End date. Default end date is Today. Null will select all dates.</param>
+        /// <param name="employeeId">The Employee ID. Null will select all Employees.</param>
+        /// <param name="projectId">The Project ID. Null will select all Projects.</param>
+        /// <param name="scheduleOption"><see cref="ScheduleOption"/>. Null will select all Schedule Options.</param>
+        /// <returns><see cref="IDictionary{TKey, TValue}"/> where {TKey} is <see cref="EmployeeConciseViewModel"/> and 
+        /// {TValue} is <see cref="List{T}"/> where {T} is <see cref="ScheduleViewModel"/> ordered by Date.</returns>
         private async Task<IDictionary<EmployeeConciseViewModel, List<ScheduleViewModel>>> GetSchedulesGroupedByEmployee(
             DateTime? from = null, DateTime? to = null, string employeeId = null, string projectId = null, ScheduleOption? scheduleOption = null)
         {
@@ -450,14 +527,11 @@ namespace Wilson.Web.Areas.Scheduler.Controllers
             return groupedSchedulesByEmployee;
         }
 
-        private void UpdateSchedule(ScheduleViewModel source, Schedule target)
-        {
-            target.ProjectId = source.ProjectId;
-            target.ScheduleOption = source.ScheduleOption;
-            target.WorkHours = source.WorkHours;
-            target.ExtraWorkHours = source.ExtraWorkHours;
-        }
-
+        /// <summary>
+        /// Asynchronous method that creates <see cref="SearchViewModel"/>.
+        /// </summary>
+        /// <returns><see cref="SearchViewModel"/></returns>
+        /// <example>await SetupSearchModel()</example>
         private async Task<SearchViewModel> SetupSearchModel()
         {
             var projects = await this.SchedulerWorkData.Projects.FindAsync(x => x.IsActive);

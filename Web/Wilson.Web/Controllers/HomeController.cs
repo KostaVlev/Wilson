@@ -74,8 +74,7 @@ namespace Wilson.Web.Controllers
             var schedulerEmployees = await this.SchedulerWorkData.Employees.GetAllAsync();
 
             // Get the Base Pay Rate that will be assigned to each new employee.
-            var basePayRate = await this.SchedulerWorkData.PayRates.FindAsync(x => x.IsBaseRate);
-            var basePayRateId = basePayRate.FirstOrDefault().Id;
+            var basePayRate = await this.SchedulerWorkData.PayRates.SingleOrDefaultAsync(x => x.IsBaseRate);
 
             // Get the new employees.
             var employeesToAddToSheduler = companyEmployees.Where(x => !schedulerEmployees.Any() || !schedulerEmployees.Any(e => e.Id == x.Id));
@@ -83,9 +82,9 @@ namespace Wilson.Web.Controllers
                 this.Mapper.Map<IEnumerable<Employee>, IEnumerable<Scheduler.Core.Entities.Employee>>(employeesToAddToSheduler);
 
             // Assigned Base Pay Rate for each new employee.
-            foreach (var emp in newSchedulerEmployees)
+            foreach (var employee in newSchedulerEmployees)
             {
-                emp.PayRateId = basePayRateId;
+                employee.ApplayPayRate(basePayRate);
             }
 
             this.SchedulerWorkData.Employees.AddRange(newSchedulerEmployees);
@@ -99,13 +98,7 @@ namespace Wilson.Web.Controllers
             var projectsToAddToScheduler = companyProjects.Where(x => !schedulerpProjects.Any() || !schedulerpProjects.Any(e => e.Id == x.Id));
             var newSchedulerProjects =
                 this.Mapper.Map<IEnumerable<Project>, IEnumerable<Scheduler.Core.Entities.Project>>(projectsToAddToScheduler);
-
-            var maxDatabaseColumnLength = 4;
-            foreach (var project in newSchedulerProjects)
-            {                
-                project.ShortName = project.Name.Substring(0, maxDatabaseColumnLength).ToUpper();
-            }
-
+            
             this.SchedulerWorkData.Projects.AddRange(newSchedulerProjects);
         }
     }

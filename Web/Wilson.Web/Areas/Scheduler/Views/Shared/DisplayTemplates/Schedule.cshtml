@@ -32,7 +32,8 @@
                     {
                         <td></td>
                     }                    
-                    @if (employeeSchedule.ScheduleOption == ScheduleOption.AtWork)
+                    @if (employeeSchedule.ScheduleOption == ScheduleOption.AtWork ||
+                        employeeSchedule.ScheduleOption == ScheduleOption.Holiday)
                     {
                         <td>@employeeSchedule.WorkHours</td>
                         <td>@employeeSchedule.ExtraWorkHours</td>

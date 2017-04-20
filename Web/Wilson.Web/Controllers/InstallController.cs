@@ -106,8 +106,8 @@ namespace Wilson.Web.Controllers
                     this.CompanyWorkData.Addresses.Add(companyAddress);
 
                     // Set company Base Pay Rate
+                    model.PayRate.IsBaseRate = true;
                     var payRate = this.Mapper.Map<PayRateViewModel, Scheduler.Core.Entities.PayRate>(model.PayRate);
-                    payRate.IsBaseRate = true;
 
                     this.SchedulerWorkData.PayRates.Add(payRate);
 

@@ -21,6 +21,7 @@ namespace Wilson.Scheduler.Data.Configurations
             builder.Property(x => x.PayForExtraHours).HasPrecision(18, 4);
             builder.Property(x => x.PayForHolidayHours).HasPrecision(18, 4);
             builder.Property(x => x.PayForPayedDaysOff).HasPrecision(18, 4);
+            builder.Property(x => x.PayBusinessTrip).HasPrecision(18, 4);
             builder.Property(x => x.Total).HasPrecision(18, 4);
         }
     }
