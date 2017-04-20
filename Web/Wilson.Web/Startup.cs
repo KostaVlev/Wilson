@@ -19,6 +19,7 @@ using Wilson.Scheduler.Data.DataAccess;
 using Wilson.Web.Seed;
 using Wilson.Web.Services;
 using Wilson.Web.Utilities;
+using Wilson.Web.Areas.Scheduler.Services;
 
 namespace Wilson.Web
 {
@@ -79,6 +80,7 @@ namespace Wilson.Web
             services.AddTransient<IAccountingWorkData, AccountingWorkData>();
             services.AddTransient<IProjectsWorkData, ProjectsWorkData>();
             services.AddTransient<ISchedulerWorkData, SchedulerWorkData>();
+            services.AddTransient<IScheduleSevice, ScheduleSevice>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
