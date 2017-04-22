@@ -1,10 +1,13 @@
 <div class="container">
     <h4 class="text-primary">Choose one of the following options:</h4>
     <div class="row">
-        <a asp-area=@Constants.Areas.Scheduler asp-controller="Payroll" asp-action=@nameof(PayrollController.PreparePayrolls)>Prepare Payrolls?</a>
+        <form asp-area=@Constants.Areas.Scheduler asp-controller="Payroll" asp-action=@nameof(PayrollController.PreparePayrolls) method="post">
+            @Html.AntiForgeryToken()
+            <button type="submit" class="btn btn-link">Prepare Payrolls?</button>
+        </form>
     </div>
     <div class="row">
-        <a asp-area=@Constants.Areas.Scheduler asp-controller="Payroll" asp-action=@nameof(PayrollController.ReviewPaychecks)>Review Payrolls?</a>
+        <a class="btn btn-link" asp-area=@Constants.Areas.Scheduler asp-controller="Payroll" asp-action=@nameof(PayrollController.ReviewPaychecks)>Review Payrolls?</a>
     </div>   
 </div>
 

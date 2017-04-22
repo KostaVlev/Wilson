@@ -43,25 +43,24 @@ namespace Wilson.Scheduler.Core.Entities
 
         public virtual Employee Employee { get; private set; }
 
-        public static Paycheck Create(Employee employee, DateTime issuingDate)
-        {
-            var paycheck =  new Paycheck() { EmployeeId = employee.Id };
-            
-            SetPaycheckDates(paycheck, issuingDate);
-            CalculateHours(paycheck, employee.Schedules);
+        public static Paycheck Create(Employee employee, DateTime issuingDate, DateTime from)
+        {            
+            var firstDayOfMonth = GetFirstDayOfMonth(from);
+            var lastDayOfMonth = GetLastDayOfMonth(firstDayOfMonth);
+            var paycheck = new Paycheck()
+            {
+                EmployeeId = employee.Id,
+                Date = issuingDate,
+                From = firstDayOfMonth,
+                To = lastDayOfMonth
+            };
+
+            CalculateHours(paycheck, employee.Schedules.Where(s => 
+                s.Date >= firstDayOfMonth && s.Date <= lastDayOfMonth));
+
             CalculatePayments(paycheck, employee.PayRate);
 
             return paycheck;
-        }
-
-        private static void SetPaycheckDates(Paycheck paycheck, DateTime issuingDate)
-        {
-            var firstDayOfPreviousMonth = new DateTime(issuingDate.Year, issuingDate.AddMonths(-1).Month, 1);
-            var lastDayOfPreviousMonth = firstDayOfPreviousMonth.AddMonths(1).AddDays(-1).AddTicks(-1);
-
-            paycheck.Date = issuingDate;
-            paycheck.From = firstDayOfPreviousMonth;
-            paycheck.To = lastDayOfPreviousMonth;
         }
 
         private static void CalculateHours(Paycheck paycheck, IEnumerable<Schedule> schedules)
@@ -88,6 +87,16 @@ namespace Wilson.Scheduler.Core.Entities
             paycheck.PayForExtraHours = paycheck.ExtraHours * payRate.ExtraHour;
 
             paycheck.Total = paycheck.PayForPayedDaysOff + paycheck.PayBusinessTrip + paycheck.PayForHolidayHours + paycheck.PayForHours + paycheck.PayForExtraHours;
+        }
+
+        private static DateTime GetFirstDayOfMonth(DateTime date)
+        {
+            return new DateTime(date.Year, date.Month, 1);
+        }
+
+        private static DateTime GetLastDayOfMonth(DateTime firstDayOfTheMonth)
+        {
+            return firstDayOfTheMonth.AddMonths(1).AddDays(-1).AddTicks(-1);
         }
 
         public bool Equals(Paycheck other)

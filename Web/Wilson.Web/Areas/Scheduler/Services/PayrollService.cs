@@ -44,7 +44,7 @@ namespace Wilson.Web.Areas.Scheduler.Services
             return employeesWithoutPaychecks;
         }
 
-        public async Task<IEnumerable<EmployeeViewModel>> FindEmployeesPayshecks(string period, string employeeId)
+        public async Task<IEnumerable<EmployeeViewModel>> FindEmployeesPayshecks(string periodFrom, string periodTo, string employeeId)
         {
             IEnumerable<Employee> query;
             if (string.IsNullOrEmpty(employeeId))
@@ -56,23 +56,35 @@ namespace Wilson.Web.Areas.Scheduler.Services
                 query = await this.SchedulerWorkData.Employees.FindAsync(e => e.Id == employeeId, x => x.Include(p => p.Paychecks));
             }
 
-            var date = this.TryParsePeriod(period);
-            var employees = query.Where(e => e.Paychecks.Any(
-                p => p.From.ToString(Constants.DateTimeFormats.Short) == date.ToString(Constants.DateTimeFormats.Short))).ToList();
+            var dateFrom = this.TryParsePeriod(periodFrom);
+            var dateTo = this.TryParsePeriod(periodTo, false);
+            var employees = query.Where(e => e.Paychecks.Any(p => p.From >= dateFrom && p.To <= dateTo));
 
             var employeeModels = this.Mapper.Map<IEnumerable<Employee>, IEnumerable<EmployeeViewModel>>(employees);
+            foreach (var employee in employeeModels)
+            {
+                employee.Paychecks = employee.Paychecks.Where(p => p.From >= dateFrom && p.To <= dateTo).OrderBy(f => f.From);
+            }
 
             return employeeModels;
         }
 
-        private DateTime TryParsePeriod(string period)
+        public DateTime TryParsePeriod(string period, bool isBeggingOfThePeriod = true)
         {
             try
             {
                 var month = int.Parse(period.Substring(0, 2));
                 var year = int.Parse(period.Substring(3, 4));
-
-                return new DateTime(year, month, 1);
+                var firstDayOfTheMonth = new DateTime(year, month, 1);
+                var lastDayOfTheMonth = firstDayOfTheMonth.AddMonths(1).AddTicks(-1);
+                if (isBeggingOfThePeriod)
+                {
+                    return firstDayOfTheMonth;
+                }
+                else
+                {
+                    return lastDayOfTheMonth;
+                }
             }
             catch
             {

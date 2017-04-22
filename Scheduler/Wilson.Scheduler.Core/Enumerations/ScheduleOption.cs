@@ -17,6 +17,10 @@ namespace Wilson.Scheduler.Core.Enumerations
         UnpaidDayOff = 3,
 
         [Display(Name = "Business Trip")]
-        BusinessTrip = 4
+        BusinessTrip = 4,
+
+        [Display(Name = "Sick Day Off")]
+        SickDayOff = 5
+
     }
 }

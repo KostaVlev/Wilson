@@ -43,7 +43,7 @@
 
         public static class PayrollMessages
         {
-            public const string PayrollsAlredyCreted = "Payrolls for the current month has been already created.";
+            public const string PayrollsCreted = "Payrolls has been created.";
         }
 
         public static class ExceptionMessages

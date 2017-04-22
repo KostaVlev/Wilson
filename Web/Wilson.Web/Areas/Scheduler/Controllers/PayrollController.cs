@@ -33,28 +33,34 @@ namespace Wilson.Web.Areas.Scheduler.Controllers
 
             return View();
         }
-        
+
         //
-        // GET: Scheduler/Home/PreparePayrolls
-        [HttpGet]
-        public async Task<IActionResult> PreparePayrolls(DateTime? date)
+        // POST: Scheduler/Home/PreparePayrolls
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> PreparePayrolls([FromForm]string period)
         {
-            var paycheckIssueDate = date.GetValueOrDefault();
-            if (paycheckIssueDate == default(DateTime))
+            DateTime paycheckIssueDate = DateTime.Now;
+            DateTime fromDate;
+            if (!string.IsNullOrEmpty(period))
             {
-                paycheckIssueDate = DateTime.Now;
+                fromDate = this.PayrollService.TryParsePeriod(period);
+            }
+            else
+            {
+                fromDate = DateTime.Now;
             }
 
-            var employeesWithoutPaychecks = await this.PayrollService.GetEmployeesWithoutPaycheks(date);
+            var employeesWithoutPaychecks = await this.PayrollService.GetEmployeesWithoutPaycheks(fromDate);
 
             if (employeesWithoutPaychecks.Count() == 0)
             {
-                return RedirectToAction(nameof(PayrollController.Index), new { Message = Constants.PayrollMessages.PayrollsAlredyCreted });
+                return RedirectToAction(nameof(PayrollController.Index), new { Message = Constants.PayrollMessages.PayrollsCreted });
             }
 
             foreach (var employee in employeesWithoutPaychecks)
             {
-                employee.AddNewPaycheck(paycheckIssueDate);
+                employee.AddNewPaycheck(paycheckIssueDate, fromDate);
             }
 
             var success = await this.SchedulerWorkData.CompleteAsync();
@@ -90,8 +96,10 @@ namespace Wilson.Web.Areas.Scheduler.Controllers
 
             if (ModelState.IsValid)
             {
-                var employeeModels = await this.PayrollService.FindEmployeesPayshecks(model.Period, model.EmployeeId);
+                var employeeModels = await this.PayrollService.FindEmployeesPayshecks(model.From, model.To, model.EmployeeId);
                 modelToReturn.Employees = employeeModels;
+                modelToReturn.From = model.From;
+                modelToReturn.To = model.To;
             }
             
             return View(modelToReturn);

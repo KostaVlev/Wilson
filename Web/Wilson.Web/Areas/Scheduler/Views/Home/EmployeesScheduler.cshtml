@@ -1,7 +1,10 @@
 @model EmployeesShceduleViewModel
 
-@Html.DisplayFor(m => m.EmployeesShcedules, "Schedule")
-<hr />
+@if (Model.EmployeesShcedules.Count() > 0)
+{
+    @Html.DisplayFor(m => m.EmployeesShcedules, "Schedule")
+    <hr />
+}
 
 @if (!Model.IsTodayScheduleCreated)
 {

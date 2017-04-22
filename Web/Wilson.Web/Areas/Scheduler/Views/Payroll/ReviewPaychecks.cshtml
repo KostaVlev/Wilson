@@ -18,9 +18,20 @@
         </div>
     </div>
     <div class="form-group">
-        <label asp-for="Period" class="col-md-2 control-label"></label>
+        <label asp-for="From" class="col-md-2 control-label"></label>
         <div class="col-md-10">
-            <select asp-for="Period" class="form-control">
+            <select asp-for="From" class="form-control">
+                @foreach (var period in Model.PeriodOptions)
+                {
+                    <option value=@period.Value>@period.Text</option>
+                }
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label asp-for="To" class="col-md-2 control-label"></label>
+        <div class="col-md-10">
+            <select asp-for="To" class="form-control">
                 @foreach (var period in Model.PeriodOptions)
                 {
                     <option value=@period.Value>@period.Text</option>
@@ -38,6 +49,15 @@
 @if (Model.Employees != null && Model.Employees.Count() > 0)
 {
     @Html.DisplayFor(m => m.Employees, "Paycheck")
+}
+else if (Model.Employees != null && Model.Employees.Count() == 0)
+{
+    <h4 class="text-info">Missing payrolls for the period @Model.From - @Model.To!</h4>
+    <form asp-area=@Constants.Areas.Scheduler asp-controller="Payroll" asp-action=@nameof(PayrollController.PreparePayrolls) method="post">
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="period" value="@Model.From"/>
+        <button type="submit" class="btn btn-link">Prepare Payrolls?</button>
+    </form>
 }
 
 

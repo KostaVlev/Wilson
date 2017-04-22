@@ -25,9 +25,9 @@
         <tr>
             <td class="bg-success text-primary" colspan="15">@employee.ToString()</td>
         </tr>
-        <tr>
-            @foreach (var paycheck in employee.Paychecks)
-            {
+        @foreach (var paycheck in employee.Paychecks)
+        {
+            <tr>
                 <td>@paycheck.Date.ToString(Constants.DateTimeFormats.Short)</td>
                 <td>@paycheck.From.ToString(Constants.DateTimeFormats.Short) | @paycheck.To.ToString(Constants.DateTimeFormats.Short)</td>
                 <td>@paycheck.Hours</td>
@@ -43,9 +43,8 @@
                 <td>@paycheck.UnpaidDaysOff</td>
                 <td>@paycheck.SickDaysOff</td>
                 <td class="text-success">@paycheck.Total</td>
-            }
-        </tr>
+            </tr>
+        }
     }
-    <tbody>
-    </tbody>
+    <tbody></tbody>
 </table>

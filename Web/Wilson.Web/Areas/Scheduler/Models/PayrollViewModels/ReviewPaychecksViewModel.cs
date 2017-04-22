@@ -12,8 +12,12 @@ namespace Wilson.Web.Areas.Scheduler.Models.PayrollViewModels
         public string EmployeeId { get; set; }
 
         [StringLength(7)]
-        [Display(Name = "Period")]
-        public string Period { get; set; }
+        [Display(Name = "From")]
+        public string From { get; set; }
+
+        [StringLength(7)]
+        [Display(Name = "To")]
+        public string To { get; set; }
 
         public IEnumerable<SelectListItem> EmployeeOptions { get; set; }
 

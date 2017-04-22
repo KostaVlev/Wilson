@@ -36,9 +36,9 @@ namespace Wilson.Scheduler.Core.Entities
             return employee;
         }
 
-        public void AddNewPaycheck(DateTime issueDate)
+        public void AddNewPaycheck(DateTime issueDate, DateTime from)
         {
-            var paycheck = Paycheck.Create(this, DateTime.Now);
+            var paycheck = Paycheck.Create(this, DateTime.Now, from);
             if (!this.Paychecks.Contains(paycheck))
             {
                 this.Paychecks.Add(paycheck);                
