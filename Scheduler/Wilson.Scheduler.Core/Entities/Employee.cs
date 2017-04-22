@@ -72,5 +72,10 @@ namespace Wilson.Scheduler.Core.Entities
 
             this.Schedules.Add(newSchedule);
         }
+
+        public override string ToString()
+        {
+            return this.FirstName + " " + this.LastName;
+        }
     }
 }

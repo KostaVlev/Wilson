@@ -242,14 +242,6 @@ namespace Wilson.Web.Areas.Scheduler.Controllers
 
             ModelState.AddModelError("", Constants.ValidationMessages.Error);
             return View(await this.ScheduleSevice.SetupSearchModel());
-        }
-
-        //
-        // GET: Scheduler/Home/PayRolls
-        [HttpGet]
-        public IActionResult PayRolls()
-        {
-            return View();
-        }        
+        }               
     }
 }

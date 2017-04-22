@@ -41,6 +41,11 @@
             public const string Error = "Error! Please try again.";
         }
 
+        public static class PayrollMessages
+        {
+            public const string PayrollsAlredyCreted = "Payrolls for the current month has been already created.";
+        }
+
         public static class ExceptionMessages
         {
             public const string FileToLarge = "Maximum upload size is :";

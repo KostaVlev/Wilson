@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Wilson.Web.Areas.Scheduler.Models.PayrollViewModels;
 
 namespace Wilson.Web.Areas.Scheduler.Models.SharedViewModels
 {
@@ -12,7 +13,11 @@ namespace Wilson.Web.Areas.Scheduler.Models.SharedViewModels
 
         public ScheduleViewModel NewSchedule { get; set; } = new ScheduleViewModel();
 
+        public PaycheckViewModel NewPaycheck { get; set; } = new PaycheckViewModel();
+
         public IList<ScheduleViewModel> Schedules { get; set; }
+
+        public IEnumerable<PaycheckViewModel> Paychecks { get; set; }
 
         public override string ToString()
         {

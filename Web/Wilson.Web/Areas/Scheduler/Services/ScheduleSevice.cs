@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Wilson.Scheduler.Core.Entities;
 using Wilson.Scheduler.Core.Enumerations;
-using Wilson.Scheduler.Data.DataAccess;
 using Wilson.Web.Areas.Scheduler.Models.HomeViewModels;
 using Wilson.Web.Areas.Scheduler.Models.SharedViewModels;
 
@@ -20,9 +19,7 @@ namespace Wilson.Web.Areas.Scheduler.Services
         public ScheduleSevice(IMapper mapper)
             : base(mapper)
         {
-        }
-
-        public ISchedulerWorkData SchedulerWorkData { get; set; }
+        }        
 
         public async Task<Schedule> FindSchedule(string id)
         {
@@ -56,17 +53,7 @@ namespace Wilson.Web.Areas.Scheduler.Services
                 .GetCustomAttribute<DisplayAttribute>().Name;
 
             return name;
-        }
-
-        public List<SelectListItem> GetProjectOptions(IEnumerable<ProjectViewModel> projectModels)
-        {
-            return projectModels.Select(x => new SelectListItem() { Value = x.Id, Text = x.ShortName }).ToList();
-        }
-
-        public List<SelectListItem> GetEmployeeOptions(IEnumerable<EmployeeConciseViewModel> employeeModels)
-        {
-            return employeeModels.Select(x => new SelectListItem() { Value = x.Id, Text = x.ToString() }).ToList();
-        }
+        }        
 
         public async Task SetupEmployeeNewSchedule(IEnumerable<EmployeeViewModel> employeeModels)
         {
@@ -74,7 +61,7 @@ namespace Wilson.Web.Areas.Scheduler.Services
             var projects = await this.SchedulerWorkData.Projects.FindAsync(x => x.IsActive);
             var projectModels = this.Mapper.Map<IEnumerable<Project>, IEnumerable<ProjectViewModel>>(projects);
 
-            var projectOptions = this.GetProjectOptions(projectModels);
+            var projectOptions = await this.GetProjectOptions();
             var scheduleOptions = this.GetScheduleOptions();
 
             foreach (var employee in employeeModels)
@@ -100,7 +87,7 @@ namespace Wilson.Web.Areas.Scheduler.Services
             var projects = await this.SchedulerWorkData.Projects.FindAsync(x => x.IsActive);
             var projectModels = this.Mapper.Map<IEnumerable<Project>, IEnumerable<ProjectViewModel>>(projects);
 
-            var projectOptions = this.GetProjectOptions(projectModels);
+            var projectOptions = await this.GetProjectOptions();
             var scheduleOptions = this.GetScheduleOptions();
 
             foreach (var scheduleModel in scheduleModels)
@@ -115,7 +102,7 @@ namespace Wilson.Web.Areas.Scheduler.Services
             var projects = await this.SchedulerWorkData.Projects.FindAsync(x => x.IsActive);
             var projectModels = this.Mapper.Map<IEnumerable<Project>, IEnumerable<ProjectViewModel>>(projects);
 
-            var projectOptions = this.GetProjectOptions(projectModels);
+            var projectOptions = await this.GetProjectOptions();
             var scheduleOptions = this.GetScheduleOptions();
 
             scheduleModel.ProjectOptions = projectOptions;
@@ -254,9 +241,9 @@ namespace Wilson.Web.Areas.Scheduler.Services
 
             var to = DateTime.Now;
             var from = to.AddDays(-7);
-            var projectOptions = this.GetProjectOptions(projectModels);
+            var projectOptions = await this.GetProjectOptions();
             var scheduleOptions = this.GetScheduleOptions();
-            var employeeOptions = this.GetEmployeeOptions(employeeModels);
+            var employeeOptions = await this.GetEmployeeOptions();
 
             return new SearchViewModel()
             {

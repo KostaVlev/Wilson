@@ -81,6 +81,7 @@ namespace Wilson.Web
             services.AddTransient<IProjectsWorkData, ProjectsWorkData>();
             services.AddTransient<ISchedulerWorkData, SchedulerWorkData>();
             services.AddTransient<IScheduleSevice, ScheduleSevice>();
+            services.AddTransient<IPayrollService, PayrollService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

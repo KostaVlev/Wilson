@@ -37,23 +37,7 @@ namespace Wilson.Web.Areas.Scheduler.Services
         /// </summary>
         /// <param name="scheduleOption"></param>
         /// <returns>The name as <see cref="string"/>.</returns>
-        string GetShceduleOptionName(ScheduleOption scheduleOption);
-
-        /// <summary>
-        /// Creates Collection of Project as options for drop-down lists.
-        /// </summary>
-        /// <param name="projectModels">Collection of <see cref="ProjectViewModel"/> that will be used.</param>
-        /// <returns><see cref="List{T}"/> where {T} is <see cref="SelectListItem"/> with 
-        /// value the <see cref="ProjectViewModel.Id"/> and text <see cref="ProjectViewModel.ShortName"/></returns>
-        List<SelectListItem> GetProjectOptions(IEnumerable<ProjectViewModel> projectModels);
-
-        /// <summary>
-        /// Creates Collection of Employees as options for drop-down lists.
-        /// </summary>
-        /// <param name="employeeModels">Collection of <see cref="EmployeeConciseViewModel"/> that will be used.</param>
-        /// <returns><see cref="List{T}"/> where {T} is <see cref="SelectListItem"/> with 
-        /// value the <see cref="EmployeeConciseViewModel.Id"/> and text <see cref="EmployeeConciseViewModel.ToString()"/></returns>
-        List<SelectListItem> GetEmployeeOptions(IEnumerable<EmployeeConciseViewModel> employeeModels);
+        string GetShceduleOptionName(ScheduleOption scheduleOption);        
 
         /// <summary>
         /// Asynchronous method that populates <see cref="EmployeeViewModel.NewSchedule"/> property.

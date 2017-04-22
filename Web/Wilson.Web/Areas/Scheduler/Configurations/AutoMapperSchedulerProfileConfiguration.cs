@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Wilson.Scheduler.Core.Entities;
 using Wilson.Web.Areas.Scheduler.Models.HomeViewModels;
+using Wilson.Web.Areas.Scheduler.Models.PayrollViewModels;
 using Wilson.Web.Areas.Scheduler.Models.SharedViewModels;
 
 namespace Wilson.Web.Areas.Scheduler.Configurations
@@ -23,6 +24,7 @@ namespace Wilson.Web.Areas.Scheduler.Configurations
                 .ForMember(x => x.Employee, opt => opt.Ignore())
                 .ForSourceMember(x => x.Project, opt => opt.Ignore())
                 .ForMember(x => x.Project, opt => opt.Ignore());
+            CreateMap<Paycheck, PaycheckViewModel>();
         }
     }
 }

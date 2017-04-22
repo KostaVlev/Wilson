@@ -1,0 +1,44 @@
+@model ReviewPaychecksViewModel
+
+<form asp-area=@Constants.Areas.Scheduler asp-controller="Payroll" asp-action=@nameof(PayrollController.ReviewPaychecks) class="form-horizontal" method="post">
+    @Html.AntiForgeryToken()
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <h4 class="text-primary">Find Payrolls</h4>
+    <hr />
+    <div class="form-group">
+        <label asp-for="EmployeeId" class="col-md-2 control-label"></label>
+        <div class="col-md-10">
+            <select asp-for="EmployeeId" class="form-control">
+                <option value="">Select all</option>
+                @foreach (var employee in Model.EmployeeOptions)
+                {
+                    <option value=@employee.Value>@employee.Text</option>
+                }
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label asp-for="Period" class="col-md-2 control-label"></label>
+        <div class="col-md-10">
+            <select asp-for="Period" class="form-control">
+                @foreach (var period in Model.PeriodOptions)
+                {
+                    <option value=@period.Value>@period.Text</option>
+                }
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <button type="submit" class="btn btn-default">Find</button>
+        </div>
+    </div>
+</form>
+
+@if (Model.Employees != null && Model.Employees.Count() > 0)
+{
+    @Html.DisplayFor(m => m.Employees, "Paycheck")
+}
+
+
+

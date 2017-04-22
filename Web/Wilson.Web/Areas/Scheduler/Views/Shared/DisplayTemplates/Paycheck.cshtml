@@ -1,0 +1,51 @@
+@model IEnumerable<EmployeeViewModel>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Issuing Date</th>
+            <th>Period</th>
+            <th>Hours</th>
+            <th>Sum</th>
+            <th>Business Trip Hours</th>
+            <th>Sum</th>
+            <th>Holiday Hours</th>
+            <th>Sum</th>
+            <th>Extra Hours</th>
+            <th>Sum</th>
+            <th>Paid Days Off</th>
+            <th>Sum</th>
+            <th>Unpaid Days Off</th>
+            <th>Sick Days Off</th>
+            <th>Total</th>
+        </tr>
+    </thead>
+    @foreach (var employee in Model)
+    {
+        <tr>
+            <td class="bg-success text-primary" colspan="15">@employee.ToString()</td>
+        </tr>
+        <tr>
+            @foreach (var paycheck in employee.Paychecks)
+            {
+                <td>@paycheck.Date.ToString(Constants.DateTimeFormats.Short)</td>
+                <td>@paycheck.From.ToString(Constants.DateTimeFormats.Short) | @paycheck.To.ToString(Constants.DateTimeFormats.Short)</td>
+                <td>@paycheck.Hours</td>
+                <td class="text-primary">@paycheck.PayForHours</td>
+                <td>@paycheck.HourOnBusinessTrip</td>
+                <td class="text-primary">@paycheck.PayBusinessTrip</td>
+                <td>@paycheck.HourOnHolidays</td>
+                <td class="text-primary">@paycheck.PayForHolidayHours</td>
+                <td>@paycheck.ExtraHours</td>
+                <td class="text-primary">@paycheck.PayForExtraHours</td>
+                <td>@paycheck.PaidDaysOff</td>
+                <td class="text-primary">@paycheck.PayForPayedDaysOff</td>
+                <td>@paycheck.UnpaidDaysOff</td>
+                <td>@paycheck.SickDaysOff</td>
+                <td class="text-success">@paycheck.Total</td>
+            }
+        </tr>
+    }
+    <tbody>
+    </tbody>
+</table>
