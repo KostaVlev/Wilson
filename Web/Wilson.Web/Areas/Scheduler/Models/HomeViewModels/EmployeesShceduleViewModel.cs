@@ -9,8 +9,8 @@ namespace Wilson.Web.Areas.Scheduler.Models.HomeViewModels
 
         public bool IsTodayScheduleCreated { get; set; }
 
-        public IDictionary<EmployeeConciseViewModel, List<ScheduleViewModel>> EmployeesShcedules { get; set; }
+        public IEnumerable<EmployeeViewModel> LastScheduledEmployees { get; set; }
 
-        public IList<EmployeeViewModel> Employees { get; set; }
+        public IEnumerable<EmployeeViewModel> Employees { get; set; }
     }
 }

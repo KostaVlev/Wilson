@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Wilson.Scheduler.Core.Enumerations;
-using Wilson.Web.Areas.Scheduler.Models.HomeViewModels;
+using System.Reflection;
+using System.Linq;
 
 namespace Wilson.Web.Areas.Scheduler.Models.SharedViewModels
 {
@@ -14,9 +15,7 @@ namespace Wilson.Web.Areas.Scheduler.Models.SharedViewModels
         public DateTime Date { get; set; }
 
         [Display(Name = "Schedule Option")]
-        public ScheduleOption ScheduleOption { get; set; }
-
-        public string ScheduleOptionName { get; set; }
+        public ScheduleOption ScheduleOption { get; set; }       
 
         [Range(2, 8, ErrorMessage = Constants.ValidationMessages.Range)]
         [Display(Name = "Hours")]
@@ -25,21 +24,30 @@ namespace Wilson.Web.Areas.Scheduler.Models.SharedViewModels
         [Range(0, 6, ErrorMessage = Constants.ValidationMessages.Range)]
         [Display(Name = "Extra Hours")]
         public int ExtraWorkHours { get; set; }
-
-        [StringLength(36)]
-        [Required(ErrorMessage = Constants.ValidationMessages.Error)]        
+        
         public string EmployeeId { get; set; }
 
-        [StringLength(36)]
+        [StringLength(36, ErrorMessage = Constants.ValidationMessages.Error)]
         [Display(Name = "Project")]
         public string ProjectId { get; set; }
 
-        public ProjectViewModel Project { get; set; }
+        public string ScheduleOptionName { get { return this.GetShceduleOptionName(); } }
 
-        public EmployeeConciseViewModel Employee { get; set; }
+        public ProjectViewModel Project { get; set; }
 
         public IEnumerable<SelectListItem> ProjectOptions { get; set; }
 
-        public IEnumerable<SelectListItem> ScheduleOptions { get; set; }        
+        public IEnumerable<SelectListItem> ScheduleOptions { get; set; }
+
+        private string GetShceduleOptionName()
+        {
+            string name = this.ScheduleOption
+                .GetType()
+                .GetMember(this.ScheduleOption.ToString())
+                .First()
+                .GetCustomAttribute<DisplayAttribute>().Name;
+
+            return name;
+        }
     }
 }

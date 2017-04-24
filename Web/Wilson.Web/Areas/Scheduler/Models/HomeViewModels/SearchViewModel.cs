@@ -30,6 +30,6 @@ namespace Wilson.Web.Areas.Scheduler.Models.HomeViewModels
 
         public IEnumerable<SelectListItem> ScheduleOptions { get; set; }
 
-        public IDictionary<EmployeeConciseViewModel, List<ScheduleViewModel>> EmployeesShcedules { get; set; }
+        public IEnumerable<EmployeeViewModel> Employees { get; set; }
     }
 }

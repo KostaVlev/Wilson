@@ -62,8 +62,8 @@ namespace Wilson.Web.Areas.Scheduler.Controllers
                 {
                     var scheduleModel = model.Employees.Where(e => e.NewSchedule.EmployeeId == employee.Id).FirstOrDefault().NewSchedule;
 
-                    // Since this is the today schedule we assign today to the Date property.
-                    scheduleModel.Date = DateTime.Now;
+                    //// Since this is the today schedule we assign today to the Date property.
+                    //scheduleModel.Date = DateTime.Now;
 
                     var schedule = this.Mapper.Map<ScheduleViewModel, Schedule>(scheduleModel);
                     employee.AddNewSchedule(schedule);
@@ -88,25 +88,13 @@ namespace Wilson.Web.Areas.Scheduler.Controllers
                 return BadRequest();
             }
 
-            DateTime date = Convert.ToDateTime(dateTime);
-            if (date == null)
-            {
-                return NotFound();
-            }
-
-            string dateFormat = Constants.DateTimeFormats.Short;
-            var shrotDate = date.ToString(dateFormat);
-            var schedules = await this.SchedulerWorkData.Schedules.FindAsync(s => s.Date.ToString(dateFormat) == shrotDate, x => x
-            .Include(e => e.Employee)
-            .Include(p => p.Project));
-            
+            var schedules = await this.ScheduleSevice.FindAllSchedulesForDate(dateTime);            
             if (schedules == null || schedules.Count() == 0)
             {
                 return NotFound();
             }
-
-            var scheduleModels = this.Mapper.Map<IEnumerable<Schedule>, IEnumerable<ScheduleViewModel>>(schedules);
-            await this.ScheduleSevice.SetupScheduleModelForEdit(scheduleModels);
+            
+            var scheduleModels = await this.ScheduleSevice.SetupScheduleModelForEdit(schedules);
 
             return View(scheduleModels);
         }
@@ -155,14 +143,13 @@ namespace Wilson.Web.Areas.Scheduler.Controllers
                 return BadRequest();
             }
 
-            var schedule = await this.ScheduleSevice.FindSchedule(id);
+            var schedule = await this.ScheduleSevice.FindScheduleById(id);
             if (schedule == null)
             {
                 return NotFound();
             }
-
-            var scheduleModel = this.Mapper.Map<Schedule, ScheduleViewModel>(schedule);
-            await this.ScheduleSevice.SetupScheduleModelForEdit(scheduleModel);
+                        
+            var scheduleModel = await this.ScheduleSevice.SetupScheduleModelForEdit(schedule);
 
             return View(scheduleModel);
         }
@@ -180,7 +167,7 @@ namespace Wilson.Web.Areas.Scheduler.Controllers
 
             if (ModelState.IsValid)
             {
-                var schedule = await this.ScheduleSevice.FindSchedule(model.Id);
+                var schedule = await this.ScheduleSevice.FindScheduleById(model.Id);
                 if (schedule == null)
                 {
                     return NotFound();
@@ -228,16 +215,12 @@ namespace Wilson.Web.Areas.Scheduler.Controllers
                     return View(await this.ScheduleSevice.SetupSearchModel());
                 }
 
-                var employeesScgedulesModel = await this.ScheduleSevice.GetSchedulesGroupedByEmployee(
+                var employeesResult = await this.ScheduleSevice.FindEmployeeSchedules(
                     model.From, model.To, model.EmployeeId, model.ProjectId, model.ScheduleOption);
 
-                if (employeesScgedulesModel != null)
-                {
-                    var returnModel = await this.ScheduleSevice.SetupSearchModel();
-                    returnModel.EmployeesShcedules = employeesScgedulesModel;
+                var returnModel = await this.ScheduleSevice.SetupSearchModel(employeesResult);
 
-                    return View(returnModel);
-                }
+                return View(returnModel);
             }
 
             ModelState.AddModelError("", Constants.ValidationMessages.Error);

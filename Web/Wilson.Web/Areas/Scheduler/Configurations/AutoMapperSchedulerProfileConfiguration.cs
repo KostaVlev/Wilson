@@ -20,7 +20,7 @@ namespace Wilson.Web.Areas.Scheduler.Configurations
             CreateMap<ScheduleViewModel, Schedule>()
                 .ForSourceMember(x => x.ProjectOptions, opt => opt.Ignore())
                 .ForSourceMember(x => x.ScheduleOptions, opt => opt.Ignore())
-                .ForSourceMember(x => x.Employee, opt => opt.Ignore())
+                //.ForSourceMember(x => x.Employee, opt => opt.Ignore())
                 .ForMember(x => x.Employee, opt => opt.Ignore())
                 .ForSourceMember(x => x.Project, opt => opt.Ignore())
                 .ForMember(x => x.Project, opt => opt.Ignore());

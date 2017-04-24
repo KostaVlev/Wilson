@@ -22,8 +22,7 @@ namespace Wilson.Web.Areas.Scheduler.Services
         /// </summary>
         /// <param name="id">ID to search.</param>
         /// <returns><see cref="Schedule"/></returns>
-        /// <example>await FindSchedule(...)</example>
-        Task<Schedule> FindSchedule(string id);
+        Task<Schedule> FindScheduleById(string id);
 
         /// <summary>
         /// Gets the schedule options form <see cref="ScheduleOption"/> which are used for drop-down lists.
@@ -43,22 +42,33 @@ namespace Wilson.Web.Areas.Scheduler.Services
         /// Asynchronous method that populates <see cref="EmployeeViewModel.NewSchedule"/> property.
         /// </summary>
         /// <param name="employeeModels">Collection of <see cref="EmployeeViewModel"/> which will be processed.</param>
-        /// <example>await SetupEmployeeNewSchedule(...)</example>
         Task SetupEmployeeNewSchedule(IEnumerable<EmployeeViewModel> employeeModels);
 
         /// <summary>
         /// Asynchronous method that prepares <see cref="ScheduleViewModel"/> for displaying.
         /// </summary>
-        /// <param name="employeeModels">Collection of <see cref="ScheduleViewModel"/> which will be processed.</param>
-        /// <example>await SetupScheduleModelForEdit(...)</example>
+        /// <param name="schedules">Collection of <see cref="Schedule"/> which will be processed.</param>
+        /// <returns>Collection of <see cref="ScheduleViewModel"/></returns>
+        Task<IEnumerable<ScheduleViewModel>> SetupScheduleModelForEdit(IEnumerable<Schedule> schedules);
+
+        /// <summary>
+        /// Asynchronous method that prepares <see cref="ScheduleViewModel"/> for displaying.
+        /// </summary>
+        /// <param name="scheduleModels">Collection of <see cref="Schedule"/> which will be processed.</param>
         Task SetupScheduleModelForEdit(IEnumerable<ScheduleViewModel> scheduleModels);
 
         /// <summary>
         /// Asynchronous method that prepares <see cref="ScheduleViewModel"/> for displaying.
         /// </summary>
+        /// <param name="employeeModel"><see cref="Schedule"/> model which will be processed.</param>
+        /// <returns><see cref="ScheduleViewModel"/></returns>
+        Task<ScheduleViewModel> SetupScheduleModelForEdit(Schedule schedule);
+
+        /// <summary>
+        /// Asynchronous method that prepares <see cref="ScheduleViewModel"/> for displaying.
+        /// </summary>
         /// <param name="employeeModel"><see cref="ScheduleViewModel"/> model which will be processed.</param>
-        /// <example>await SetupScheduleModelForEdit(...)</example>
-        Task SetupScheduleModelForEdit(ScheduleViewModel scheduleModel);
+        Task SetupScheduleModelForEdit(ScheduleViewModel schedule);
 
         /// <summary>
         /// Asynchronous method that creates <see cref="EmployeesShceduleViewModel"/> ready for displaying.
@@ -67,25 +77,31 @@ namespace Wilson.Web.Areas.Scheduler.Services
         Task<EmployeesShceduleViewModel> PrepareEmployeesShceduleViewModel();
 
         /// <summary>
-        /// Asynchronous method that creates collection of <see cref="ScheduleViewModel"/> for each Employee in order to
-        /// meet the requirements of given parameters.
+        /// Asynchronous method that creates collection of <see cref="EmployeeViewModel"/> with required schedules.
         /// </summary>
         /// <param name="from">Start date. Default start date is 7 days ago. Null will select all dates.</param>
         /// <param name="to">End date. Default end date is Today. Null will select all dates.</param>
         /// <param name="employeeId">The Employee ID. Null will select all Employees.</param>
         /// <param name="projectId">The Project ID. Null will select all Projects.</param>
         /// <param name="scheduleOption"><see cref="ScheduleOption"/>. Null will select all Schedule Options.</param>
-        /// <returns><see cref="IDictionary{TKey, TValue}"/> where {TKey} is <see cref="EmployeeConciseViewModel"/> and 
-        /// {TValue} is <see cref="List{T}"/> where {T} is <see cref="ScheduleViewModel"/> ordered by Date.</returns>
-        Task<IDictionary<EmployeeConciseViewModel, List<ScheduleViewModel>>> GetSchedulesGroupedByEmployee(
+        /// <returns><see cref="IEnumerable{T}"/> where {T} is <see cref="EmployeeViewModel"/>.</returns>
+        Task<IEnumerable<EmployeeViewModel>> FindEmployeeSchedules(
             DateTime? from = null, DateTime? to = null, string employeeId = null,
             string projectId = null, ScheduleOption? scheduleOption = null);
 
         /// <summary>
         /// Asynchronous method that creates <see cref="SearchViewModel"/>.
         /// </summary>
+        /// <param name="employees">Collection which contains the found employees.</param>
         /// <returns><see cref="SearchViewModel"/></returns>
         /// <example>await SetupSearchModel()</example>
-        Task<SearchViewModel> SetupSearchModel();
+        Task<SearchViewModel> SetupSearchModel(IEnumerable<EmployeeViewModel> employees = null);
+
+        /// <summary>
+        /// Asynchronous method that finds all the schedules for a given date.
+        /// </summary>
+        /// <param name="dateTime">The date to search for.</param>
+        /// <returns>Collection of <see cref="Schedule"/></returns>
+        Task<IEnumerable<Schedule>> FindAllSchedulesForDate(string dateTime);
     }
 }

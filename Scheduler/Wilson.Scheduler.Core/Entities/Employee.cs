@@ -10,6 +10,8 @@ namespace Wilson.Scheduler.Core.Entities
 
         public string LastName { get; private set; }
 
+        public bool IsFired { get; private set; }
+
         public EmployeePosition EmployeePosition { get; private set; }
 
         public string PayRateId { get; private set; }
@@ -28,7 +30,8 @@ namespace Wilson.Scheduler.Core.Entities
                 FirstName = firstName,
                 LastName = lastName,
                 PayRateId = payRate.Id,
-                PayRate = payRate
+                PayRate = payRate,
+                IsFired = false
             };
 
             employee.AssighnEmployeePossition(employeePosition);
@@ -57,20 +60,23 @@ namespace Wilson.Scheduler.Core.Entities
 
         public void AddNewSchedule(Schedule schedule)
         {
-            if (schedule.EmployeeId != this.Id)
-            {
-                throw new ArgumentException(
-                    "The Schedule doesn't belong to the employee. Check the schedule.EmployeeId property.", 
-                    "schedule");
-            }
-
-            var newSchedule = Schedule.Create(schedule.Date, schedule.ScheduleOption, schedule.EmployeeId, schedule.ProjectId);
+            var newSchedule = Schedule.Create(DateTime.Now, schedule.ScheduleOption, this.Id, schedule.ProjectId);
             if (this.Schedules.Contains(newSchedule))
             {
                 throw new ArgumentException("Only one Schedule can be added per date for an employee");
             }
 
             this.Schedules.Add(newSchedule);
+        }
+
+        public void Fire()
+        {
+            this.IsFired = true;
+        }
+
+        public void Hire()
+        {
+            this.IsFired = false;
         }
 
         public override string ToString()

@@ -1,34 +1,22 @@
 ﻿using System.Collections.Generic;
-using Wilson.Web.Areas.Scheduler.Models.HomeViewModels;
+using System.Linq;
 using Wilson.Web.Areas.Scheduler.Models.PayrollViewModels;
 
 namespace Wilson.Web.Areas.Scheduler.Models.SharedViewModels
 {
     public class EmployeeViewModel
     {
-        public EmployeeViewModel()
-        {
-            this.NewSchedule = new ScheduleViewModel()
-            {
-                Employee = new EmployeeConciseViewModel()
-                {
-                    Id = this.Id, FirstName = this.FirstName, LastName = this.LastName
-                }
-            };
-
-        }
-
         public string Id { get; set; }
 
         public string FirstName { get; set; }
 
         public string LastName { get; set; }
 
-        public ScheduleViewModel NewSchedule { get; set; }
+        public ScheduleViewModel NewSchedule { get; set; } = new ScheduleViewModel();
 
         public PaycheckViewModel NewPaycheck { get; set; } = new PaycheckViewModel();
 
-        public IList<ScheduleViewModel> Schedules { get; set; }
+        public IEnumerable<ScheduleViewModel> Schedules { get; set; }
 
         public IEnumerable<PaycheckViewModel> Paychecks { get; set; }
 

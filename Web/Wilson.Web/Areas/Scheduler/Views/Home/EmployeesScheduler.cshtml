@@ -1,8 +1,8 @@
 @model EmployeesShceduleViewModel
 
-@if (Model.EmployeesShcedules.Count() > 0)
+@if (Model.LastScheduledEmployees.Count() > 0)
 {
-    @Html.DisplayFor(m => m.EmployeesShcedules, "Schedule")
+    @Html.DisplayFor(m => m.LastScheduledEmployees, "Schedule")
     <hr />
 }
 
