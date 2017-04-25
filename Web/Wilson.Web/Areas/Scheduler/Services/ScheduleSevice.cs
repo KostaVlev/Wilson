@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -11,7 +12,6 @@ using Wilson.Scheduler.Core.Entities;
 using Wilson.Scheduler.Core.Enumerations;
 using Wilson.Web.Areas.Scheduler.Models.HomeViewModels;
 using Wilson.Web.Areas.Scheduler.Models.SharedViewModels;
-using System.Linq.Expressions;
 
 namespace Wilson.Web.Areas.Scheduler.Services
 {
@@ -26,8 +26,6 @@ namespace Wilson.Web.Areas.Scheduler.Services
         {
             var employees = await this.SchedulerWorkData.Employees
                 .FindAsync(e => !e.IsFired, x => x.Include(s => s.Schedules).ThenInclude(p => p.Project));
-
-            //var employeeModels = this.Mapper.Map<IEnumerable<Employee>, IEnumerable<EmployeeViewModel>>(employees);
 
             return employees;
         }

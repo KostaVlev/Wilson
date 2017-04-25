@@ -44,6 +44,7 @@
         public static class PayrollMessages
         {
             public const string PayrollsCreted = "Payrolls has been created.";
+            public const string PeriodError = "Please select correct period.";
         }
 
         public static class ExceptionMessages

@@ -1,9 +1,32 @@
-<div class="container">
-    <h4 class="text-primary">Choose one of the following options:</h4>
+@model IndexViewModel
+
+<div class="container">    
+    <div class="row">
+        <form asp-area=@Constants.Areas.Scheduler asp-controller="Payroll" asp-action=@nameof(PayrollController.PreparePayrolls) method="post" class="form-horizontal">
+            <h4 class="text-primary">Create Payroll for the selected period</h4>
+            @Html.AntiForgeryToken()
+            <div class="form-group">
+                <label asp-for="Period" class="col-md-2 control-label"></label>
+                <div class="col-md-10">
+                    <select asp-for="Period" class="form-control">
+                        @foreach (var period in Model.PeriodOptions)
+                        {
+                            <option value=@period.Value>@period.Text</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <button type="submit" class="btn btn-default">Create Payroll</button>
+                </div>
+            </div>
+        </form>
+    </div>
     <div class="row">
         <form asp-area=@Constants.Areas.Scheduler asp-controller="Payroll" asp-action=@nameof(PayrollController.PreparePayrolls) method="post">
             @Html.AntiForgeryToken()
-            <button type="submit" class="btn btn-link">Prepare Payrolls?</button>
+            <button type="submit" class="btn btn-link">Prepare Payrolls for the current period?</button>
         </form>
     </div>
     <div class="row">

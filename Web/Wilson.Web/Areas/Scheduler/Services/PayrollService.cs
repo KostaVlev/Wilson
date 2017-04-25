@@ -17,6 +17,21 @@ namespace Wilson.Web.Areas.Scheduler.Services
         {
         }
 
+        public async Task<IEnumerable<Employee>> Employees()
+        {
+            var employees = await this.SchedulerWorkData.Employees
+                .FindAsync(e => !e.IsFired, x => x.Include(s => s.Schedules).Include(p => p.Paychecks).Include(p => p.PayRate));
+
+            return employees;
+        }
+
+        public IndexViewModel PrepareIndexViewModel()
+        {
+            var periodOptions = this.GetPeriodsOptions();
+
+            return new IndexViewModel() { PeriodOptions = periodOptions };
+        }
+
         public async Task<ReviewPaychecksViewModel> PrepareReviewPaychecksViewModel()
         {
             var employeeOptions = await this.GetEmployeeOptions();
@@ -33,11 +48,7 @@ namespace Wilson.Web.Areas.Scheduler.Services
                 dateValue = DateTime.Now;
             }
 
-            var employees = await this.SchedulerWorkData.Employees.GetAllAsync(x => x
-                .Include(s => s.Schedules)
-                .Include(p => p.Paychecks)
-                .Include(pr => pr.PayRate));
-
+            var employees = await this.Employees();
             var employeesWithoutPaychecks = employees.Where(e => !e.Paychecks.Any(p =>
                 p.Date.Month == dateValue.Month && p.Date.Year == dateValue.Year));
 
@@ -46,25 +57,18 @@ namespace Wilson.Web.Areas.Scheduler.Services
 
         public async Task<IEnumerable<EmployeeViewModel>> FindEmployeesPayshecks(string periodFrom, string periodTo, string employeeId)
         {
-            IEnumerable<Employee> query;
-            if (string.IsNullOrEmpty(employeeId))
+            var employees = await this.Employees();
+            if (!string.IsNullOrEmpty(employeeId))
             {
-                query = await this.SchedulerWorkData.Employees.GetAllAsync(x => x.Include(p => p.Paychecks));
-            }
-            else
-            {
-                query = await this.SchedulerWorkData.Employees.FindAsync(e => e.Id == employeeId, x => x.Include(p => p.Paychecks));
+                employees = employees.Where(e => e.Id == employeeId);
             }
 
             var dateFrom = this.TryParsePeriod(periodFrom);
             var dateTo = this.TryParsePeriod(periodTo, false);
-            var employees = query.Where(e => e.Paychecks.Any(p => p.From >= dateFrom && p.To <= dateTo));
+            employees = employees.Where(e => e.Paychecks.Any(p => p.From >= dateFrom && p.To <= dateTo));
+            employees.ToList().ForEach(e => e.Paychecks.OrderBy(p => p.From));
 
-            var employeeModels = this.Mapper.Map<IEnumerable<Employee>, IEnumerable<EmployeeViewModel>>(employees);
-            foreach (var employee in employeeModels)
-            {
-                employee.Paychecks = employee.Paychecks.Where(p => p.From >= dateFrom && p.To <= dateTo).OrderBy(f => f.From);
-            }
+            var employeeModels = this.Mapper.Map<IEnumerable<Employee>, IEnumerable<EmployeeViewModel>>(employees); 
 
             return employeeModels;
         }

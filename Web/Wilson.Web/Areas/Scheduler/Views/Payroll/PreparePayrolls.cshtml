@@ -1,5 +1,12 @@
 @model IEnumerable<EmployeeViewModel>
 
+<h4 class="text-info">Missing payrolls for the period @Model.From</h4>
+<form asp-area=@Constants.Areas.Scheduler asp-controller="Payroll" asp-action=@nameof(PayrollController.PreparePayrolls) method="post">
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="period" value="@Model.From" />
+    <button type="submit" class="btn btn-link">Prepare Payrolls?</button>
+</form>
+
 
 
 

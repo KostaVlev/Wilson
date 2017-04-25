@@ -52,7 +52,7 @@
 }
 else if (Model.Employees != null && Model.Employees.Count() == 0)
 {
-    <h4 class="text-info">Missing payrolls for the period @Model.From - @Model.To!</h4>
+    <h4 class="text-info">Missing payrolls for the period @Model.From</h4>
     <form asp-area=@Constants.Areas.Scheduler asp-controller="Payroll" asp-action=@nameof(PayrollController.PreparePayrolls) method="post">
         @Html.AntiForgeryToken()
         <input type="hidden" name="period" value="@Model.From"/>

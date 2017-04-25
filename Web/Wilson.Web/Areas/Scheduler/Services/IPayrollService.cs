@@ -16,6 +16,12 @@ namespace Wilson.Web.Areas.Scheduler.Services
         ISchedulerWorkData SchedulerWorkData { get; set; }
 
         /// <summary>
+        /// Creates <see cref="IndexViewModel"/>
+        /// </summary>
+        /// <returns><see cref="IndexViewModel"/></returns>
+        IndexViewModel PrepareIndexViewModel();
+
+        /// <summary>
         /// Creates <see cref="ReviewPaychecksViewModel"/>.
         /// </summary>
         /// <returns><see cref="ReviewPaychecksViewModel"/></returns>

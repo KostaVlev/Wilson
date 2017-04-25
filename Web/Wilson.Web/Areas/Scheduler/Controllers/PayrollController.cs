@@ -31,7 +31,7 @@ namespace Wilson.Web.Areas.Scheduler.Controllers
         {
             ViewData["StatusMessage"] = message ?? "";
 
-            return View();
+            return View(this.PayrollService.PrepareIndexViewModel());
         }
 
         //
@@ -45,6 +45,10 @@ namespace Wilson.Web.Areas.Scheduler.Controllers
             if (!string.IsNullOrEmpty(period))
             {
                 fromDate = this.PayrollService.TryParsePeriod(period);
+                if (fromDate > DateTime.Now)
+                {
+                    return RedirectToAction(nameof(PayrollController.Index), new { Message = Constants.PayrollMessages.PeriodError });
+                }
             }
             else
             {
