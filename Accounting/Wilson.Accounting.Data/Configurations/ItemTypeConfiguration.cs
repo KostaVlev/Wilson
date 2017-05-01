@@ -16,7 +16,6 @@ namespace Wilson.Accounting.Data.Configurations
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Id).HasMaxLength(36);
             builder.Property(x => x.Name).HasMaxLength(70).IsRequired();
-            builder.HasMany(x => x.Prices).WithOne(x => x.Item).HasForeignKey(x => x.ItemId);
         }
     }
 }

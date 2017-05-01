@@ -15,15 +15,9 @@ namespace Wilson.Accounting.Data
         }
 
         public virtual DbSet<Invoice> Invoices { get; set; }
-        public virtual DbSet<Item> Items { get; set; }
-        public virtual DbSet<InvoiceItem> InvoiceItems { get; set; }
-        public virtual DbSet<Payment> Payments { get; set; }
-        public virtual DbSet<Price> Prices { get; set; }
         public virtual DbSet<Storehouse> Storehouses { get; set; }
-        public virtual DbSet<Address> Addresses { get; set; }
         public virtual DbSet<Company> Companies { get; set; }
         public virtual DbSet<Employee> Employees { get; set; }
-        public virtual DbSet<Project> Projects { get; set; }
         public virtual DbSet<Bill> Bills { get; set; }
 
         public virtual DbSet<StorehouseItem> StorehouseItems { get; set; }

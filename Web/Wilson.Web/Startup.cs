@@ -130,7 +130,7 @@ namespace Wilson.Web
                 accountingDb.Database.Migrate();
                 companiesDb.Database.Migrate();
                 projectsDb.Database.Migrate();
-                schedulerDb.Database.Migrate();
+                schedulerDb.Database.Migrate(); 
             }
         }
     }

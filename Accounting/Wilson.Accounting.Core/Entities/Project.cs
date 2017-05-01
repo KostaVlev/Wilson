@@ -4,12 +4,12 @@ namespace Wilson.Accounting.Core.Entities
 {
     public class Project : Entity
     {
-        public string Name { get; set; }
+        public string Name { get; private set; }
 
-        public string CustomerId { get; set; }
+        public string CustomerId { get; private set; }
 
-        public Company Customer { get; set; }
+        public Company Customer { get; private set; }
 
-        public virtual ICollection<Bill> Bills { get; set; } = new HashSet<Bill>();
+        public virtual ICollection<Bill> Bills { get; private set; }
     }
 }

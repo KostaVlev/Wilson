@@ -15,12 +15,12 @@ namespace Wilson.Web.Seed
     /// </summary>
     public static class CompaniesDbSeeder
     {
-        private static IEnumerable<Address> addresses;
+        //private static IEnumerable<Address> addresses;
         private static IEnumerable<Company> companies;
         private static IEnumerable<Employee> employees;
         private static IEnumerable<ProjectLocation> projectLocations;
         private static IEnumerable<CompanyContract> companyContracts;
-        private static IEnumerable<Project> projects;
+        //private static IEnumerable<Project> projects;
         private static IEnumerable<Inquiry> inquiries;
         private static IEnumerable<InfoRequest> infoRequests;
         private static IEnumerable<Offer> offers;
@@ -37,12 +37,12 @@ namespace Wilson.Web.Seed
                 var accountingDb = scope.ServiceProvider.GetRequiredService<AccountingDbContext>();
 
                 // Keep the following methods in this exact order.
-                SeedAddresses(companyDb, accountingDb, companyDb.Addresses.Any(), out addresses);
+                //SeedAddresses(companyDb, accountingDb, companyDb.Addresses.Any(), out addresses);
                 SeedCompanies(companyDb, accountingDb, companyDb.Companies.Any(), out companies);
                 SeedEmployees(companyDb, accountingDb, companyDb.Employees.Any(), out employees);
                 SeedProjectLocations(companyDb, companyDb.ProjectLocations.Any(), out projectLocations);
                 SeedCompanyContracts(companyDb, companyDb.CompanyContracts.Any(), out companyContracts);
-                SeedProjects(companyDb, accountingDb, companyDb.Projects.Any(), out projects);
+                //SeedProjects(companyDb, accountingDb, companyDb.Projects.Any(), out projects);
                 SeedInquiries(companyDb, companyDb.Inquiries.Any(), out inquiries);
                 SeedInfoRequests(companyDb, companyDb.InfoRequests.Any(), out infoRequests);
                 SeedOffers(companyDb, companyDb.Offers.Any(), out offers);
@@ -52,20 +52,20 @@ namespace Wilson.Web.Seed
         }
         
 
-        private static void SeedAddresses(CompanyDbContext db, AccountingDbContext accDb, bool hasAddresses, out IEnumerable<Address> addresses)
-        {
-            if (!hasAddresses)
-            {
-                var accAddresses = accDb.Addresses.ToList();
-                addresses = PropertyCopy.CopyCollection<Address, Accounting.Core.Entities.Address>(accAddresses);
+        //private static void SeedAddresses(CompanyDbContext db, AccountingDbContext accDb, bool hasAddresses, out IEnumerable<Address> addresses)
+        //{
+        //    if (!hasAddresses)
+        //    {
+        //        var accAddresses = accDb.Addresses.ToList();
+        //        addresses = PropertyCopy.CopyCollection<Address, Accounting.Core.Entities.Address>(accAddresses);
 
-                db.Addresses.AddRange(addresses);
-            }
-            else
-            {
-                addresses = db.Addresses.ToList();
-            }
-        }
+        //        db.Addresses.AddRange(addresses);
+        //    }
+        //    else
+        //    {
+        //        addresses = db.Addresses.ToList();
+        //    }
+        //}
 
         private static void SeedCompanies(CompanyDbContext db, AccountingDbContext accDb, bool hasCompanies, out IEnumerable<Company> companies)
         {
@@ -223,52 +223,52 @@ namespace Wilson.Web.Seed
             }
         }
 
-        private static void SeedProjects(CompanyDbContext db, AccountingDbContext accDb, bool hasProjects, out IEnumerable<Project> projects)
-        {
-            if (!hasProjects)
-            {
-                var accProjects = accDb.Projects.ToList();
-                projects = PropertyCopy.CopyCollection<Project, Accounting.Core.Entities.Project>(accProjects).ToArray();
+        //private static void SeedProjects(CompanyDbContext db, AccountingDbContext accDb, bool hasProjects, out IEnumerable<Project> projects)
+        //{
+        //    if (!hasProjects)
+        //    {
+        //        var accProjects = accDb.Projects.ToList();
+        //        projects = PropertyCopy.CopyCollection<Project, Accounting.Core.Entities.Project>(accProjects).ToArray();
 
-                var first = projects.Take(1).Last();
-                var firstContract = companyContracts.Where(x => x.IsApproved).Take(1).Last();
-                first.ContractId = firstContract.Id;
-                first.LocationId = projectLocations.Take(1).Last().Id;
+        //        var first = projects.Take(1).Last();
+        //        var firstContract = companyContracts.Where(x => x.IsApproved).Take(1).Last();
+        //        first.ContractId = firstContract.Id;
+        //        first.LocationId = projectLocations.Take(1).Last().Id;
 
-                // Update the relation CompanyContract -> Project!!!
-                firstContract.ProjectId = first.Id;         
+        //        // Update the relation CompanyContract -> Project!!!
+        //        firstContract.ProjectId = first.Id;         
                 
-                var second = projects.Take(2).Last();
-                var secondContract = companyContracts.Where(x => x.IsApproved).Take(2).Last();
-                second.ContractId = secondContract.Id;
-                second.LocationId = projectLocations.Take(2).Last().Id;
+        //        var second = projects.Take(2).Last();
+        //        var secondContract = companyContracts.Where(x => x.IsApproved).Take(2).Last();
+        //        second.ContractId = secondContract.Id;
+        //        second.LocationId = projectLocations.Take(2).Last().Id;
 
-                // Update the relation CompanyContract -> Project!!!
-                secondContract.ProjectId = second.Id;
+        //        // Update the relation CompanyContract -> Project!!!
+        //        secondContract.ProjectId = second.Id;
 
-                var third = projects.Take(3).Last();
-                var thirdContract = companyContracts.Where(x => x.IsApproved).Take(3).Last();
-                third.ContractId = thirdContract.Id;
-                third.LocationId = projectLocations.Take(3).Last().Id;
+        //        var third = projects.Take(3).Last();
+        //        var thirdContract = companyContracts.Where(x => x.IsApproved).Take(3).Last();
+        //        third.ContractId = thirdContract.Id;
+        //        third.LocationId = projectLocations.Take(3).Last().Id;
 
-                // Update the relation CompanyContract -> Project!!!
-                thirdContract.ProjectId = third.Id;
+        //        // Update the relation CompanyContract -> Project!!!
+        //        thirdContract.ProjectId = third.Id;
 
-                var forth = projects.Take(4).Last();
-                var forthContract = companyContracts.Where(x => !x.IsApproved).Take(1).Last();
-                forth.ContractId = forthContract.Id;
-                forth.LocationId = projectLocations.Take(4).Last().Id;
+        //        var forth = projects.Take(4).Last();
+        //        var forthContract = companyContracts.Where(x => !x.IsApproved).Take(1).Last();
+        //        forth.ContractId = forthContract.Id;
+        //        forth.LocationId = projectLocations.Take(4).Last().Id;
 
-                // Update the relation CompanyContract -> Project!!!
-                forthContract.ProjectId = forth.Id;
+        //        // Update the relation CompanyContract -> Project!!!
+        //        forthContract.ProjectId = forth.Id;
 
-                db.Projects.AddRange(projects);
-            }
-            else
-            {
-                projects = db.Projects.ToList();
-            }
-        }
+        //        db.Projects.AddRange(projects);
+        //    }
+        //    else
+        //    {
+        //        projects = db.Projects.ToList();
+        //    }
+        //}
 
         private static void SeedInquiries(CompanyDbContext db, bool hasInquiries, out IEnumerable<Inquiry> inquiries)
         {

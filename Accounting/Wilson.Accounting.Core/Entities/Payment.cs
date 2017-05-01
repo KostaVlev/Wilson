@@ -2,16 +2,25 @@
 
 namespace Wilson.Accounting.Core.Entities
 {
-    public class Payment : Entity
+    public class Payment : IValueObject<Payment>
     {
-        public DateTime Date { get; set; }
+        public DateTime Date { get; private set; }
 
-        public string InvoiceId { get; set; }
+        public decimal Amount { get; private set; }
 
-        public string PriceId { get; set; }
+        public static Payment Create(DateTime date, decimal amount)
+        {
+            return new Payment() { Date = date, Amount = amount };
+        }
 
-        public virtual Price Price { get; set; }
+        public bool Equals(Payment other)
+        {
+            if (other == null)
+            {
+                return false;
+            }
 
-        public virtual Invoice Invoice { get; set; }
+            return this.Date == other.Date && this.Amount == other.Amount;
+        }
     }
 }

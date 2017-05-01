@@ -3,16 +3,27 @@ using Wilson.Accounting.Core.Enumerations;
 
 namespace Wilson.Accounting.Core.Entities
 {
-    public class Item : Entity
+    public class Item : Entity, IValueObject<Item>
     {
-        public string Name { get; set; }
+        public string Name { get; private set; }
 
-        public int Quantity { get; set; }
-
-        public Мeasure Мeasure { get; set; }
+        public Мeasure Мeasure { get; private set; }
         
-        public virtual ICollection<InvoiceItem> Invoices { get; set; } = new HashSet<InvoiceItem>();
+        public virtual ICollection<InvoiceItem> InvoiceItems { get; private set; }
 
-        public virtual ICollection<Price> Prices { get; set; } = new HashSet<Price>();
+        public static Item Create(string name, Мeasure measure)
+        {
+            return new Item() { Name = name, Мeasure = measure };
+        }
+        
+        public bool Equals(Item other)
+        {
+            if (other == null)
+            {
+                return false;
+            }
+
+            return this.Name == other.Name && this.Мeasure == other.Мeasure;
+        }
     }
 }

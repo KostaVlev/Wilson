@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Wilson.Accounting.Core.Entities;
 
@@ -18,6 +19,7 @@ namespace Wilson.Accounting.Data.Configurations
             builder.Property(x => x.CompanyId).HasMaxLength(36).IsRequired();
             builder.Property(x => x.FirstName).HasMaxLength(70).IsRequired();
             builder.Property(x => x.LastName).HasMaxLength(70).IsRequired();
+            builder.HasMany(x => x.Paycheks).WithOne(x => x.Employee).HasForeignKey(x => x.EmployeeId).OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

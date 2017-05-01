@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Wilson.Accounting.Core.Entities;
+using Wilson.Accounting.Data.Extensions;
 
 namespace Wilson.Accounting.Data.Configurations
 {
@@ -16,10 +17,11 @@ namespace Wilson.Accounting.Data.Configurations
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Id).HasMaxLength(36).IsRequired();
             builder.Property(x => x.InvoiceId).HasMaxLength(36).IsRequired();
-            builder.Property(x => x.PriceId).HasMaxLength(36).IsRequired();
-            builder.HasOne(x => x.Invoice).WithMany(x => x.Items).HasForeignKey(x => x.InvoiceId);
-            builder.HasOne(x => x.Item).WithMany(x => x.Invoices).HasForeignKey(x => x.ItemId);
-            builder.HasOne(x => x.Price).WithMany().HasForeignKey(x => x.PriceId);
+            builder.Property(x => x.ItemId).HasMaxLength(36).IsRequired();
+            builder.Property(x => x.Quantity).IsRequired();
+            builder.Property(x => x.Price).HasMaxLength(36).HasPrecision(18, 4).IsRequired();
+            builder.HasOne(x => x.Invoice).WithMany(x => x.InvoiceItems).HasForeignKey(x => x.InvoiceId);
+            builder.HasOne(x => x.Item).WithMany(x => x.InvoiceItems).HasForeignKey(x => x.ItemId);
         }
     }
 }

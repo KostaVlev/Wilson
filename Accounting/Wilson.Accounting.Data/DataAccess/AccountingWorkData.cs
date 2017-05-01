@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Wilson.Accounting.Core.Aggregates;
 using Wilson.Accounting.Data.DataAccess.Repositories;
 
 namespace Wilson.Accounting.Data.DataAccess
@@ -23,9 +22,7 @@ namespace Wilson.Accounting.Data.DataAccess
             this.dbContext = dbContext;
             this.repositories = new Dictionary<Type, object>();
         }
-
-        public IRepository<InvoiceAggregate> Invoices => this.GetRepository<InvoiceAggregate>();
-
+        
         public int Complete()
         {
             return this.dbContext.SaveChanges();

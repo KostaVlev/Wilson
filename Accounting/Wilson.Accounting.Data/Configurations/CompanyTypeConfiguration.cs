@@ -15,7 +15,6 @@ namespace Wilson.Accounting.Data.Configurations
         {
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Id).HasMaxLength(36);
-            builder.Property(x => x.AddressId).HasMaxLength(36).IsRequired();
             builder.Property(x => x.Name).HasMaxLength(70).IsRequired();
             builder.Property(x => x.RegistrationNumber).HasMaxLength(9).IsRequired();
             builder.Property(x => x.VatNumber).HasMaxLength(11);

@@ -6,7 +6,7 @@ namespace Wilson.Web.Seed
     {
         public void Seed(IServiceScopeFactory services)
         {
-            AccountingDbSeeder.Seed(services);
+            //AccountingDbSeeder.Seed(services);
             CompaniesDbSeeder.Seed(services);
         }
     }
