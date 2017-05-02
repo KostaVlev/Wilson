@@ -8,9 +8,10 @@ using Wilson.Projects.Data;
 namespace Wilson.Projects.Data.Migrations
 {
     [DbContext(typeof(ProjectsDbContext))]
-    partial class ProjectsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20170502133012_DDD")]
+    partial class DDD
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasDefaultSchema("Projects")

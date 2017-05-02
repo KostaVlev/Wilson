@@ -27,6 +27,8 @@ namespace Wilson.Accounting.Data.Migrations
                     b.Property<decimal>("Amount")
                         .HasColumnType("decimal(18,4)");
 
+                    b.Property<string>("BillItems");
+
                     b.Property<DateTime>("Date");
 
                     b.Property<bool>("HasInvoice");
@@ -40,6 +42,8 @@ namespace Wilson.Accounting.Data.Migrations
                     b.Property<string>("ProjectId")
                         .IsRequired()
                         .HasMaxLength(36);
+
+                    b.Property<DateTime>("RevisionDate");
 
                     b.HasKey("Id");
 
@@ -297,6 +301,8 @@ namespace Wilson.Accounting.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasMaxLength(36);
 
+                    b.Property<string>("BillItems");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(70);
@@ -413,7 +419,7 @@ namespace Wilson.Accounting.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Wilson.Accounting.Core.Entities.Storehouse", "Storehouse")
-                        .WithMany("Items")
+                        .WithMany("StorehouseItems")
                         .HasForeignKey("StorehouseId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });

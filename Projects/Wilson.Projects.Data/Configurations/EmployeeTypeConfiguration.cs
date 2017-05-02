@@ -19,7 +19,6 @@ namespace Wilson.Projects.Data.Configurations
             builder.Property(x => x.FirstName).HasMaxLength(70).IsRequired();
             builder.Property(x => x.LastName).HasMaxLength(70).IsRequired();
             builder.HasMany(x => x.Projects).WithOne(x => x.Manager).HasForeignKey(x => x.ManagerId).OnDelete(DeleteBehavior.Restrict);
-            builder.HasMany(x => x.Bills).WithOne(x => x.CreatedBy).HasForeignKey(x => x.CreatedById).OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

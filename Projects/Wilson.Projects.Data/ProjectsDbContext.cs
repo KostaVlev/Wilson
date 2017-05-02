@@ -13,15 +13,9 @@ namespace Wilson.Projects.Data
             : base(options)
         {
         }
-
-        public virtual DbSet<Bill> Bills { get; set; }
+        
         public virtual DbSet<Employee> Employees { get; set; }
-        public virtual DbSet<Item> Items { get; set; }
         public virtual DbSet<Project> Projects { get; set; }
-        public virtual DbSet<Storehouse> Storehouses { get; set; }
-
-        public virtual DbSet<StorehouseItem> StorehouseItems { get; set; }
-        public virtual DbSet<StorehouseItemBill> StorehouseItemBill { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

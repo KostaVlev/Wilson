@@ -11,5 +11,10 @@ namespace Wilson.Accounting.Core.Entities
         public Company Customer { get; private set; }
 
         public virtual ICollection<Bill> Bills { get; private set; }
+
+        public Storehouse CreateStorehouse(string name)
+        {
+            return Storehouse.Create(name, this);
+        }
     }
 }

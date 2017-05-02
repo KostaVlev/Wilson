@@ -8,11 +8,13 @@ namespace Wilson.Accounting.Core.Entities
     {
         public string Name { get; private set; }
 
+        public string BillItems { get; private set; }
+
         public string ProjectId { get; private set; }
 
         public virtual Project Project { get; private set; }
 
-        public virtual ICollection<StorehouseItem> StorehouseItems { get; set; }
+        public virtual ICollection<StorehouseItem> StorehouseItems { get; set; }        
 
         public static Storehouse Create(string name, Project project)
         {
@@ -36,6 +38,19 @@ namespace Wilson.Accounting.Core.Entities
             {                
                 itemToUpdate.AddQiantity(quantity);
             }
+        }
+
+        public ListOfBillItems GetBillItems()
+        {
+            return (ListOfBillItems)this.BillItems;
+        }
+
+        public ListOfBillItems AddBilledItems(Bill bill)
+        {
+            var billedItems = bill.GetBillItems();
+            billedItems.AddRange(bill.GetBillItems());
+
+            return ListOfBillItems.Create(billedItems);
         }
     }
 }

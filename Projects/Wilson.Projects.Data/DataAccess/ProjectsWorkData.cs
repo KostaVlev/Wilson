@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Wilson.Projects.Core.Aggregates;
 using Wilson.Projects.Data.DataAccess.Repositories;
 
 namespace Wilson.Projects.Data.DataAccess
@@ -23,9 +22,7 @@ namespace Wilson.Projects.Data.DataAccess
             this.dbContext = dbContext;
             this.repositories = new Dictionary<Type, object>();
         }
-
-        public IRepository<ProjectAggregate> Projects => this.GetRepository<ProjectAggregate>();
-
+        
         public int Complete()
         {
             return this.dbContext.SaveChanges();

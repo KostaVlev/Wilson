@@ -71,14 +71,20 @@ namespace Wilson.Web.Seed
         {
             if (!hasCompanies)
             {
-                var accCompanies = accDb.Companies.ToList();
-                companies = PropertyCopy.CopyCollection<Company, Accounting.Core.Entities.Company>(accCompanies);
-                foreach (var company in companies)
+                string id = Guid.NewGuid().ToString();
+                companies = new List<Company>()
                 {
-                    company.ShippingAddressId = company.AddressId;
-                    company.OfficeEmail = "office@mail.com";
-                    company.OfficePhone = "0000000000";
-                }
+                    new Company()
+                    {
+                        Name = "Forest Build",
+                        Address = new Address(){Id = id, Country = "Bulgaria", City = "Sofia", Street = "Slance", StreetNumber = "25", PostCode = "14se"},
+                        AddressId = id,
+                        ShippingAddressId = id,
+                        OfficeEmail = "office@mail.com",
+                        OfficePhone = "12563984789",
+                        RegistrationNumber = "123659847",
+                    }
+                };
 
                 db.Companies.AddRange(companies);
             }
@@ -92,10 +98,7 @@ namespace Wilson.Web.Seed
         {
             if (!hasEmployees)
             {
-                var accEmployees = accDb.Employees.ToList();
-                employees = PropertyCopy.CopyCollection<Employee, Accounting.Core.Entities.Employee>(accEmployees).ToArray();
-
-                var first = employees.Take(1).Last();
+                var first = new Employee() { FirstName = "Kostadin", LastName = "Vasilev", CompanyId = companies.FirstOrDefault().Id };
                 var address = new Address()
                 {
                     Country = "Bulgaria",
@@ -111,18 +114,19 @@ namespace Wilson.Web.Seed
                 first.Email = string.Format("{0}@mail.com", first.FirstName);
                 first.AddressId = address.Id;
 
-                var second = employees.Take(2).Last();
+                var second = new Employee() { FirstName = "Kostadin", LastName = "Vasilev", CompanyId = companies.FirstOrDefault().Id };
                 second.EmployeePosition = EmployeePosition.OfficeSaff;
                 second.Phone = "08789522568";
                 second.PrivatePhone = "0789563214";
                 second.Email = string.Format("{0}@gmail.com", second.FirstName);
 
-                var third = employees.Take(3).Last();
+                var third = new Employee() { FirstName = "Kostadin", LastName = "Vasilev", CompanyId = companies.FirstOrDefault().Id };
                 third.EmployeePosition = EmployeePosition.OfficeSaff;
                 third.Phone = "0999856369";
                 third.PrivatePhone = "0700258963";
                 third.Email = string.Format("{0}@mail.com", third.LastName);
 
+                employees = new List<Employee> { first, second, third };
                 db.Employees.AddRange(employees);
                 db.Addresses.Add(address);
             }

@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Wilson.Projects.Core.Entities;
 
@@ -19,8 +18,6 @@ namespace Wilson.Projects.Data.Configurations
             builder.Property(x => x.ManagerId).HasMaxLength(36).IsRequired();
             builder.Property(x => x.StorehouseId).HasMaxLength(36).IsRequired();
             builder.Property(x => x.Name).HasMaxLength(900).IsRequired();
-            builder.HasOne(x => x.Storehouse).WithOne(x => x.Project).HasForeignKey<Project>(x => x.StorehouseId).OnDelete(DeleteBehavior.Restrict);
-            builder.HasMany(x => x.Bills).WithOne(x => x.Project).HasForeignKey(x => x.ProjectId).OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

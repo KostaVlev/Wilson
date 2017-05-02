@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Wilson.Scheduler.Data.Migrations
 {
-    public partial class Init : Migration
+    public partial class DDD : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -51,6 +51,7 @@ namespace Wilson.Scheduler.Data.Migrations
                     Id = table.Column<string>(maxLength: 36, nullable: false),
                     EmployeePosition = table.Column<int>(nullable: false),
                     FirstName = table.Column<string>(maxLength: 70, nullable: false),
+                    IsFired = table.Column<bool>(nullable: false),
                     LastName = table.Column<string>(maxLength: 70, nullable: false),
                     PayRateId = table.Column<string>(maxLength: 36, nullable: false)
                 },
@@ -76,9 +77,11 @@ namespace Wilson.Scheduler.Data.Migrations
                     EmployeeId = table.Column<string>(maxLength: 36, nullable: false),
                     ExtraHours = table.Column<int>(nullable: false),
                     From = table.Column<DateTime>(nullable: false),
+                    HourOnBusinessTrip = table.Column<int>(nullable: false),
                     HourOnHolidays = table.Column<int>(nullable: false),
                     Hours = table.Column<int>(nullable: false),
                     PaidDaysOff = table.Column<int>(nullable: false),
+                    PayBusinessTrip = table.Column<decimal>(type: "decimal(18,4)", nullable: false),
                     PayForExtraHours = table.Column<decimal>(type: "decimal(18,4)", nullable: false),
                     PayForHolidayHours = table.Column<decimal>(type: "decimal(18,4)", nullable: false),
                     PayForHours = table.Column<decimal>(type: "decimal(18,4)", nullable: false),

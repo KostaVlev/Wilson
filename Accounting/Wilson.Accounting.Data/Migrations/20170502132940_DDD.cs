@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Wilson.Accounting.Data.Migrations
 {
-    public partial class Init : Migration
+    public partial class DDD : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -12,47 +12,12 @@ namespace Wilson.Accounting.Data.Migrations
                 name: "Accounting");
 
             migrationBuilder.CreateTable(
-                name: "Addresses",
-                schema: "Accounting",
-                columns: table => new
-                {
-                    Id = table.Column<string>(maxLength: 36, nullable: false),
-                    City = table.Column<string>(maxLength: 70, nullable: false),
-                    Country = table.Column<string>(maxLength: 70, nullable: false),
-                    Floor = table.Column<int>(nullable: true),
-                    Note = table.Column<string>(maxLength: 250, nullable: true),
-                    PostCode = table.Column<string>(maxLength: 10, nullable: false),
-                    Street = table.Column<string>(maxLength: 70, nullable: false),
-                    StreetNumber = table.Column<string>(maxLength: 6, nullable: false),
-                    UnitNumber = table.Column<string>(maxLength: 6, nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Addresses", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Items",
-                schema: "Accounting",
-                columns: table => new
-                {
-                    Id = table.Column<string>(maxLength: 36, nullable: false),
-                    Name = table.Column<string>(maxLength: 70, nullable: false),
-                    Quantity = table.Column<int>(nullable: false),
-                    Мeasure = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Items", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Companies",
                 schema: "Accounting",
                 columns: table => new
                 {
                     Id = table.Column<string>(maxLength: 36, nullable: false),
-                    AddressId = table.Column<string>(maxLength: 36, nullable: false),
+                    Address = table.Column<string>(nullable: true),
                     HasVatRegistration = table.Column<bool>(nullable: false),
                     Name = table.Column<string>(maxLength: 70, nullable: false),
                     RegistrationNumber = table.Column<string>(maxLength: 9, nullable: false),
@@ -61,13 +26,20 @@ namespace Wilson.Accounting.Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Companies", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Companies_Addresses_AddressId",
-                        column: x => x.AddressId,
-                        principalSchema: "Accounting",
-                        principalTable: "Addresses",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Item",
+                schema: "Accounting",
+                columns: table => new
+                {
+                    Id = table.Column<string>(maxLength: 36, nullable: false),
+                    Name = table.Column<string>(maxLength: 70, nullable: false),
+                    Мeasure = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Item", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -78,6 +50,7 @@ namespace Wilson.Accounting.Data.Migrations
                     Id = table.Column<string>(maxLength: 36, nullable: false),
                     CompanyId = table.Column<string>(maxLength: 36, nullable: false),
                     FirstName = table.Column<string>(maxLength: 70, nullable: false),
+                    IsFired = table.Column<bool>(nullable: false),
                     LastName = table.Column<string>(maxLength: 70, nullable: false)
                 },
                 constraints: table =>
@@ -93,7 +66,7 @@ namespace Wilson.Accounting.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Projects",
+                name: "Project",
                 schema: "Accounting",
                 columns: table => new
                 {
@@ -103,14 +76,52 @@ namespace Wilson.Accounting.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Projects", x => x.Id);
+                    table.PrimaryKey("PK_Project", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Projects_Companies_CustomerId",
+                        name: "FK_Project_Companies_CustomerId",
                         column: x => x.CustomerId,
                         principalSchema: "Accounting",
                         principalTable: "Companies",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Paycheck",
+                schema: "Accounting",
+                columns: table => new
+                {
+                    Id = table.Column<string>(maxLength: 36, nullable: false),
+                    Date = table.Column<DateTime>(nullable: false),
+                    EmployeeId = table.Column<string>(maxLength: 36, nullable: false),
+                    ExtraHours = table.Column<int>(nullable: false),
+                    From = table.Column<DateTime>(nullable: false),
+                    HourOnBusinessTrip = table.Column<int>(nullable: false),
+                    HourOnHolidays = table.Column<int>(nullable: false),
+                    Hours = table.Column<int>(nullable: false),
+                    IsPaied = table.Column<bool>(nullable: false),
+                    PaidDaysOff = table.Column<int>(nullable: false),
+                    PayBusinessTrip = table.Column<decimal>(type: "decimal(18,4)", nullable: false),
+                    PayForExtraHours = table.Column<decimal>(type: "decimal(18,4)", nullable: false),
+                    PayForHolidayHours = table.Column<decimal>(type: "decimal(18,4)", nullable: false),
+                    PayForHours = table.Column<decimal>(type: "decimal(18,4)", nullable: false),
+                    PayForPayedDaysOff = table.Column<decimal>(type: "decimal(18,4)", nullable: false),
+                    Payments = table.Column<string>(nullable: true),
+                    SickDaysOff = table.Column<int>(nullable: false),
+                    To = table.Column<DateTime>(nullable: false),
+                    Total = table.Column<decimal>(type: "decimal(18,4)", nullable: false),
+                    UnpaidDaysOff = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Paycheck", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Paycheck_Employees_EmployeeId",
+                        column: x => x.EmployeeId,
+                        principalSchema: "Accounting",
+                        principalTable: "Employees",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -120,19 +131,22 @@ namespace Wilson.Accounting.Data.Migrations
                 {
                     Id = table.Column<string>(maxLength: 36, nullable: false),
                     Amount = table.Column<decimal>(type: "decimal(18,4)", nullable: false),
+                    BillItems = table.Column<string>(nullable: true),
                     Date = table.Column<DateTime>(nullable: false),
+                    HasInvoice = table.Column<bool>(nullable: false),
                     HtmlContent = table.Column<string>(nullable: false),
                     InvoiceId = table.Column<string>(maxLength: 36, nullable: true),
-                    ProjectId = table.Column<string>(maxLength: 36, nullable: false)
+                    ProjectId = table.Column<string>(maxLength: 36, nullable: false),
+                    RevisionDate = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Bills", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Bills_Projects_ProjectId",
+                        name: "FK_Bills_Project_ProjectId",
                         column: x => x.ProjectId,
                         principalSchema: "Accounting",
-                        principalTable: "Projects",
+                        principalTable: "Project",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -143,6 +157,7 @@ namespace Wilson.Accounting.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(maxLength: 36, nullable: false),
+                    BillItems = table.Column<string>(nullable: true),
                     Name = table.Column<string>(maxLength: 70, nullable: false),
                     ProjectId = table.Column<string>(maxLength: 36, nullable: true)
                 },
@@ -150,10 +165,10 @@ namespace Wilson.Accounting.Data.Migrations
                 {
                     table.PrimaryKey("PK_Storehouses", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Storehouses_Projects_ProjectId",
+                        name: "FK_Storehouses_Project_ProjectId",
                         column: x => x.ProjectId,
                         principalSchema: "Accounting",
-                        principalTable: "Projects",
+                        principalTable: "Project",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -175,6 +190,8 @@ namespace Wilson.Accounting.Data.Migrations
                     IssueDate = table.Column<DateTime>(nullable: false),
                     Number = table.Column<string>(maxLength: 10, nullable: false),
                     PayedAmount = table.Column<decimal>(nullable: false),
+                    PaymentDate = table.Column<DateTime>(nullable: false),
+                    Payments = table.Column<string>(nullable: true),
                     SellerId = table.Column<string>(maxLength: 36, nullable: false),
                     SubTotal = table.Column<decimal>(type: "decimal(18,4)", nullable: false),
                     Total = table.Column<decimal>(type: "decimal(18,4)", nullable: false),
@@ -208,89 +225,31 @@ namespace Wilson.Accounting.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Payments",
-                schema: "Accounting",
-                columns: table => new
-                {
-                    Id = table.Column<string>(maxLength: 36, nullable: false),
-                    Date = table.Column<DateTime>(nullable: false),
-                    InvoiceId = table.Column<string>(maxLength: 36, nullable: false),
-                    PriceId = table.Column<string>(maxLength: 36, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Payments", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Payments_Invoices_InvoiceId",
-                        column: x => x.InvoiceId,
-                        principalSchema: "Accounting",
-                        principalTable: "Invoices",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Prices",
-                schema: "Accounting",
-                columns: table => new
-                {
-                    Id = table.Column<string>(maxLength: 36, nullable: false),
-                    Amount = table.Column<decimal>(type: "decimal(18,4)", nullable: false),
-                    ItemId = table.Column<string>(maxLength: 36, nullable: true),
-                    PaymentId = table.Column<string>(maxLength: 36, nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Prices", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Prices_Items_ItemId",
-                        column: x => x.ItemId,
-                        principalSchema: "Accounting",
-                        principalTable: "Items",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Prices_Payments_PaymentId",
-                        column: x => x.PaymentId,
-                        principalSchema: "Accounting",
-                        principalTable: "Payments",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "InvoiceItems",
+                name: "InvoiceItem",
                 schema: "Accounting",
                 columns: table => new
                 {
                     Id = table.Column<string>(maxLength: 36, nullable: false),
                     InvoiceId = table.Column<string>(maxLength: 36, nullable: false),
-                    ItemId = table.Column<string>(nullable: true),
-                    PriceId = table.Column<string>(maxLength: 36, nullable: false),
+                    ItemId = table.Column<string>(maxLength: 36, nullable: false),
+                    Price = table.Column<decimal>(type: "decimal(18,4)", maxLength: 36, nullable: false),
                     Quantity = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_InvoiceItems", x => x.Id);
+                    table.PrimaryKey("PK_InvoiceItem", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_InvoiceItems_Invoices_InvoiceId",
+                        name: "FK_InvoiceItem_Invoices_InvoiceId",
                         column: x => x.InvoiceId,
                         principalSchema: "Accounting",
                         principalTable: "Invoices",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_InvoiceItems_Items_ItemId",
+                        name: "FK_InvoiceItem_Item_ItemId",
                         column: x => x.ItemId,
                         principalSchema: "Accounting",
-                        principalTable: "Items",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_InvoiceItems_Prices_PriceId",
-                        column: x => x.PriceId,
-                        principalSchema: "Accounting",
-                        principalTable: "Prices",
+                        principalTable: "Item",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -300,17 +259,20 @@ namespace Wilson.Accounting.Data.Migrations
                 schema: "Accounting",
                 columns: table => new
                 {
+                    Id = table.Column<string>(nullable: false),
                     InvoiceItemId = table.Column<string>(maxLength: 36, nullable: false),
+                    Price = table.Column<decimal>(type: "decimal(18,4)", maxLength: 36, nullable: false),
+                    Quantity = table.Column<int>(nullable: false),
                     StorehouseId = table.Column<string>(maxLength: 36, nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_StorehouseItems", x => new { x.InvoiceItemId, x.StorehouseId });
+                    table.PrimaryKey("PK_StorehouseItems", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_StorehouseItems_InvoiceItems_InvoiceItemId",
+                        name: "FK_StorehouseItems_InvoiceItem_InvoiceItemId",
                         column: x => x.InvoiceItemId,
                         principalSchema: "Accounting",
-                        principalTable: "InvoiceItems",
+                        principalTable: "InvoiceItem",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -327,12 +289,6 @@ namespace Wilson.Accounting.Data.Migrations
                 schema: "Accounting",
                 table: "Bills",
                 column: "ProjectId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Companies_AddressId",
-                schema: "Accounting",
-                table: "Companies",
-                column: "AddressId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Employees_CompanyId",
@@ -360,46 +316,27 @@ namespace Wilson.Accounting.Data.Migrations
                 column: "SellerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_InvoiceItems_InvoiceId",
+                name: "IX_InvoiceItem_InvoiceId",
                 schema: "Accounting",
-                table: "InvoiceItems",
+                table: "InvoiceItem",
                 column: "InvoiceId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_InvoiceItems_ItemId",
+                name: "IX_InvoiceItem_ItemId",
                 schema: "Accounting",
-                table: "InvoiceItems",
+                table: "InvoiceItem",
                 column: "ItemId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_InvoiceItems_PriceId",
+                name: "IX_Paycheck_EmployeeId",
                 schema: "Accounting",
-                table: "InvoiceItems",
-                column: "PriceId");
+                table: "Paycheck",
+                column: "EmployeeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Payments_InvoiceId",
+                name: "IX_Project_CustomerId",
                 schema: "Accounting",
-                table: "Payments",
-                column: "InvoiceId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Prices_ItemId",
-                schema: "Accounting",
-                table: "Prices",
-                column: "ItemId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Prices_PaymentId",
-                schema: "Accounting",
-                table: "Prices",
-                column: "PaymentId",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Projects_CustomerId",
-                schema: "Accounting",
-                table: "Projects",
+                table: "Project",
                 column: "CustomerId");
 
             migrationBuilder.CreateIndex(
@@ -407,6 +344,12 @@ namespace Wilson.Accounting.Data.Migrations
                 schema: "Accounting",
                 table: "Storehouses",
                 column: "ProjectId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_StorehouseItems_InvoiceItemId",
+                schema: "Accounting",
+                table: "StorehouseItems",
+                column: "InvoiceItemId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_StorehouseItems_StorehouseId",
@@ -418,7 +361,7 @@ namespace Wilson.Accounting.Data.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Employees",
+                name: "Paycheck",
                 schema: "Accounting");
 
             migrationBuilder.DropTable(
@@ -426,7 +369,11 @@ namespace Wilson.Accounting.Data.Migrations
                 schema: "Accounting");
 
             migrationBuilder.DropTable(
-                name: "InvoiceItems",
+                name: "Employees",
+                schema: "Accounting");
+
+            migrationBuilder.DropTable(
+                name: "InvoiceItem",
                 schema: "Accounting");
 
             migrationBuilder.DropTable(
@@ -434,19 +381,11 @@ namespace Wilson.Accounting.Data.Migrations
                 schema: "Accounting");
 
             migrationBuilder.DropTable(
-                name: "Prices",
-                schema: "Accounting");
-
-            migrationBuilder.DropTable(
-                name: "Items",
-                schema: "Accounting");
-
-            migrationBuilder.DropTable(
-                name: "Payments",
-                schema: "Accounting");
-
-            migrationBuilder.DropTable(
                 name: "Invoices",
+                schema: "Accounting");
+
+            migrationBuilder.DropTable(
+                name: "Item",
                 schema: "Accounting");
 
             migrationBuilder.DropTable(
@@ -454,15 +393,11 @@ namespace Wilson.Accounting.Data.Migrations
                 schema: "Accounting");
 
             migrationBuilder.DropTable(
-                name: "Projects",
+                name: "Project",
                 schema: "Accounting");
 
             migrationBuilder.DropTable(
                 name: "Companies",
-                schema: "Accounting");
-
-            migrationBuilder.DropTable(
-                name: "Addresses",
                 schema: "Accounting");
         }
     }

@@ -4,14 +4,14 @@ using Wilson.Projects.Core.Entities;
 
 namespace Wilson.Projects.Data.Configurations
 {
-    public class ItemTypeConfiguration : EntityTypeConfiguration<Item>
+    public class CompanyTypeConfiguration : EntityTypeConfiguration<Company>
     {
-        public ItemTypeConfiguration(ModelBuilder modelBuilder)
+        public CompanyTypeConfiguration(ModelBuilder modelBuilder)
         {
-            this.Map(modelBuilder.Entity<Item>());
+            this.Map(modelBuilder.Entity<Company>());
         }
 
-        public override void Map(EntityTypeBuilder<Item> builder)
+        public override void Map(EntityTypeBuilder<Company> builder)
         {
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Id).HasMaxLength(36);

@@ -9,7 +9,7 @@ using Wilson.Scheduler.Core.Enumerations;
 namespace Wilson.Scheduler.Data.Migrations
 {
     [DbContext(typeof(SchedulerDbContext))]
-    [Migration("20170420132350_DDD")]
+    [Migration("20170502133545_DDD")]
     partial class DDD
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -30,6 +30,8 @@ namespace Wilson.Scheduler.Data.Migrations
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasMaxLength(70);
+
+                    b.Property<bool>("IsFired");
 
                     b.Property<string>("LastName")
                         .IsRequired()

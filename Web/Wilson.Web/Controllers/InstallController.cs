@@ -90,7 +90,7 @@ namespace Wilson.Web.Controllers
                     // Seed the database
                     if (model.SeedData)
                     {
-                        this.dataSeeder.Seed(this.services);
+                        this.dataSeeder.Seed(this.services, this.Mapper);
                         this.logger.LogInformation(3, "Data was seeded into the database.");
                     }
                     
