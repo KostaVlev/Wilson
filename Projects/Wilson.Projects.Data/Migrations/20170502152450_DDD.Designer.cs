@@ -8,7 +8,7 @@ using Wilson.Projects.Data;
 namespace Wilson.Projects.Data.Migrations
 {
     [DbContext(typeof(ProjectsDbContext))]
-    [Migration("20170502133012_DDD")]
+    [Migration("20170502152450_DDD")]
     partial class DDD
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -77,10 +77,6 @@ namespace Wilson.Projects.Data.Migrations
                         .HasMaxLength(900);
 
                     b.Property<DateTime>("StartDate");
-
-                    b.Property<string>("StorehouseId")
-                        .IsRequired()
-                        .HasMaxLength(36);
 
                     b.HasKey("Id");
 

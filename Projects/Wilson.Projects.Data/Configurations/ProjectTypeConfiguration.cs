@@ -16,7 +16,6 @@ namespace Wilson.Projects.Data.Configurations
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Id).HasMaxLength(36);
             builder.Property(x => x.ManagerId).HasMaxLength(36).IsRequired();
-            builder.Property(x => x.StorehouseId).HasMaxLength(36).IsRequired();
             builder.Property(x => x.Name).HasMaxLength(900).IsRequired();
         }
     }

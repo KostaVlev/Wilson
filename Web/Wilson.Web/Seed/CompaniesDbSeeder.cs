@@ -114,13 +114,13 @@ namespace Wilson.Web.Seed
                 first.Email = string.Format("{0}@mail.com", first.FirstName);
                 first.AddressId = address.Id;
 
-                var second = new Employee() { FirstName = "Kostadin", LastName = "Vasilev", CompanyId = companies.FirstOrDefault().Id };
+                var second = new Employee() { FirstName = "John", LastName = "Smith", CompanyId = companies.FirstOrDefault().Id };
                 second.EmployeePosition = EmployeePosition.OfficeSaff;
                 second.Phone = "08789522568";
                 second.PrivatePhone = "0789563214";
                 second.Email = string.Format("{0}@gmail.com", second.FirstName);
 
-                var third = new Employee() { FirstName = "Kostadin", LastName = "Vasilev", CompanyId = companies.FirstOrDefault().Id };
+                var third = new Employee() { FirstName = "Samantha", LastName = "Fox", CompanyId = companies.FirstOrDefault().Id };
                 third.EmployeePosition = EmployeePosition.OfficeSaff;
                 third.Phone = "0999856369";
                 third.PrivatePhone = "0700258963";

@@ -77,10 +77,6 @@ namespace Wilson.Projects.Data.Migrations
 
                     b.Property<DateTime>("StartDate");
 
-                    b.Property<string>("StorehouseId")
-                        .IsRequired()
-                        .HasMaxLength(36);
-
                     b.HasKey("Id");
 
                     b.HasIndex("CustomerId");

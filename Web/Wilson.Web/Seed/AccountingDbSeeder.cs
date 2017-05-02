@@ -32,7 +32,7 @@ namespace Wilson.Web.Seed
         /// Seeds the data for the Accounting module.
         /// </summary>
         /// <param name="services">The service factory.</param>
-        public static void Seed(IServiceScopeFactory services, IMapper mapper)
+        public static void Seed(IServiceScopeFactory services)
         {
             using (var scope = services.CreateScope())
             {
@@ -41,7 +41,8 @@ namespace Wilson.Web.Seed
                 var projectsDb = scope.ServiceProvider.GetRequiredService<ProjectsDbContext>();
 
                 // Keep the following methods in this exact order.
-                SeedProjects(accountingDb, projectsDb, mapper, !accountingDb.Set<Project>().Any(), out projects);
+                SeedCompanies(accountingDb, companyDb, !accountingDb.Set<Company>().Any(), out companies);
+                SeedProjects(accountingDb, projectsDb, !accountingDb.Set<Project>().Any(), out projects);
 
                 //SeedStorehouses(db, !db.Storehouses.Any(), out storehouses);
                 //SeedInvoices(db, !db.Invoices.Any(), out invoices);
@@ -56,13 +57,41 @@ namespace Wilson.Web.Seed
             }
         }
 
-        private static void SeedProjects(AccountingDbContext accDb, ProjectsDbContext projectsDb, IMapper mapper, bool hasProjects, out IEnumerable<Project> projetcs)
+        private static void SeedCompanies(
+            AccountingDbContext accountingDb,
+            CompanyDbContext companyDb,
+            bool hasCompanies,
+            out IEnumerable<Company> companies)
+        {
+            if (hasCompanies)
+            {
+                Mapper.Initialize(cfg =>
+                {
+                    cfg.CreateMap<Companies.Core.Entities.Company, Company>();
+                });
+
+                var dbCompanies = companyDb.Companies;
+                companies = Mapper.Map<IEnumerable<Companies.Core.Entities.Company>, IEnumerable<Company>>(dbCompanies);
+
+                accountingDb.Set<Company>().AddRange(companies);
+            }
+            else
+            {
+                companies = accountingDb.Set<Company>().ToList();
+            }
+        }
+
+        private static void SeedProjects(AccountingDbContext accDb, ProjectsDbContext projectsDb, bool hasProjects, out IEnumerable<Project> projetcs)
         {
             if (hasProjects)
             {
-                var projects = projectsDb.Projects.ToList();
-                Mapper.Initialize(cfg => cfg.CreateMap<Projects.Core.Entities.Project, Project>());
-                projetcs = mapper.Map<IEnumerable<Projects.Core.Entities.Project>, IEnumerable<Project>>(projects);
+                var dbProjects = projectsDb.Projects.ToList();
+                Mapper.Initialize(cfg =>
+                {
+                    cfg.CreateMap<Projects.Core.Entities.Project, Project>().ForMember(x => x.Customer, opt => opt.Ignore());
+                });
+
+                projetcs = Mapper.Map<IEnumerable<Projects.Core.Entities.Project>, IEnumerable<Project>>(dbProjects);
 
                 accDb.Set<Project>().AddRange(projetcs);
             }

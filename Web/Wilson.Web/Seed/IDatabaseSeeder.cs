@@ -5,6 +5,6 @@ namespace Wilson.Web.Seed
 {
     public interface IDatabaseSeeder
     {
-        void Seed(IServiceScopeFactory services, IMapper mapper);
+        void Seed(IServiceScopeFactory services);
     }
 }

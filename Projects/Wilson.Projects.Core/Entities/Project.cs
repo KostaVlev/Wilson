@@ -20,8 +20,6 @@ namespace Wilson.Projects.Core.Entities
 
         public string ManagerId { get; private set; }
 
-        public string StorehouseId { get; private set; }
-
         public virtual Company Customer { get; private set; }
 
         public virtual Employee Manager { get; private set; }

@@ -5,10 +5,11 @@ namespace Wilson.Web.Seed
 {
     public class DatabaseSeeder : IDatabaseSeeder
     {
-        public void Seed(IServiceScopeFactory services, IMapper mapper)
+        public void Seed(IServiceScopeFactory services)
         {
-            AccountingDbSeeder.Seed(services, mapper);
             CompaniesDbSeeder.Seed(services);
+            ProjectsDbSeeder.Seed(services);
+            AccountingDbSeeder.Seed(services);            
         }
     }
 }

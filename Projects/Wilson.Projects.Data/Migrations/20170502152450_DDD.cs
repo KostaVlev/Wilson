@@ -51,8 +51,7 @@ namespace Wilson.Projects.Data.Migrations
                     InProgress = table.Column<bool>(nullable: false),
                     ManagerId = table.Column<string>(maxLength: 36, nullable: false),
                     Name = table.Column<string>(maxLength: 900, nullable: false),
-                    StartDate = table.Column<DateTime>(nullable: false),
-                    StorehouseId = table.Column<string>(maxLength: 36, nullable: false)
+                    StartDate = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {
