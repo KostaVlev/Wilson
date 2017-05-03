@@ -50,6 +50,7 @@ namespace Wilson.Scheduler.Core.Entities
 
         public void ApplayPayRate(PayRate payRate)
         {
+            this.PayRate = payRate;
             this.PayRateId = PayRateId;
         }
 

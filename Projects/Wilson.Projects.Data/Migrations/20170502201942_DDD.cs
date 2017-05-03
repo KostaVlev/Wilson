@@ -31,6 +31,7 @@ namespace Wilson.Projects.Data.Migrations
                 {
                     Id = table.Column<string>(maxLength: 36, nullable: false),
                     FirstName = table.Column<string>(maxLength: 70, nullable: false),
+                    IsFired = table.Column<bool>(nullable: false),
                     LastName = table.Column<string>(maxLength: 70, nullable: false)
                 },
                 constraints: table =>

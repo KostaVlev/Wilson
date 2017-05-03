@@ -86,14 +86,7 @@ namespace Wilson.Web.Controllers
 
                     // Make the user administrator.
                     await userManager.AddToRoleAsync(user, Constants.Roles.Administrator);
-
-                    // Seed the database
-                    if (model.SeedData)
-                    {
-                        this.dataSeeder.Seed(this.services);
-                        this.logger.LogInformation(3, "Data was seeded into the database.");
-                    }
-                    
+                      
                     // Create home company.
                     var company = this.Mapper.Map<CompanyViewModel, Company>(model.Company);
                     var companyAddress = this.Mapper.Map<AddressViewModel, Address>(model.Company.Address);
@@ -113,10 +106,17 @@ namespace Wilson.Web.Controllers
 
                     // Set database settings to installed and Save Home Company Id.
                     this.CompanyWorkData.Settings.Add(new Settings() { IsDatabaseInstalled = true, HomeCompanyId = company.Id });
+                    
+                    // Save all changes. Don't use async here because the Data seeder might access the db before they to be completed.
+                    this.CompanyWorkData.Complete();
+                    this.SchedulerWorkData.Complete();
 
-                    // Save all changes.
-                    await this.CompanyWorkData.CompleteAsync();
-                    await this.SchedulerWorkData.CompleteAsync();
+                    // Seed the database. Keep this at the end.
+                    if (model.SeedData)
+                    {
+                        this.dataSeeder.Seed(this.services);
+                        this.logger.LogInformation(3, "Data was seeded into the database.");
+                    }                    
 
                     this.logger.LogInformation(3, "The database was installed successfully.");
                     return RedirectToAction(nameof(AccountController.Login), "Account");

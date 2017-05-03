@@ -42,6 +42,8 @@ namespace Wilson.Projects.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(70);
 
+                    b.Property<bool>("IsFired");
+
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasMaxLength(70);

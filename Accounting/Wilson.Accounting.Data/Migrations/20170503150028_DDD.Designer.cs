@@ -9,7 +9,7 @@ using Wilson.Accounting.Core.Enumerations;
 namespace Wilson.Accounting.Data.Migrations
 {
     [DbContext(typeof(AccountingDbContext))]
-    [Migration("20170502132940_DDD")]
+    [Migration("20170503150028_DDD")]
     partial class DDD
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -69,10 +69,10 @@ namespace Wilson.Accounting.Data.Migrations
 
                     b.Property<string>("RegistrationNumber")
                         .IsRequired()
-                        .HasMaxLength(9);
+                        .HasMaxLength(10);
 
                     b.Property<string>("VatNumber")
-                        .HasMaxLength(11);
+                        .HasMaxLength(12);
 
                     b.HasKey("Id");
 

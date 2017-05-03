@@ -68,10 +68,10 @@ namespace Wilson.Accounting.Data.Migrations
 
                     b.Property<string>("RegistrationNumber")
                         .IsRequired()
-                        .HasMaxLength(9);
+                        .HasMaxLength(10);
 
                     b.Property<string>("VatNumber")
-                        .HasMaxLength(11);
+                        .HasMaxLength(12);
 
                     b.HasKey("Id");
 

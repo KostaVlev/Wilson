@@ -20,8 +20,8 @@ namespace Wilson.Accounting.Data.Migrations
                     Address = table.Column<string>(nullable: true),
                     HasVatRegistration = table.Column<bool>(nullable: false),
                     Name = table.Column<string>(maxLength: 70, nullable: false),
-                    RegistrationNumber = table.Column<string>(maxLength: 9, nullable: false),
-                    VatNumber = table.Column<string>(maxLength: 11, nullable: true)
+                    RegistrationNumber = table.Column<string>(maxLength: 10, nullable: false),
+                    VatNumber = table.Column<string>(maxLength: 12, nullable: true)
                 },
                 constraints: table =>
                 {

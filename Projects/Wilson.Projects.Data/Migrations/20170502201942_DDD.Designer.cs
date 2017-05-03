@@ -8,7 +8,7 @@ using Wilson.Projects.Data;
 namespace Wilson.Projects.Data.Migrations
 {
     [DbContext(typeof(ProjectsDbContext))]
-    [Migration("20170502152450_DDD")]
+    [Migration("20170502201942_DDD")]
     partial class DDD
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -42,6 +42,8 @@ namespace Wilson.Projects.Data.Migrations
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasMaxLength(70);
+
+                    b.Property<bool>("IsFired");
 
                     b.Property<string>("LastName")
                         .IsRequired()

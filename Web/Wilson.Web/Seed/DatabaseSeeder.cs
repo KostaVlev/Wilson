@@ -9,7 +9,8 @@ namespace Wilson.Web.Seed
         {
             CompaniesDbSeeder.Seed(services);
             ProjectsDbSeeder.Seed(services);
-            AccountingDbSeeder.Seed(services);            
+            AccountingDbSeeder.Seed(services);
+            SchedulerDbSeeder.Seed(services);
         }
     }
 }

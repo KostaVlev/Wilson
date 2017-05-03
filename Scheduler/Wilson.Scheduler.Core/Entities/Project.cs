@@ -18,6 +18,11 @@
             };
         }
 
+        public void SetShortName()
+        {
+            this.ShortName = this.Name.Substring(0, 4).ToUpper();
+        }
+
         public void Activate()
         {
             this.IsActive = true;

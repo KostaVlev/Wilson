@@ -8,6 +8,13 @@ namespace Wilson.Projects.Core.Entities
 
         public string LastName { get; private set; }
 
+        public bool IsFired { get; private set; }
+
         public virtual ICollection<Project> Projects { get; private set; }
+
+        public override string ToString()
+        {
+            return this.FirstName + " " + this.LastName; 
+        }
     }
 }
