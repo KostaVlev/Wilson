@@ -110,7 +110,7 @@ namespace Wilson.Web.Controllers
                     // Save all changes. Don't use async here because the Data seeder might access the db before they to be completed.
                     this.CompanyWorkData.Complete();
                     this.SchedulerWorkData.Complete();
-
+                     
                     // Seed the database. Keep this at the end.
                     if (model.SeedData)
                     {

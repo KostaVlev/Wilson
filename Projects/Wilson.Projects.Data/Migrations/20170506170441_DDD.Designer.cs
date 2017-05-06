@@ -8,7 +8,7 @@ using Wilson.Projects.Data;
 namespace Wilson.Projects.Data.Migrations
 {
     [DbContext(typeof(ProjectsDbContext))]
-    [Migration("20170502201942_DDD")]
+    [Migration("20170506170441_DDD")]
     partial class DDD
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -68,7 +68,7 @@ namespace Wilson.Projects.Data.Migrations
 
                     b.Property<int>("GuaranteePeriodInMonths");
 
-                    b.Property<bool>("InProgress");
+                    b.Property<bool>("IsActive");
 
                     b.Property<string>("ManagerId")
                         .IsRequired()

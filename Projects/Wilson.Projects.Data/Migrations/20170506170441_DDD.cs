@@ -49,7 +49,7 @@ namespace Wilson.Projects.Data.Migrations
                     CustomerId = table.Column<string>(nullable: true),
                     EndDate = table.Column<DateTime>(nullable: false),
                     GuaranteePeriodInMonths = table.Column<int>(nullable: false),
-                    InProgress = table.Column<bool>(nullable: false),
+                    IsActive = table.Column<bool>(nullable: false),
                     ManagerId = table.Column<string>(maxLength: 36, nullable: false),
                     Name = table.Column<string>(maxLength: 900, nullable: false),
                     StartDate = table.Column<DateTime>(nullable: false)

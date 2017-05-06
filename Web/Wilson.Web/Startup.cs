@@ -20,6 +20,9 @@ using Wilson.Web.Seed;
 using Wilson.Web.Services;
 using Wilson.Web.Utilities;
 using Wilson.Web.Areas.Scheduler.Services;
+using Wilson.Web.Events.Interfaces;
+using Wilson.Web.Events;
+using Wilson.Web.Events.Handlers;
 
 namespace Wilson.Web
 {
@@ -68,7 +71,7 @@ namespace Wilson.Web
             services.AddTransient<IEmailSender, AuthMessageSender>();
             services.AddTransient<ISmsSender, AuthMessageSender>();
             services.AddTransient<AutoMapper.IConfigurationProvider, MapperConfiguration>();
-            services.AddTransient<IAttachmnetProcessor, AttachmentProcessor>();
+            services.AddTransient<IAttachmnetProcessor, AttachmentProcessor>();            
 
             services.AddScoped<IMapper>(sp =>
                 new Mapper(new MapperConfiguration(cfg => cfg.AddProfiles(Assembly.GetEntryAssembly()))));
@@ -82,6 +85,10 @@ namespace Wilson.Web
             services.AddTransient<ISchedulerWorkData, SchedulerWorkData>();
             services.AddTransient<IScheduleSevice, ScheduleSevice>();
             services.AddTransient<IPayrollService, PayrollService>();
+
+            // Add application events
+            services.AddTransient<IDomainEvent, ProjectCreated>();
+            services.AddTransient<IEventsFactory, EventsFactory>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

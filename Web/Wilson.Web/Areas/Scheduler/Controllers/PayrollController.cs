@@ -10,13 +10,18 @@ using Wilson.Web.Areas.Scheduler.Models.SharedViewModels;
 using Wilson.Scheduler.Core.Entities;
 using Wilson.Web.Areas.Scheduler.Services;
 using Wilson.Web.Areas.Scheduler.Models.PayrollViewModels;
+using Wilson.Web.Events.Interfaces;
 
 namespace Wilson.Web.Areas.Scheduler.Controllers
 {
     public class PayrollController : SchedulerBaseController
     {
-        public PayrollController(ISchedulerWorkData schedulerWorkData, IMapper mapper, IPayrollService payrollService)
-            : base(schedulerWorkData, mapper)
+        public PayrollController(
+            ISchedulerWorkData schedulerWorkData, 
+            IMapper mapper,
+            IPayrollService payrollService, 
+            IEventsFactory eventsFactory)
+            : base(schedulerWorkData, mapper, eventsFactory)
         {
             this.PayrollService = payrollService;
             this.PayrollService.SchedulerWorkData = schedulerWorkData;

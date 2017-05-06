@@ -67,7 +67,7 @@ namespace Wilson.Projects.Data.Migrations
 
                     b.Property<int>("GuaranteePeriodInMonths");
 
-                    b.Property<bool>("InProgress");
+                    b.Property<bool>("IsActive");
 
                     b.Property<string>("ManagerId")
                         .IsRequired()

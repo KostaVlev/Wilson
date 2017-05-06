@@ -14,7 +14,7 @@ namespace Wilson.Projects.Core.Entities
 
         public int GuaranteePeriodInMonths { get; private set; }        
 
-        public bool InProgress { get; private set; }
+        public bool IsActive { get; private set; }
 
         public string CustomerId { get; private set; }
 
@@ -34,7 +34,8 @@ namespace Wilson.Projects.Core.Entities
                 Manager = manager,
                 ManagerId = manager.Id,
                 Customer = customer,
-                CustomerId = customer.Id
+                CustomerId = customer.Id,
+                IsActive = true
             };
         }
 
@@ -51,6 +52,7 @@ namespace Wilson.Projects.Core.Entities
             }
 
             this.ActualEndDate = actualEndDate;
+            this.IsActive = false;
         }
     }
 }

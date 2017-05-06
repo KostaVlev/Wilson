@@ -9,13 +9,18 @@ using Wilson.Scheduler.Data.DataAccess;
 using Wilson.Web.Areas.Scheduler.Models.HomeViewModels;
 using Wilson.Web.Areas.Scheduler.Models.SharedViewModels;
 using Wilson.Web.Areas.Scheduler.Services;
+using Wilson.Web.Events.Interfaces;
 
 namespace Wilson.Web.Areas.Scheduler.Controllers
 {
     public class HomeController : SchedulerBaseController
     {
-        public HomeController(ISchedulerWorkData schedulerWorkData, IMapper mapper, IScheduleSevice scheduleSevice)
-            : base(schedulerWorkData, mapper)
+        public HomeController(
+            ISchedulerWorkData schedulerWorkData, 
+            IMapper mapper, 
+            IScheduleSevice scheduleSevice, 
+            IEventsFactory eventsFactory)
+            : base(schedulerWorkData, mapper, eventsFactory)
         {
             this.ScheduleSevice = scheduleSevice;
             this.ScheduleSevice.SchedulerWorkData = schedulerWorkData;

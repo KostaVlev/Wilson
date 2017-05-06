@@ -9,7 +9,7 @@ using Wilson.Accounting.Core.Enumerations;
 namespace Wilson.Accounting.Data.Migrations
 {
     [DbContext(typeof(AccountingDbContext))]
-    [Migration("20170503150028_DDD")]
+    [Migration("20170506165335_DDD")]
     partial class DDD
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
