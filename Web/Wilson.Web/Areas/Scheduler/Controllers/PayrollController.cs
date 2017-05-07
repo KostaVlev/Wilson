@@ -1,15 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Wilson.Scheduler.Data.DataAccess;
-using Microsoft.EntityFrameworkCore;
-using Wilson.Web.Areas.Scheduler.Models.SharedViewModels;
-using Wilson.Scheduler.Core.Entities;
-using Wilson.Web.Areas.Scheduler.Services;
 using Wilson.Web.Areas.Scheduler.Models.PayrollViewModels;
+using Wilson.Web.Areas.Scheduler.Services;
+using Wilson.Web.Events;
 using Wilson.Web.Events.Interfaces;
 
 namespace Wilson.Web.Areas.Scheduler.Controllers
@@ -67,18 +64,16 @@ namespace Wilson.Web.Areas.Scheduler.Controllers
                 return RedirectToAction(nameof(PayrollController.Index), new { Message = Constants.PayrollMessages.PayrollsCreted });
             }
 
-            foreach (var employee in employeesWithoutPaychecks)
-            {
-                employee.AddNewPaycheck(paycheckIssueDate, fromDate);
-            }
+            var newPaycheks = this.PayrollService.AddNewPaychecks(employeesWithoutPaychecks, paycheckIssueDate, fromDate);            
 
             var success = await this.SchedulerWorkData.CompleteAsync();
-            if (success == 0)
+            if (success != 0)
             {
-                return RedirectToAction(nameof(PayrollController.Index), new { Message = Constants.ExceptionMessages.DatabaseUpdateError });
+                this.EventsFactory.Raise<PaychecksCreated>(new PaychecksCreated(newPaycheks));
+                return RedirectToAction(nameof(PayrollController.Index), new { Message = Constants.SuccessMessages.DatabaseUpdateSuccess });                
             }
 
-            return RedirectToAction(nameof(PayrollController.Index), new { Message = Constants.SuccessMessages.DatabaseUpdateSuccess });
+            return RedirectToAction(nameof(PayrollController.Index), new { Message = Constants.ExceptionMessages.DatabaseUpdateError });
         }
 
         //

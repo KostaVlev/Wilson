@@ -24,8 +24,8 @@ namespace Wilson.Scheduler.Core.Entities
 
         public static Employee Create(string firstName, string lastName, PayRate payRate, EmployeePosition employeePosition)
         {
-            
-            var employee =  new Employee()
+
+            var employee = new Employee()
             {
                 FirstName = firstName,
                 LastName = lastName,
@@ -39,14 +39,13 @@ namespace Wilson.Scheduler.Core.Entities
             return employee;
         }
 
-        public void AddNewPaycheck(DateTime issueDate, DateTime from)
+        public Paycheck AddNewPaycheck(DateTime issueDate, DateTime from)
         {
             var paycheck = Paycheck.Create(this, DateTime.Now, from);
-            if (!this.Paychecks.Contains(paycheck))
-            {
-                this.Paychecks.Add(paycheck);                
-            }
-        }        
+            this.Paychecks.Add(paycheck);
+
+            return paycheck;
+        }
 
         public void ApplayPayRate(PayRate payRate)
         {

@@ -2,7 +2,7 @@
 
 namespace Wilson.Accounting.Core.Entities
 {
-    public class Paycheck : Entity
+    public class Paycheck : Entity, IValueObject<Paycheck>
     {
         public DateTime Date { get; private set; }
 
@@ -74,6 +74,16 @@ namespace Wilson.Accounting.Core.Entities
         public ListOfPayments GetPayments()
         {
             return (ListOfPayments)this.Payments;
+        }
+
+        public bool Equals(Paycheck other)
+        {
+            if (other == null)
+            {
+                return false;
+            }
+
+            return this.From == other.From && this.To == other.To && this.EmployeeId == other.EmployeeId;
         }
     }
 } 

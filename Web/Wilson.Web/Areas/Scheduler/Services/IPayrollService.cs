@@ -53,5 +53,14 @@ namespace Wilson.Web.Areas.Scheduler.Services
         /// <returns>If true returns first day of the month otherwise last day if the month.</returns>
         /// <exception cref="ArgumentException">Thrown if the period cannot be converted.</exception>
         DateTime TryParsePeriod(string period, bool isBeggingOfThePeriod = true);
+
+        /// <summary>
+        /// Adds new <see cref="Paycheck"/> for selected employees.
+        /// </summary>
+        /// <param name="employees">The employees for which paychecks will be created.</param>
+        /// <param name="paycheckIssueDate">The Paycheck issue date.</param>
+        /// <param name="fromDate">Beginning of the month for which paychecks will be generated.</param>
+        /// <returns>Collection of <see cref="Paycheck"/></returns>
+        IEnumerable<Paycheck> AddNewPaychecks(IEnumerable<Employee> employees, DateTime paycheckIssueDate, DateTime fromDate);
     }
 }

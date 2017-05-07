@@ -96,5 +96,16 @@ namespace Wilson.Web.Areas.Scheduler.Services
                 throw new ArgumentException("Period cannot be parsed.", "period");
             }
         }
+
+        public IEnumerable<Paycheck> AddNewPaychecks(IEnumerable<Employee> employees, DateTime paycheckIssueDate, DateTime fromDate)
+        {
+            var paychecks = new Stack<Paycheck>();
+            foreach (var employee in employees)
+            {
+                paychecks.Push(employee.AddNewPaycheck(paycheckIssueDate, fromDate));
+            }
+
+            return paychecks;
+        }
     }
 }

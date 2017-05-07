@@ -35,6 +35,8 @@ namespace Wilson.Web.Events
 
         public void Raise<T>(T args) where T : IDomainEvent
         {
+            //TODO How I can get only the handlers that handles "T"?!? At the moment I am getting all the handlers then passing
+            // "T args" to each one and if the cast is succeed then the args are processed.
             foreach (var handler in this.GetHandlers())
             {
                 handler.Handle(args);
@@ -53,7 +55,7 @@ namespace Wilson.Web.Events
         }
 
         private IEnumerable<Handler> GetHandlers()
-        {
+        {            
             var types = Assembly.Load(new AssemblyName("Wilson.Web")).GetTypes().Where(
                 type => type.GetTypeInfo().BaseType != null &&
                 !type.GetTypeInfo().IsAbstract &&

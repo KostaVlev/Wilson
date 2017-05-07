@@ -47,9 +47,9 @@ namespace Wilson.Web.Events.Handlers
             var accProject = Mapper.Map<Project, Accounting.Core.Entities.Project>(eventArgs.Project);
             var schedulerProject = Mapper.Map<Project, Scheduler.Core.Entities.Project>(eventArgs.Project);
 
-            await companyDbContext.AddAsync(companyProject);
-            await accDbContext.AddAsync(accProject);
-            await schedulerDbContext.AddAsync(schedulerProject);
+            await companyDbContext.Set<Companies.Core.Entities.Project>().AddAsync(companyProject);
+            await accDbContext.Set<Accounting.Core.Entities.Project>().AddAsync(accProject);
+            await schedulerDbContext.Set<Scheduler.Core.Entities.Project>().AddAsync(schedulerProject);
 
             await accDbContext.SaveChangesAsync();
             await schedulerDbContext.SaveChangesAsync();
