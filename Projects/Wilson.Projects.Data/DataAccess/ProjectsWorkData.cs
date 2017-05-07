@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Wilson.Projects.Data.DataAccess.Repositories;
+using Wilson.Projects.Core.Entities;
 
 namespace Wilson.Projects.Data.DataAccess
 {
@@ -22,15 +23,17 @@ namespace Wilson.Projects.Data.DataAccess
             this.dbContext = dbContext;
             this.repositories = new Dictionary<Type, object>();
         }
-        
+
+        public IRepository<Project> Projects => this.GetRepository<Project>();
+
         public int Complete()
         {
             return this.dbContext.SaveChanges();
         }
 
-        public async Task CompleteAsync()
+        public async Task<int> CompleteAsync()
         {
-            await this.dbContext.SaveChangesAsync();
+            return await this.dbContext.SaveChangesAsync();
         }
 
         public DbSet<TEntity> Set<TEntity>() where TEntity : class

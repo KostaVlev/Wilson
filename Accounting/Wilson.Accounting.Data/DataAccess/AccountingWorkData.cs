@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Wilson.Accounting.Data.DataAccess.Repositories;
+using Wilson.Accounting.Core.Entities;
 
 namespace Wilson.Accounting.Data.DataAccess
 {
@@ -22,15 +23,19 @@ namespace Wilson.Accounting.Data.DataAccess
             this.dbContext = dbContext;
             this.repositories = new Dictionary<Type, object>();
         }
-        
+
+        public IRepository<Invoice> Invoices => this.GetRepository<Invoice>();
+        public IRepository<Storehouse> Storehouses => this.GetRepository<Storehouse>();
+        public IRepository<Bill> Bills => this.GetRepository<Bill>();
+
         public int Complete()
         {
             return this.dbContext.SaveChanges();
         }
 
-        public async Task CompleteAsync()
+        public async Task<int> CompleteAsync()
         {
-            await this.dbContext.SaveChangesAsync();
+            return await this.dbContext.SaveChangesAsync();
         }
 
         public DbSet<TEntity> Set<TEntity>() where TEntity : class
