@@ -4,6 +4,10 @@ namespace Wilson.Accounting.Core.Entities
 {
     public class BillItem : IValueObject<BillItem>
     {
+        private BillItem()
+        {
+        }
+
         public int Quantity { get; private set; }
 
         public decimal Price { get; private set; }

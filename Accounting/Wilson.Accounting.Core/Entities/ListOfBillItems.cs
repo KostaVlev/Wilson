@@ -8,6 +8,10 @@ namespace Wilson.Accounting.Core.Entities
 {
     public class ListOfBillItems : IValueObject<ListOfBillItems>, IEnumerable<BillItem>
     {
+        private ListOfBillItems()
+        {
+        }
+
         private IList<BillItem> BillItems { get; set; }
 
         protected ListOfBillItems()

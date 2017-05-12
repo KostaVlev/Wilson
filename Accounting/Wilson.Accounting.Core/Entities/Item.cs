@@ -5,6 +5,10 @@ namespace Wilson.Accounting.Core.Entities
 {
     public class Item : Entity, IValueObject<Item>
     {
+        private Item()
+        {
+        }
+
         public string Name { get; private set; }
 
         public Мeasure Мeasure { get; private set; }

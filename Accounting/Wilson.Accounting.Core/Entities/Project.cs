@@ -4,6 +4,10 @@ namespace Wilson.Accounting.Core.Entities
 {
     public class Project : Entity
     {
+        private Project()
+        {
+        }
+
         public string Name { get; private set; }
 
         public string CustomerId { get; private set; }

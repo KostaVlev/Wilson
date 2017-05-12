@@ -5,6 +5,10 @@ namespace Wilson.Accounting.Core.Entities
 {
     public class Bill : Entity
     {
+        private Bill()
+        {
+        }
+
         public DateTime Date { get; private set; }
 
         public DateTime RevisionDate { get; private set; }

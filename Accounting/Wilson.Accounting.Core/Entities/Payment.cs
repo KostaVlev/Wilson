@@ -4,6 +4,10 @@ namespace Wilson.Accounting.Core.Entities
 {
     public class Payment : IValueObject<Payment>
     {
+        private Payment()
+        {
+        }
+
         public DateTime Date { get; private set; }
 
         public decimal Amount { get; private set; }

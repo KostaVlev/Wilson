@@ -5,6 +5,10 @@ namespace Wilson.Accounting.Core.Entities
 {
     public class InvoiceItem : Entity, IValueObject<InvoiceItem>
     {
+        private InvoiceItem()
+        {
+        }
+
         public int Quantity { get; private set; }
 
         public decimal Price { get; private set; }

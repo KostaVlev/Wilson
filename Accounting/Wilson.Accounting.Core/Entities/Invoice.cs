@@ -7,6 +7,10 @@ namespace Wilson.Accounting.Core.Entities
 {
     public class Invoice : Entity
     {
+        private Invoice()
+        {
+        }
+
         public string Number { get; private set; }
 
         public InvoiceVariant InvoiceVariant { get; private set; }

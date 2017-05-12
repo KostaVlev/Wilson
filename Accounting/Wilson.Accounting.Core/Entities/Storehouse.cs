@@ -6,6 +6,10 @@ namespace Wilson.Accounting.Core.Entities
 {
     public class Storehouse : Entity
     {
+        private Storehouse()
+        {
+        }
+
         public string Name { get; private set; }
 
         public string BillItems { get; private set; }

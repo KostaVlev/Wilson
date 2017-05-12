@@ -5,6 +5,10 @@ namespace Wilson.Accounting.Core.Entities
 {
     public class Company : Entity
     {
+        private Company()
+        {
+        }
+
         public string Name { get; private set; }
 
         public string RegistrationNumber { get; private set; }

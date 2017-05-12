@@ -2,6 +2,10 @@
 {
     public class StorehouseItem : Entity, IValueObject<StorehouseItem>
     {
+        private StorehouseItem()
+        {
+        }
+
         public int Quantity { get; private set; }
 
         public decimal Price { get; private set; }

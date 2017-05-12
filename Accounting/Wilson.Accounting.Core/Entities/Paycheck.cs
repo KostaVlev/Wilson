@@ -4,6 +4,10 @@ namespace Wilson.Accounting.Core.Entities
 {
     public class Paycheck : Entity, IValueObject<Paycheck>
     {
+        private Paycheck()
+        {
+        }
+
         public DateTime Date { get; private set; }
 
         public DateTime From { get; private set; }
