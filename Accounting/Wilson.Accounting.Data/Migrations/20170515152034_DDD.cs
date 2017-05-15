@@ -43,7 +43,7 @@ namespace Wilson.Accounting.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Employees",
+                name: "Employee",
                 schema: "Accounting",
                 columns: table => new
                 {
@@ -55,9 +55,9 @@ namespace Wilson.Accounting.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Employees", x => x.Id);
+                    table.PrimaryKey("PK_Employee", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Employees_Companies_CompanyId",
+                        name: "FK_Employee_Companies_CompanyId",
                         column: x => x.CompanyId,
                         principalSchema: "Accounting",
                         principalTable: "Companies",
@@ -116,10 +116,10 @@ namespace Wilson.Accounting.Data.Migrations
                 {
                     table.PrimaryKey("PK_Paycheck", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Paycheck_Employees_EmployeeId",
+                        name: "FK_Paycheck_Employee_EmployeeId",
                         column: x => x.EmployeeId,
                         principalSchema: "Accounting",
-                        principalTable: "Employees",
+                        principalTable: "Employee",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -255,7 +255,7 @@ namespace Wilson.Accounting.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "StorehouseItems",
+                name: "StorehouseItem",
                 schema: "Accounting",
                 columns: table => new
                 {
@@ -267,16 +267,16 @@ namespace Wilson.Accounting.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_StorehouseItems", x => x.Id);
+                    table.PrimaryKey("PK_StorehouseItem", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_StorehouseItems_InvoiceItem_InvoiceItemId",
+                        name: "FK_StorehouseItem_InvoiceItem_InvoiceItemId",
                         column: x => x.InvoiceItemId,
                         principalSchema: "Accounting",
                         principalTable: "InvoiceItem",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_StorehouseItems_Storehouses_StorehouseId",
+                        name: "FK_StorehouseItem_Storehouses_StorehouseId",
                         column: x => x.StorehouseId,
                         principalSchema: "Accounting",
                         principalTable: "Storehouses",
@@ -291,9 +291,9 @@ namespace Wilson.Accounting.Data.Migrations
                 column: "ProjectId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Employees_CompanyId",
+                name: "IX_Employee_CompanyId",
                 schema: "Accounting",
-                table: "Employees",
+                table: "Employee",
                 column: "CompanyId");
 
             migrationBuilder.CreateIndex(
@@ -346,15 +346,15 @@ namespace Wilson.Accounting.Data.Migrations
                 column: "ProjectId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_StorehouseItems_InvoiceItemId",
+                name: "IX_StorehouseItem_InvoiceItemId",
                 schema: "Accounting",
-                table: "StorehouseItems",
+                table: "StorehouseItem",
                 column: "InvoiceItemId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_StorehouseItems_StorehouseId",
+                name: "IX_StorehouseItem_StorehouseId",
                 schema: "Accounting",
-                table: "StorehouseItems",
+                table: "StorehouseItem",
                 column: "StorehouseId");
         }
 
@@ -365,11 +365,11 @@ namespace Wilson.Accounting.Data.Migrations
                 schema: "Accounting");
 
             migrationBuilder.DropTable(
-                name: "StorehouseItems",
+                name: "StorehouseItem",
                 schema: "Accounting");
 
             migrationBuilder.DropTable(
-                name: "Employees",
+                name: "Employee",
                 schema: "Accounting");
 
             migrationBuilder.DropTable(

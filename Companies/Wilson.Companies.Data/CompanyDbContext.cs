@@ -8,25 +8,17 @@ using Wilson.Companies.Data.Configurations;
 
 namespace Wilson.Companies.Data
 {
-    public class CompanyDbContext : IdentityDbContext<User>
+    public class CompanyDbContext : IdentityDbContext<ApplicationUser>
     {
         public CompanyDbContext(DbContextOptions<CompanyDbContext> options)
             : base(options)
         {
         }
-
-        public virtual DbSet<Address> Addresses { get; set; }
-        public virtual DbSet<Attachment> Attachments { get; set; }
+        
         public virtual DbSet<Company> Companies { get; set; }
-        public virtual DbSet<CompanyContract> CompanyContracts { get; set; }
         public virtual DbSet<Employee> Employees { get; set; }
-        public virtual DbSet<InfoRequest> InfoRequests { get; set; }
-        public virtual DbSet<Inquiry> Inquiries { get; set; }        
-        public virtual DbSet<Offer> Offers { get; set; }
-        public virtual DbSet<Project> Projects { get; set; }
-        public virtual DbSet<ProjectLocation> ProjectLocations { get; set; }
-
-        public virtual DbSet<InquiryEmployee> InquiryEmployee { get; set; }
+        public virtual DbSet<Inquiry> Inquiries { get; set; }
+        public virtual DbSet<Settings> Settings { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

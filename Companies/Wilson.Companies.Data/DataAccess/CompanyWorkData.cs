@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Wilson.Companies.Core.Aggregates;
 using Wilson.Companies.Core.Entities;
 using Wilson.Companies.Data.DataAccess.Repositories;
 
@@ -24,24 +23,16 @@ namespace Wilson.Companies.Data.DataAccess
             this.dbContext = dbContext;
             this.repositories = new Dictionary<Type, object>();
         }
-
-        public IRepository<Inquiry> Inquiries => this.GetRepository<Inquiry>();
-
-        public IRepository<InquiryEmployee> InquiryEmployee => this.GetRepository<InquiryEmployee>();
-
-        public IRepository<User> Users => this.GetRepository<User>();
-
-        public IRepository<Settings> Settings => this.GetRepository<Settings>();
-
+        
+        public IRepository<ApplicationUser> Users => this.GetRepository<ApplicationUser>();
+        
         public IRepository<Company> Companies => this.GetRepository<Company>();
 
         public IRepository<Employee> Employees => this.GetRepository<Employee>();
 
-        public IRepository<Attachment> Attachments => this.GetRepository<Attachment>();
+        public IRepository<Inquiry> Inquiries => this.GetRepository<Inquiry>();
 
-        public IRepository<Address> Addresses => this.GetRepository<Address>();
-
-        public IRepository<Project> Projects => this.GetRepository<Project>();
+        public IRepository<Settings> Settings => this.GetRepository<Settings>();
 
         public int Complete()
         {

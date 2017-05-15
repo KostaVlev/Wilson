@@ -27,7 +27,14 @@ namespace Wilson.Accounting.Core.Entities
 
         public static Company Create(string name, string registrationNumber, Address address, string vatNumber = null)
         {
-            var company = new Company() { Name = name, RegistrationNumber = registrationNumber, Address = address };
+            var company = new Company()
+            {
+                Name = name,
+                RegistrationNumber = registrationNumber,
+                Address = address,
+                SaleInvoices = new HashSet<Invoice>(),
+                BuyInvoices = new HashSet<Invoice>()
+            };
             if (!string.IsNullOrEmpty(vatNumber))
             {
                 company.VatNumber = vatNumber;

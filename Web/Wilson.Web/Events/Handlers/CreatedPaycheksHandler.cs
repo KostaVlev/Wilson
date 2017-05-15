@@ -9,9 +9,9 @@ using System.Collections.Generic;
 
 namespace Wilson.Web.Events.Handlers
 {
-    public class InsertCreatedPaycheks : Handler
+    public class CreatedPaycheksHandler : Handler
     {
-        public InsertCreatedPaycheks(IServiceProvider serviceProvider) 
+        public CreatedPaycheksHandler(IServiceProvider serviceProvider) 
             : base(serviceProvider)
         {
         }

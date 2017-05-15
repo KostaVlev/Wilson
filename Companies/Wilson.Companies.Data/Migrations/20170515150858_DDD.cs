@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace Wilson.Companies.Data.Migrations
 {
-    public partial class Init : Migration
+    public partial class DDD : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -43,21 +43,23 @@ namespace Wilson.Companies.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ProjectLocations",
+                name: "Companies",
                 schema: "Companies",
                 columns: table => new
                 {
                     Id = table.Column<string>(maxLength: 36, nullable: false),
-                    City = table.Column<string>(maxLength: 70, nullable: false),
-                    Country = table.Column<string>(maxLength: 70, nullable: true),
-                    Note = table.Column<string>(maxLength: 250, nullable: true),
-                    PostCode = table.Column<string>(nullable: true),
-                    Street = table.Column<string>(maxLength: 70, nullable: true),
-                    StreetNumber = table.Column<int>(nullable: true)
+                    Address = table.Column<string>(nullable: true),
+                    HasVatRegistration = table.Column<bool>(nullable: false),
+                    Name = table.Column<string>(maxLength: 70, nullable: false),
+                    OfficeEmail = table.Column<string>(maxLength: 70, nullable: false),
+                    OfficePhone = table.Column<string>(maxLength: 15, nullable: false),
+                    RegistrationNumber = table.Column<string>(maxLength: 10, nullable: false),
+                    ShippingAddress = table.Column<string>(nullable: true),
+                    VatNumber = table.Column<string>(maxLength: 12, nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ProjectLocations", x => x.Id);
+                    table.PrimaryKey("PK_Companies", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -98,58 +100,24 @@ namespace Wilson.Companies.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "AspNetUserRoles",
-                schema: "Companies",
-                columns: table => new
-                {
-                    UserId = table.Column<string>(nullable: false),
-                    RoleId = table.Column<string>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AspNetUserRoles", x => new { x.UserId, x.RoleId });
-                    table.ForeignKey(
-                        name: "FK_AspNetUserRoles_AspNetRoles_RoleId",
-                        column: x => x.RoleId,
-                        principalSchema: "Companies",
-                        principalTable: "AspNetRoles",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Companies",
-                schema: "Companies",
-                columns: table => new
-                {
-                    Id = table.Column<string>(maxLength: 36, nullable: false),
-                    AddressId = table.Column<string>(maxLength: 36, nullable: false),
-                    Name = table.Column<string>(maxLength: 70, nullable: false),
-                    OfficeEmail = table.Column<string>(maxLength: 70, nullable: false),
-                    OfficePhone = table.Column<string>(maxLength: 15, nullable: false),
-                    RegistrationNumber = table.Column<string>(maxLength: 10, nullable: false),
-                    ShippingAddressId = table.Column<string>(maxLength: 36, nullable: false),
-                    VatNumber = table.Column<string>(maxLength: 12, nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Companies", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Employees",
                 schema: "Companies",
                 columns: table => new
                 {
                     Id = table.Column<string>(maxLength: 36, nullable: false),
-                    AddressId = table.Column<string>(maxLength: 36, nullable: true),
+                    Address = table.Column<string>(nullable: true),
                     CompanyId = table.Column<string>(maxLength: 36, nullable: false),
                     Email = table.Column<string>(maxLength: 70, nullable: false),
                     EmployeePosition = table.Column<int>(nullable: false),
+                    FiredAt = table.Column<DateTime>(nullable: true),
                     FirstName = table.Column<string>(maxLength: 70, nullable: false),
+                    HiredAt = table.Column<DateTime>(nullable: false),
+                    IsFired = table.Column<bool>(nullable: false),
                     LastName = table.Column<string>(maxLength: 70, nullable: false),
                     Phone = table.Column<string>(maxLength: 15, nullable: false),
-                    PrivatePhone = table.Column<string>(maxLength: 15, nullable: true)
+                    PositionBeforePromotion = table.Column<int>(nullable: true),
+                    PrivatePhone = table.Column<string>(maxLength: 15, nullable: true),
+                    PromotionDate = table.Column<DateTime>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -161,63 +129,6 @@ namespace Wilson.Companies.Data.Migrations
                         principalTable: "Companies",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "CompanyContracts",
-                schema: "Companies",
-                columns: table => new
-                {
-                    Id = table.Column<string>(maxLength: 36, nullable: false),
-                    CretedById = table.Column<string>(maxLength: 36, nullable: false),
-                    Date = table.Column<DateTime>(nullable: false),
-                    HtmlContent = table.Column<string>(nullable: true),
-                    IsApproved = table.Column<bool>(nullable: false),
-                    LastRevisedAt = table.Column<DateTime>(nullable: true),
-                    ProjectId = table.Column<string>(maxLength: 36, nullable: true),
-                    Revision = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_CompanyContracts", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_CompanyContracts_Employees_CretedById",
-                        column: x => x.CretedById,
-                        principalSchema: "Companies",
-                        principalTable: "Employees",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Inquiries",
-                schema: "Companies",
-                columns: table => new
-                {
-                    Id = table.Column<string>(maxLength: 36, nullable: false),
-                    ClosedAt = table.Column<DateTime>(nullable: true),
-                    CustomerId = table.Column<string>(maxLength: 36, nullable: false),
-                    Description = table.Column<string>(maxLength: 900, nullable: false),
-                    ReceivedAt = table.Column<DateTime>(nullable: false),
-                    ReceivedById = table.Column<string>(maxLength: 36, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Inquiries", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Inquiries_Companies_CustomerId",
-                        column: x => x.CustomerId,
-                        principalSchema: "Companies",
-                        principalTable: "Companies",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Inquiries_Employees_ReceivedById",
-                        column: x => x.ReceivedById,
-                        principalSchema: "Companies",
-                        principalTable: "Employees",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -258,138 +169,64 @@ namespace Wilson.Companies.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Projects",
+                name: "CompanyContract",
                 schema: "Companies",
                 columns: table => new
                 {
                     Id = table.Column<string>(maxLength: 36, nullable: false),
-                    ContractId = table.Column<string>(maxLength: 36, nullable: false),
-                    CustomerId = table.Column<string>(maxLength: 36, nullable: false),
-                    IsActive = table.Column<bool>(nullable: false, defaultValue: true),
-                    LocationId = table.Column<string>(maxLength: 36, nullable: false),
-                    Name = table.Column<string>(maxLength: 900, nullable: false)
+                    CretedById = table.Column<string>(maxLength: 36, nullable: false),
+                    Date = table.Column<DateTime>(nullable: false),
+                    HtmlContent = table.Column<string>(nullable: true),
+                    IsApproved = table.Column<bool>(nullable: false),
+                    LastRevisedAt = table.Column<DateTime>(nullable: true),
+                    ProjectId = table.Column<string>(maxLength: 36, nullable: true),
+                    RevisedById = table.Column<string>(maxLength: 36, nullable: true),
+                    Revision = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Projects", x => x.Id);
+                    table.PrimaryKey("PK_CompanyContract", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Projects_CompanyContracts_ContractId",
-                        column: x => x.ContractId,
+                        name: "FK_CompanyContract_Employees_CretedById",
+                        column: x => x.CretedById,
                         principalSchema: "Companies",
-                        principalTable: "CompanyContracts",
+                        principalTable: "Employees",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Projects_Companies_CustomerId",
+                        name: "FK_CompanyContract_Employees_RevisedById",
+                        column: x => x.RevisedById,
+                        principalSchema: "Companies",
+                        principalTable: "Employees",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Inquiries",
+                schema: "Companies",
+                columns: table => new
+                {
+                    Id = table.Column<string>(maxLength: 36, nullable: false),
+                    ClosedAt = table.Column<DateTime>(nullable: true),
+                    CustomerId = table.Column<string>(maxLength: 36, nullable: false),
+                    Description = table.Column<string>(maxLength: 900, nullable: false),
+                    ReceivedAt = table.Column<DateTime>(nullable: false),
+                    ReceivedById = table.Column<string>(maxLength: 36, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Inquiries", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Inquiries_Companies_CustomerId",
                         column: x => x.CustomerId,
                         principalSchema: "Companies",
                         principalTable: "Companies",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Projects_ProjectLocations_LocationId",
-                        column: x => x.LocationId,
-                        principalSchema: "Companies",
-                        principalTable: "ProjectLocations",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "InfoRequests",
-                schema: "Companies",
-                columns: table => new
-                {
-                    Id = table.Column<string>(maxLength: 36, nullable: false),
-                    InquiryId = table.Column<string>(maxLength: 36, nullable: false),
-                    RequestMessage = table.Column<string>(maxLength: 900, nullable: false),
-                    ResponseMessage = table.Column<string>(maxLength: 900, nullable: true),
-                    ResponseReceivedAt = table.Column<DateTime>(nullable: true),
-                    SentAt = table.Column<DateTime>(nullable: false),
-                    SentById = table.Column<string>(maxLength: 36, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_InfoRequests", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_InfoRequests_Inquiries_InquiryId",
-                        column: x => x.InquiryId,
-                        principalSchema: "Companies",
-                        principalTable: "Inquiries",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_InfoRequests_Employees_SentById",
-                        column: x => x.SentById,
-                        principalSchema: "Companies",
-                        principalTable: "Employees",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "InquiryEmployee",
-                schema: "Companies",
-                columns: table => new
-                {
-                    InquiryId = table.Column<string>(maxLength: 36, nullable: false),
-                    EmployeeId = table.Column<string>(maxLength: 36, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_InquiryEmployee", x => new { x.InquiryId, x.EmployeeId });
-                    table.ForeignKey(
-                        name: "FK_InquiryEmployee_Employees_EmployeeId",
-                        column: x => x.EmployeeId,
-                        principalSchema: "Companies",
-                        principalTable: "Employees",
-                        principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_InquiryEmployee_Inquiries_InquiryId",
-                        column: x => x.InquiryId,
-                        principalSchema: "Companies",
-                        principalTable: "Inquiries",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Offers",
-                schema: "Companies",
-                columns: table => new
-                {
-                    Id = table.Column<string>(maxLength: 36, nullable: false),
-                    ApprovedAt = table.Column<DateTime>(nullable: true),
-                    ContractId = table.Column<string>(maxLength: 36, nullable: true),
-                    HtmlContent = table.Column<string>(nullable: false),
-                    InquiryId = table.Column<string>(maxLength: 36, nullable: false),
-                    IsApproved = table.Column<bool>(nullable: false),
-                    LastRevisedAt = table.Column<DateTime>(nullable: true),
-                    Revision = table.Column<int>(nullable: false),
-                    SentAt = table.Column<DateTime>(nullable: false),
-                    SentById = table.Column<string>(maxLength: 36, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Offers", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Offers_CompanyContracts_ContractId",
-                        column: x => x.ContractId,
-                        principalSchema: "Companies",
-                        principalTable: "CompanyContracts",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Offers_Inquiries_InquiryId",
-                        column: x => x.InquiryId,
-                        principalSchema: "Companies",
-                        principalTable: "Inquiries",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Offers_Employees_SentById",
-                        column: x => x.SentById,
+                        name: "FK_Inquiries_Employees_ReceivedById",
+                        column: x => x.ReceivedById,
                         principalSchema: "Companies",
                         principalTable: "Employees",
                         principalColumn: "Id",
@@ -442,39 +279,30 @@ namespace Wilson.Companies.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Addresses",
+                name: "AspNetUserRoles",
                 schema: "Companies",
                 columns: table => new
                 {
-                    Id = table.Column<string>(maxLength: 36, nullable: false),
-                    City = table.Column<string>(maxLength: 70, nullable: false),
-                    Country = table.Column<string>(maxLength: 70, nullable: false),
-                    Discriminator = table.Column<string>(nullable: false),
-                    Floor = table.Column<int>(nullable: true),
-                    Note = table.Column<string>(maxLength: 250, nullable: true),
-                    PostCode = table.Column<string>(maxLength: 10, nullable: false),
-                    Street = table.Column<string>(maxLength: 70, nullable: false),
-                    StreetNumber = table.Column<string>(maxLength: 6, nullable: false),
-                    UnitNumber = table.Column<string>(maxLength: 6, nullable: true),
-                    FirstName = table.Column<string>(maxLength: 70, nullable: true),
-                    IsDeleted = table.Column<bool>(nullable: true),
-                    IsNew = table.Column<bool>(nullable: true, defaultValue: true),
-                    LastName = table.Column<string>(maxLength: 70, nullable: true),
-                    PrivatePhone = table.Column<string>(nullable: true),
-                    ReceivedAt = table.Column<DateTime>(nullable: true),
-                    RecipientId = table.Column<string>(nullable: true),
-                    SendAt = table.Column<DateTime>(nullable: true)
+                    UserId = table.Column<string>(nullable: false),
+                    RoleId = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Addresses", x => x.Id);
+                    table.PrimaryKey("PK_AspNetUserRoles", x => new { x.UserId, x.RoleId });
                     table.ForeignKey(
-                        name: "FK_Addresses_AspNetUsers_RecipientId",
-                        column: x => x.RecipientId,
+                        name: "FK_AspNetUserRoles_AspNetRoles_RoleId",
+                        column: x => x.RoleId,
+                        principalSchema: "Companies",
+                        principalTable: "AspNetRoles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_AspNetUserRoles_AspNetUsers_UserId",
+                        column: x => x.UserId,
                         principalSchema: "Companies",
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -486,6 +314,7 @@ namespace Wilson.Companies.Data.Migrations
                     Body = table.Column<string>(maxLength: 900, nullable: false),
                     IsDeleted = table.Column<bool>(nullable: false),
                     IsNew = table.Column<bool>(nullable: false, defaultValue: true),
+                    IsRecived = table.Column<bool>(nullable: false),
                     MessageCategory = table.Column<int>(nullable: false),
                     RecipientId = table.Column<string>(nullable: true),
                     RecivedAt = table.Column<DateTime>(nullable: true),
@@ -513,7 +342,176 @@ namespace Wilson.Companies.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Attachments",
+                name: "RegistrationRequestMessage",
+                schema: "Companies",
+                columns: table => new
+                {
+                    Id = table.Column<string>(nullable: false),
+                    Address = table.Column<string>(nullable: true),
+                    FirstName = table.Column<string>(maxLength: 70, nullable: false),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    IsNew = table.Column<bool>(nullable: false, defaultValue: true),
+                    LastName = table.Column<string>(maxLength: 70, nullable: false),
+                    PrivatePhone = table.Column<string>(nullable: true),
+                    ReceivedAt = table.Column<DateTime>(nullable: true),
+                    RecipientId = table.Column<string>(nullable: true),
+                    SendAt = table.Column<DateTime>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RegistrationRequestMessage", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_RegistrationRequestMessage_AspNetUsers_RecipientId",
+                        column: x => x.RecipientId,
+                        principalSchema: "Companies",
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Project",
+                schema: "Companies",
+                columns: table => new
+                {
+                    Id = table.Column<string>(maxLength: 36, nullable: false),
+                    ContractId = table.Column<string>(maxLength: 36, nullable: false),
+                    CustomerId = table.Column<string>(maxLength: 36, nullable: false),
+                    IsActive = table.Column<bool>(nullable: false, defaultValue: true),
+                    Location = table.Column<string>(nullable: true),
+                    Name = table.Column<string>(maxLength: 900, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Project", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Project_CompanyContract_ContractId",
+                        column: x => x.ContractId,
+                        principalSchema: "Companies",
+                        principalTable: "CompanyContract",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Project_Companies_CustomerId",
+                        column: x => x.CustomerId,
+                        principalSchema: "Companies",
+                        principalTable: "Companies",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "InfoRequest",
+                schema: "Companies",
+                columns: table => new
+                {
+                    Id = table.Column<string>(maxLength: 36, nullable: false),
+                    InquiryId = table.Column<string>(maxLength: 36, nullable: false),
+                    RequestMessage = table.Column<string>(maxLength: 900, nullable: false),
+                    ResponseMessage = table.Column<string>(maxLength: 900, nullable: true),
+                    ResponseReceivedAt = table.Column<DateTime>(nullable: true),
+                    SentAt = table.Column<DateTime>(nullable: false),
+                    SentById = table.Column<string>(maxLength: 36, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_InfoRequest", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_InfoRequest_Inquiries_InquiryId",
+                        column: x => x.InquiryId,
+                        principalSchema: "Companies",
+                        principalTable: "Inquiries",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_InfoRequest_Employees_SentById",
+                        column: x => x.SentById,
+                        principalSchema: "Companies",
+                        principalTable: "Employees",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "InquiryEmployee",
+                schema: "Companies",
+                columns: table => new
+                {
+                    InquiryId = table.Column<string>(maxLength: 36, nullable: false),
+                    EmployeeId = table.Column<string>(maxLength: 36, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_InquiryEmployee", x => new { x.InquiryId, x.EmployeeId });
+                    table.ForeignKey(
+                        name: "FK_InquiryEmployee_Employees_EmployeeId",
+                        column: x => x.EmployeeId,
+                        principalSchema: "Companies",
+                        principalTable: "Employees",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_InquiryEmployee_Inquiries_InquiryId",
+                        column: x => x.InquiryId,
+                        principalSchema: "Companies",
+                        principalTable: "Inquiries",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Offer",
+                schema: "Companies",
+                columns: table => new
+                {
+                    Id = table.Column<string>(maxLength: 36, nullable: false),
+                    ApprovedAt = table.Column<DateTime>(nullable: true),
+                    ContractId = table.Column<string>(maxLength: 36, nullable: true),
+                    CreatedById = table.Column<string>(nullable: true),
+                    HtmlContent = table.Column<string>(nullable: false),
+                    InquiryId = table.Column<string>(maxLength: 36, nullable: false),
+                    IsApproved = table.Column<bool>(nullable: false),
+                    IsSent = table.Column<bool>(nullable: false),
+                    LastRevisedAt = table.Column<DateTime>(nullable: true),
+                    Revision = table.Column<int>(nullable: false),
+                    SentAt = table.Column<DateTime>(nullable: true),
+                    SentById = table.Column<string>(maxLength: 36, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Offer", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Offer_CompanyContract_ContractId",
+                        column: x => x.ContractId,
+                        principalSchema: "Companies",
+                        principalTable: "CompanyContract",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Offer_Employees_CreatedById",
+                        column: x => x.CreatedById,
+                        principalSchema: "Companies",
+                        principalTable: "Employees",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Offer_Inquiries_InquiryId",
+                        column: x => x.InquiryId,
+                        principalSchema: "Companies",
+                        principalTable: "Inquiries",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Offer_Employees_SentById",
+                        column: x => x.SentById,
+                        principalSchema: "Companies",
+                        principalTable: "Employees",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Attachment",
                 schema: "Companies",
                 columns: table => new
                 {
@@ -525,34 +523,35 @@ namespace Wilson.Companies.Data.Migrations
                     InfoRequestId = table.Column<string>(maxLength: 36, nullable: true),
                     InforequestResponseId = table.Column<string>(maxLength: 36, nullable: true),
                     InquiryId = table.Column<string>(nullable: true),
+                    Size = table.Column<long>(nullable: false),
                     UploadDate = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Attachments", x => x.Id);
+                    table.PrimaryKey("PK_Attachment", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Attachments_CompanyContracts_ContractId",
+                        name: "FK_Attachment_CompanyContract_ContractId",
                         column: x => x.ContractId,
                         principalSchema: "Companies",
-                        principalTable: "CompanyContracts",
+                        principalTable: "CompanyContract",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Attachments_InfoRequests_InfoRequestId",
+                        name: "FK_Attachment_InfoRequest_InfoRequestId",
                         column: x => x.InfoRequestId,
                         principalSchema: "Companies",
-                        principalTable: "InfoRequests",
+                        principalTable: "InfoRequest",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Attachments_InfoRequests_InforequestResponseId",
+                        name: "FK_Attachment_InfoRequest_InforequestResponseId",
                         column: x => x.InforequestResponseId,
                         principalSchema: "Companies",
-                        principalTable: "InfoRequests",
+                        principalTable: "InfoRequest",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Attachments_Inquiries_InquiryId",
+                        name: "FK_Attachment_Inquiries_InquiryId",
                         column: x => x.InquiryId,
                         principalSchema: "Companies",
                         principalTable: "Inquiries",
@@ -592,58 +591,59 @@ namespace Wilson.Companies.Data.Migrations
                 column: "RoleId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Addresses_RecipientId",
+                name: "IX_AspNetUsers_EmployeeId",
                 schema: "Companies",
-                table: "Addresses",
-                column: "RecipientId");
+                table: "AspNetUsers",
+                column: "EmployeeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Attachments_ContractId",
+                name: "EmailIndex",
                 schema: "Companies",
-                table: "Attachments",
+                table: "AspNetUsers",
+                column: "NormalizedEmail");
+
+            migrationBuilder.CreateIndex(
+                name: "UserNameIndex",
+                schema: "Companies",
+                table: "AspNetUsers",
+                column: "NormalizedUserName",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Attachment_ContractId",
+                schema: "Companies",
+                table: "Attachment",
                 column: "ContractId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Attachments_InfoRequestId",
+                name: "IX_Attachment_InfoRequestId",
                 schema: "Companies",
-                table: "Attachments",
+                table: "Attachment",
                 column: "InfoRequestId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Attachments_InforequestResponseId",
+                name: "IX_Attachment_InforequestResponseId",
                 schema: "Companies",
-                table: "Attachments",
+                table: "Attachment",
                 column: "InforequestResponseId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Attachments_InquiryId",
+                name: "IX_Attachment_InquiryId",
                 schema: "Companies",
-                table: "Attachments",
+                table: "Attachment",
                 column: "InquiryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Companies_AddressId",
+                name: "IX_CompanyContract_CretedById",
                 schema: "Companies",
-                table: "Companies",
-                column: "AddressId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Companies_ShippingAddressId",
-                schema: "Companies",
-                table: "Companies",
-                column: "ShippingAddressId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_CompanyContracts_CretedById",
-                schema: "Companies",
-                table: "CompanyContracts",
+                table: "CompanyContract",
                 column: "CretedById");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Employees_AddressId",
+                name: "IX_CompanyContract_RevisedById",
                 schema: "Companies",
-                table: "Employees",
-                column: "AddressId");
+                table: "CompanyContract",
+                column: "RevisedById");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Employees_CompanyId",
@@ -652,15 +652,15 @@ namespace Wilson.Companies.Data.Migrations
                 column: "CompanyId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_InfoRequests_InquiryId",
+                name: "IX_InfoRequest_InquiryId",
                 schema: "Companies",
-                table: "InfoRequests",
+                table: "InfoRequest",
                 column: "InquiryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_InfoRequests_SentById",
+                name: "IX_InfoRequest_SentById",
                 schema: "Companies",
-                table: "InfoRequests",
+                table: "InfoRequest",
                 column: "SentById");
 
             migrationBuilder.CreateIndex(
@@ -694,110 +694,51 @@ namespace Wilson.Companies.Data.Migrations
                 column: "SenderId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Offers_ContractId",
+                name: "IX_Offer_ContractId",
                 schema: "Companies",
-                table: "Offers",
+                table: "Offer",
                 column: "ContractId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Offers_InquiryId",
+                name: "IX_Offer_CreatedById",
                 schema: "Companies",
-                table: "Offers",
+                table: "Offer",
+                column: "CreatedById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Offer_InquiryId",
+                schema: "Companies",
+                table: "Offer",
                 column: "InquiryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Offers_SentById",
+                name: "IX_Offer_SentById",
                 schema: "Companies",
-                table: "Offers",
+                table: "Offer",
                 column: "SentById");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Projects_ContractId",
+                name: "IX_Project_ContractId",
                 schema: "Companies",
-                table: "Projects",
+                table: "Project",
                 column: "ContractId",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Projects_CustomerId",
+                name: "IX_Project_CustomerId",
                 schema: "Companies",
-                table: "Projects",
+                table: "Project",
                 column: "CustomerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Projects_LocationId",
+                name: "IX_RegistrationRequestMessage_RecipientId",
                 schema: "Companies",
-                table: "Projects",
-                column: "LocationId",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AspNetUsers_EmployeeId",
-                schema: "Companies",
-                table: "AspNetUsers",
-                column: "EmployeeId");
-
-            migrationBuilder.CreateIndex(
-                name: "EmailIndex",
-                schema: "Companies",
-                table: "AspNetUsers",
-                column: "NormalizedEmail");
-
-            migrationBuilder.CreateIndex(
-                name: "UserNameIndex",
-                schema: "Companies",
-                table: "AspNetUsers",
-                column: "NormalizedUserName",
-                unique: true);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_AspNetUserRoles_AspNetUsers_UserId",
-                schema: "Companies",
-                table: "AspNetUserRoles",
-                column: "UserId",
-                principalSchema: "Companies",
-                principalTable: "AspNetUsers",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Companies_Addresses_AddressId",
-                schema: "Companies",
-                table: "Companies",
-                column: "AddressId",
-                principalSchema: "Companies",
-                principalTable: "Addresses",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Restrict);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Companies_Addresses_ShippingAddressId",
-                schema: "Companies",
-                table: "Companies",
-                column: "ShippingAddressId",
-                principalSchema: "Companies",
-                principalTable: "Addresses",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Restrict);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Employees_Addresses_AddressId",
-                schema: "Companies",
-                table: "Employees",
-                column: "AddressId",
-                principalSchema: "Companies",
-                principalTable: "Addresses",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Restrict);
+                table: "RegistrationRequestMessage",
+                column: "RecipientId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_Addresses_AspNetUsers_RecipientId",
-                schema: "Companies",
-                table: "Addresses");
-
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims",
                 schema: "Companies");
@@ -819,7 +760,7 @@ namespace Wilson.Companies.Data.Migrations
                 schema: "Companies");
 
             migrationBuilder.DropTable(
-                name: "Attachments",
+                name: "Attachment",
                 schema: "Companies");
 
             migrationBuilder.DropTable(
@@ -831,11 +772,15 @@ namespace Wilson.Companies.Data.Migrations
                 schema: "Companies");
 
             migrationBuilder.DropTable(
-                name: "Offers",
+                name: "Offer",
                 schema: "Companies");
 
             migrationBuilder.DropTable(
-                name: "Projects",
+                name: "Project",
+                schema: "Companies");
+
+            migrationBuilder.DropTable(
+                name: "RegistrationRequestMessage",
                 schema: "Companies");
 
             migrationBuilder.DropTable(
@@ -847,23 +792,19 @@ namespace Wilson.Companies.Data.Migrations
                 schema: "Companies");
 
             migrationBuilder.DropTable(
-                name: "InfoRequests",
+                name: "InfoRequest",
                 schema: "Companies");
 
             migrationBuilder.DropTable(
-                name: "CompanyContracts",
-                schema: "Companies");
-
-            migrationBuilder.DropTable(
-                name: "ProjectLocations",
-                schema: "Companies");
-
-            migrationBuilder.DropTable(
-                name: "Inquiries",
+                name: "CompanyContract",
                 schema: "Companies");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers",
+                schema: "Companies");
+
+            migrationBuilder.DropTable(
+                name: "Inquiries",
                 schema: "Companies");
 
             migrationBuilder.DropTable(
@@ -872,10 +813,6 @@ namespace Wilson.Companies.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "Companies",
-                schema: "Companies");
-
-            migrationBuilder.DropTable(
-                name: "Addresses",
                 schema: "Companies");
         }
     }

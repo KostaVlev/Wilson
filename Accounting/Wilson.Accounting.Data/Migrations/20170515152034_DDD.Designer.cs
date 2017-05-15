@@ -9,7 +9,7 @@ using Wilson.Accounting.Core.Enumerations;
 namespace Wilson.Accounting.Data.Migrations
 {
     [DbContext(typeof(AccountingDbContext))]
-    [Migration("20170506165335_DDD")]
+    [Migration("20170515152034_DDD")]
     partial class DDD
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -103,7 +103,7 @@ namespace Wilson.Accounting.Data.Migrations
 
                     b.HasIndex("CompanyId");
 
-                    b.ToTable("Employees");
+                    b.ToTable("Employee");
                 });
 
             modelBuilder.Entity("Wilson.Accounting.Core.Entities.Invoice", b =>
@@ -343,7 +343,7 @@ namespace Wilson.Accounting.Data.Migrations
 
                     b.HasIndex("StorehouseId");
 
-                    b.ToTable("StorehouseItems");
+                    b.ToTable("StorehouseItem");
                 });
 
             modelBuilder.Entity("Wilson.Accounting.Core.Entities.Bill", b =>

@@ -25,7 +25,7 @@ namespace Wilson.Projects.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Employees",
+                name: "Employee",
                 schema: "Projects",
                 columns: table => new
                 {
@@ -36,7 +36,7 @@ namespace Wilson.Projects.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Employees", x => x.Id);
+                    table.PrimaryKey("PK_Employee", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -65,10 +65,10 @@ namespace Wilson.Projects.Data.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Projects_Employees_ManagerId",
+                        name: "FK_Projects_Employee_ManagerId",
                         column: x => x.ManagerId,
                         principalSchema: "Projects",
-                        principalTable: "Employees",
+                        principalTable: "Employee",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -97,7 +97,7 @@ namespace Wilson.Projects.Data.Migrations
                 schema: "Projects");
 
             migrationBuilder.DropTable(
-                name: "Employees",
+                name: "Employee",
                 schema: "Projects");
         }
     }

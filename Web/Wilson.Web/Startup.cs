@@ -16,13 +16,11 @@ using Wilson.Projects.Data;
 using Wilson.Projects.Data.DataAccess;
 using Wilson.Scheduler.Data;
 using Wilson.Scheduler.Data.DataAccess;
+using Wilson.Web.Areas.Scheduler.Services;
+using Wilson.Web.Events;
+using Wilson.Web.Events.Interfaces;
 using Wilson.Web.Seed;
 using Wilson.Web.Services;
-using Wilson.Web.Utilities;
-using Wilson.Web.Areas.Scheduler.Services;
-using Wilson.Web.Events.Interfaces;
-using Wilson.Web.Events;
-using Wilson.Web.Events.Handlers;
 
 namespace Wilson.Web
 {
@@ -61,7 +59,7 @@ namespace Wilson.Web
                 .AddDbContext<SchedulerDbContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddIdentity<User, IdentityRole>()
+            services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<CompanyDbContext>()
                 .AddDefaultTokenProviders();
             
@@ -71,7 +69,6 @@ namespace Wilson.Web
             services.AddTransient<IEmailSender, AuthMessageSender>();
             services.AddTransient<ISmsSender, AuthMessageSender>();
             services.AddTransient<AutoMapper.IConfigurationProvider, MapperConfiguration>();
-            services.AddTransient<IAttachmnetProcessor, AttachmentProcessor>();            
 
             services.AddScoped<IMapper>(sp =>
                 new Mapper(new MapperConfiguration(cfg => cfg.AddProfiles(Assembly.GetEntryAssembly()))));

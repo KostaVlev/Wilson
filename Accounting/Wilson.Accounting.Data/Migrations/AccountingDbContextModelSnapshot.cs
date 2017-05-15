@@ -102,7 +102,7 @@ namespace Wilson.Accounting.Data.Migrations
 
                     b.HasIndex("CompanyId");
 
-                    b.ToTable("Employees");
+                    b.ToTable("Employee");
                 });
 
             modelBuilder.Entity("Wilson.Accounting.Core.Entities.Invoice", b =>
@@ -342,7 +342,7 @@ namespace Wilson.Accounting.Data.Migrations
 
                     b.HasIndex("StorehouseId");
 
-                    b.ToTable("StorehouseItems");
+                    b.ToTable("StorehouseItem");
                 });
 
             modelBuilder.Entity("Wilson.Accounting.Core.Entities.Bill", b =>

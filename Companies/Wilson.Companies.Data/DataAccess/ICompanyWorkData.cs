@@ -6,16 +6,12 @@ using Wilson.Companies.Data.DataAccess.Repositories;
 namespace Wilson.Companies.Data.DataAccess
 {
     public interface ICompanyWorkData
-    {
-        IRepository<Inquiry> Inquiries { get; }
-        IRepository<InquiryEmployee> InquiryEmployee { get; }
-        IRepository<User> Users { get; }
-        IRepository<Settings> Settings { get; }
+    {        
+        IRepository<ApplicationUser> Users { get; }        
         IRepository<Company> Companies { get; }
         IRepository<Employee> Employees { get; }
-        IRepository<Attachment> Attachments { get; }
-        IRepository<Address> Addresses { get; }
-        IRepository<Project> Projects { get; }
+        IRepository<Inquiry> Inquiries { get; }
+        IRepository<Settings> Settings { get; }
 
         DbSet<TEntity> Set<TEntity>() where TEntity : class;
 

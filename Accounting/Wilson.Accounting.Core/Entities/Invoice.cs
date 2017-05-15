@@ -78,6 +78,7 @@ namespace Wilson.Accounting.Core.Entities
                 DaysOfDelayedPayment = daysOfDelayedPayment,
                 Vat = vat,
                 IsPayed = invoicePaymentType == InvoicePaymentType.BankTransfer ? false : true,
+                InvoiceItems = new HashSet<InvoiceItem>()
             };
 
             Validate(invoice);

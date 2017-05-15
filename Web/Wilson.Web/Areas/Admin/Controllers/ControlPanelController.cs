@@ -19,12 +19,12 @@ namespace Wilson.Web.Areas.Admin.Controllers
 {
     public class ControlPanelController : AdminBaseController
     {
-        private readonly UserManager<User> userManager;
+        private readonly UserManager<ApplicationUser> userManager;
         private ILogger logger;
 
         public ControlPanelController(
             ICompanyWorkData companyWorkData, 
-            UserManager<User> userManager,
+            UserManager<ApplicationUser> userManager,
             ILoggerFactory loggerFactory, 
             IMapper mapperr)
             : base(companyWorkData, mapperr)
@@ -65,25 +65,24 @@ namespace Wilson.Web.Areas.Admin.Controllers
                 // Continue only if we have settings for the database.
                 if (settings != null && !string.IsNullOrEmpty(settings.HomeCompanyId) && settings.IsDatabaseInstalled)
                 {
-                    // Create User.
-                    var user = this.Mapper.Map<RegisterUserViewModel, User>(model.User);
-                    user.UserName = user.Email;
-
-                    // Create employee.
-                    var employee = this.Mapper.Map<RegisterUserViewModel, Employee>(model.User);
-
-                    // Make the user employee.
-                    user.EmployeeId = employee.Id;
-
+                    // Create employee and save it in the database.
                     var employeeAddress = this.Mapper.Map<AddressViewModel, Address>(model.Address);
-                    employee.AddressId = employeeAddress.Id;
-                    employee.CompanyId = settings.HomeCompanyId;
 
-                    // Save the changes in the database.
-                    this.CompanyWorkData.Addresses.Add(employeeAddress);
+                    var employee = Employee.Create(
+                        model.User.FirstName,
+                        model.User.LastName,
+                        model.User.Phone,
+                        model.User.PrivatePhone,
+                        model.User.Email,
+                        model.User.EmployeePosition,
+                        employeeAddress,
+                        settings.HomeCompanyId);                    
+                    
                     this.CompanyWorkData.Employees.Add(employee);
                     await this.CompanyWorkData.CompleteAsync();
 
+                    // Create user from the employee.
+                    var user = ApplicationUser.Create(employee, employee.GetEmail());
                     var result = await this.userManager.CreateAsync(user, model.User.Password);
                     if (result.Succeeded)
                     {
@@ -110,7 +109,7 @@ namespace Wilson.Web.Areas.Admin.Controllers
         {
             ViewData["StatusMessage"] = message ?? "";
             var users = await this.CompanyWorkData.Users.GetAllAsync();
-            var models = this.Mapper.Map<IEnumerable<User>, IEnumerable<UserViewModel>>(users);
+            var models = this.Mapper.Map<IEnumerable<ApplicationUser>, IEnumerable<UserViewModel>>(users);
 
             return View(models);
         }
@@ -126,7 +125,7 @@ namespace Wilson.Web.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var model = this.Mapper.Map<User, UserViewModel>(user);
+            var model = this.Mapper.Map<ApplicationUser, UserViewModel>(user);
 
             return View(model);
         }
@@ -144,8 +143,7 @@ namespace Wilson.Web.Areas.Admin.Controllers
                     return NotFound();
                 }
 
-                user.FirstName = model.FirstName;
-                user.LastName = model.LastName;
+                user.ChangeNames(model.FirstName, model.LastName);
                 user.Email = model.Email;
                 user.PhoneNumber = model.PhoneNumber;
 
@@ -173,7 +171,7 @@ namespace Wilson.Web.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            user.IsActive = true;
+            user.Activate();
             var result = await this.CompanyWorkData.CompleteAsync();
             if (result > 0)
             {
@@ -202,7 +200,7 @@ namespace Wilson.Web.Areas.Admin.Controllers
                 return RedirectToAction(nameof(ShowAllUsers), new { Message = Constants.AccountManageMessagesEn.Error });
             }
 
-            user.IsActive = false;
+            user.Deactivate();
             var result = await this.CompanyWorkData.CompleteAsync();
             if (result > 0)
             {

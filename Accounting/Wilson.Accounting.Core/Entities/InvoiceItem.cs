@@ -26,7 +26,14 @@ namespace Wilson.Accounting.Core.Entities
         public static InvoiceItem Create(
             int quantity, decimal price, Item item, Invoice invoice, Storehouse storehouse = null)
         {
-            var invoiceItem = new InvoiceItem() { Quantity = quantity, Price = price, ItemId = item.Id, InvoiceId = invoice.Id };
+            var invoiceItem = new InvoiceItem()
+            {
+                Quantity = quantity,
+                Price = price,
+                ItemId = item.Id,
+                InvoiceId = invoice.Id,
+                StorehouseItems = new HashSet<StorehouseItem>()
+            };
 
             if (storehouse != null)
             {
@@ -40,7 +47,15 @@ namespace Wilson.Accounting.Core.Entities
            Dictionary<Storehouse, int> quantities, decimal price, Item item, Invoice invoice)
         {
             var invoiceItemQuantity = quantities.Sum(x => x.Value);
-            var invoiceItem = new InvoiceItem() { Quantity = invoiceItemQuantity, Price = price, ItemId = item.Id, InvoiceId = invoice.Id };
+            var invoiceItem = new InvoiceItem()
+            {
+                Quantity = invoiceItemQuantity,
+                Price = price,
+                ItemId = item.Id,
+                InvoiceId = invoice.Id,
+                StorehouseItems = new HashSet<StorehouseItem>()
+            };
+
             foreach (var storehouse in quantities.Keys)
             {
                 var storehouseItem = StorehouseItem.Create(quantities[storehouse], storehouse, invoiceItem);

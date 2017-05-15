@@ -12,14 +12,14 @@ namespace Wilson.Accounting.Core.Entities
         public string Name { get; private set; }
 
         public Мeasure Мeasure { get; private set; }
-        
+
         public virtual ICollection<InvoiceItem> InvoiceItems { get; private set; }
 
         public static Item Create(string name, Мeasure measure)
         {
-            return new Item() { Name = name, Мeasure = measure };
+            return new Item() { Name = name, Мeasure = measure, InvoiceItems = new HashSet<InvoiceItem>() };
         }
-        
+
         public bool Equals(Item other)
         {
             if (other == null)

@@ -8,7 +8,7 @@ using Wilson.Projects.Data;
 namespace Wilson.Projects.Data.Migrations
 {
     [DbContext(typeof(ProjectsDbContext))]
-    [Migration("20170506170441_DDD")]
+    [Migration("20170515152101_DDD")]
     partial class DDD
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -51,7 +51,7 @@ namespace Wilson.Projects.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Employees");
+                    b.ToTable("Employee");
                 });
 
             modelBuilder.Entity("Wilson.Projects.Core.Entities.Project", b =>

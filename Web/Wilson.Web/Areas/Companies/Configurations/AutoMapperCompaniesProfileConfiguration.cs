@@ -11,7 +11,7 @@ namespace Wilson.Web.Areas.Companies.Configurations
         {
             // Companies area mappings.
             CreateMap<Inquiry, InquiryViewModel>();
-            CreateMap<CreateViewModel, Inquiry>().ForMember(x => x.Attachmnets, opt => opt.Ignore());
+            CreateMap<CreateViewModel, Inquiry>().ForMember(x => x.Attachments, opt => opt.Ignore());
             CreateMap<Employee, EmployeeViewModel>();
             CreateMap<InquiryEmployee, InquiryEmployeeViewModel>();
             CreateMap<Company, CompanyViewModel>();

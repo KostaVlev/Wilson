@@ -1,11 +1,10 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Wilson.Accounting.Data.DataAccess;
 using Wilson.Companies.Core.Entities;
 using Wilson.Companies.Data.DataAccess;
 using Wilson.Scheduler.Data.DataAccess;
@@ -18,10 +17,11 @@ namespace Wilson.Web.Controllers
 
         public HomeController(
             ICompanyWorkData companyWorkData, 
-            ISchedulerWorkData schedulerWorkData, 
+            ISchedulerWorkData schedulerWorkData,
+            IAccountingWorkData accountingWorkData,
             IMapper mapper,
             ILoggerFactory loggerFactory)
-            : base(companyWorkData, schedulerWorkData, mapper)
+            : base(companyWorkData, schedulerWorkData, accountingWorkData, mapper)
         {
             this.logger = loggerFactory.CreateLogger<HomeController>();
         }
@@ -31,30 +31,6 @@ namespace Wilson.Web.Controllers
             ViewData["StatusMessage"] = message ?? "";
 
             return View();
-        }
-
-        public async Task<IActionResult> Sync()
-        {
-            string message = string.Empty;            
-            try
-            {
-                await this.SyncCompanySchedulerEmployees();
-                await this.SyncCompanySchedulerProjects();
-                await this.SaveChangesInAllDbContexts();
-                message = Constants.SuccessMessages.DatabaseUpdateSuccess;
-            }
-            catch (DbUpdateException e)
-            {
-                logger.LogError(e.Message);
-                message = Constants.ExceptionMessages.DatabaseUpdateError;
-            }
-            catch (Exception e)
-            {
-                logger.LogError(e.Message);
-                message = Constants.ExceptionMessages.DatabaseUpdateError;
-            }
-
-            return RedirectToAction(nameof(Index), new { Message = message});
         }
 
         public IActionResult Error()
@@ -88,18 +64,6 @@ namespace Wilson.Web.Controllers
             }
 
             this.SchedulerWorkData.Employees.AddRange(newSchedulerEmployees);
-        }
-
-        private async Task SyncCompanySchedulerProjects()
-        {
-            var companyProjects = await this.CompanyWorkData.Projects.FindAsync(x => x.IsActive);
-            var schedulerpProjects = await this.SchedulerWorkData.Projects.FindAsync(x => x.IsActive);
-
-            var projectsToAddToScheduler = companyProjects.Where(x => !schedulerpProjects.Any() || !schedulerpProjects.Any(e => e.Id == x.Id));
-            var newSchedulerProjects =
-                this.Mapper.Map<IEnumerable<Project>, IEnumerable<Scheduler.Core.Entities.Project>>(projectsToAddToScheduler);
-            
-            this.SchedulerWorkData.Projects.AddRange(newSchedulerProjects);
         }
     }
 }

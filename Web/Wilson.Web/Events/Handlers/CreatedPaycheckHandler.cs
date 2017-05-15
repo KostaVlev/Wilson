@@ -8,9 +8,9 @@ using Wilson.Web.Events.Interfaces;
 
 namespace Wilson.Web.Events.Handlers
 {
-    public class InsertCreatedPaycheck : Handler
+    public class CreatedPaycheckHandler : Handler
     {
-        public InsertCreatedPaycheck(IServiceProvider serviceProvider)
+        public CreatedPaycheckHandler(IServiceProvider serviceProvider)
             : base(serviceProvider)
         {
         }

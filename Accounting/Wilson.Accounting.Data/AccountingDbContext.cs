@@ -14,6 +14,7 @@ namespace Wilson.Accounting.Data
         {
         }
 
+        public virtual DbSet<Company> Companies { get; set; }
         public virtual DbSet<Invoice> Invoices { get; set; }
         public virtual DbSet<Storehouse> Storehouses { get; set; }
         public virtual DbSet<Bill> Bills { get; set; }

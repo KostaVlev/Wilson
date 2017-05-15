@@ -22,7 +22,7 @@ namespace Wilson.Accounting.Core.Entities
 
         public static Storehouse Create(string name, Project project)
         {
-            return new Storehouse() { Name = name, ProjectId = project.Id };
+            return new Storehouse() { Name = name, ProjectId = project.Id, StorehouseItems = new HashSet<StorehouseItem>() };
         }
 
         public void AddItem(int quantity, InvoiceItem item)

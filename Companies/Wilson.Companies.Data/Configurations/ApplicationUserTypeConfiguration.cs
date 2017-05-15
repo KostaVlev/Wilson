@@ -4,14 +4,14 @@ using Wilson.Companies.Core.Entities;
 
 namespace Wilson.Companies.Data.Configurations
 {
-    public class UserTypeConfiguration : EntityTypeConfiguration<User>
+    public class ApplicationUserTypeConfiguration : EntityTypeConfiguration<ApplicationUser>
     {
-        public UserTypeConfiguration(ModelBuilder modelBuilder)
+        public ApplicationUserTypeConfiguration(ModelBuilder modelBuilder)
         {
-            this.Map(modelBuilder.Entity<User>());
+            this.Map(modelBuilder.Entity<ApplicationUser>());
         }
 
-        public override void Map(EntityTypeBuilder<User> builder)
+        public override void Map(EntityTypeBuilder<ApplicationUser> builder)
         {
             builder.Property(x => x.FirstName).HasMaxLength(70).IsRequired();
             builder.Property(x => x.LastName).HasMaxLength(70).IsRequired();

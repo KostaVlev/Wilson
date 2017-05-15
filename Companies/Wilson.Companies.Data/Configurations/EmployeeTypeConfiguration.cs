@@ -16,7 +16,6 @@ namespace Wilson.Companies.Data.Configurations
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Id).HasMaxLength(36);
             builder.Property(x => x.CompanyId).HasMaxLength(36).IsRequired();
-            builder.Property(x => x.AddressId).HasMaxLength(36);
             builder.Property(x => x.FirstName).HasMaxLength(70).IsRequired();
             builder.Property(x => x.LastName).HasMaxLength(70).IsRequired();
             builder.Property(x => x.EmployeePosition).IsRequired();
@@ -24,7 +23,6 @@ namespace Wilson.Companies.Data.Configurations
             builder.Property(x => x.PrivatePhone).HasMaxLength(15);
             builder.Property(x => x.Email).HasMaxLength(70).IsRequired();
             builder.HasOne(x => x.Company).WithMany(x => x.Employees).HasForeignKey(x => x.CompanyId);
-            builder.HasOne(x => x.Address).WithMany().HasForeignKey(x => x.AddressId);
         }
     }
 }

@@ -9,7 +9,7 @@ using Wilson.Scheduler.Core.Enumerations;
 namespace Wilson.Scheduler.Data.Migrations
 {
     [DbContext(typeof(SchedulerDbContext))]
-    [Migration("20170502133545_DDD")]
+    [Migration("20170515152128_DDD")]
     partial class DDD
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

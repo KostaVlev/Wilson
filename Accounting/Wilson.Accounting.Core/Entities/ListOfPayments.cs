@@ -7,10 +7,6 @@ namespace Wilson.Accounting.Core.Entities
 {
     public class ListOfPayments : IValueObject<ListOfPayments>, IEnumerable<Payment>
     {
-        private ListOfPayments()
-        {
-        }
-
         private IList<Payment> Payments { get; set; }
 
         protected ListOfPayments()

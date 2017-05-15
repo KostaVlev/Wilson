@@ -8,9 +8,10 @@ namespace Wilson.Web.Configurations
     {
         public AutoMapperProfileConfiguration()
         {
-            CreateMap<UserViewModel, User>();
+            CreateMap<UserViewModel, ApplicationUser>();
             CreateMap<CompanyViewModel, Company>();
             CreateMap<AddressViewModel, Address>();
+            CreateMap<AddressViewModel, Accounting.Core.Entities.Address>();
             CreateMap<Employee, Scheduler.Core.Entities.Employee>();
             CreateMap<PayRateViewModel, Scheduler.Core.Entities.PayRate>();
             CreateMap<Project, Scheduler.Core.Entities.Project>();

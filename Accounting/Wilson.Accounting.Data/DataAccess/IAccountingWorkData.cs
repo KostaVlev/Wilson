@@ -7,6 +7,7 @@ namespace Wilson.Accounting.Data.DataAccess
 {
     public interface IAccountingWorkData
     {
+        IRepository<Company> Companies { get; }
         IRepository<Invoice> Invoices { get; }
         IRepository<Storehouse> Storehouses { get; }
         IRepository<Bill> Bills { get; }        

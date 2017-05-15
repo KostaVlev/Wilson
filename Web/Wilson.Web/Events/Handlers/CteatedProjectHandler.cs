@@ -10,9 +10,9 @@ using Wilson.Web.Events.Interfaces;
 
 namespace Wilson.Web.Events.Handlers
 {
-    public class InsertCteatedProject : Handler
+    public class CteatedProjectHandler : Handler
     {
-        public InsertCteatedProject(IServiceProvider serviceProvider) 
+        public CteatedProjectHandler(IServiceProvider serviceProvider) 
             : base(serviceProvider)
         {
         }

@@ -2,20 +2,34 @@
 {
     public class Project : Entity
     {
-        public string Name { get; set; }
+        private Project()
+        {
+        }
 
-        public bool IsActive { get; set; }
+        public string Name { get; private set; }
 
-        public string LocationId { get; set; }
+        public bool IsActive { get; private set; }
 
-        public string CustomerId { get; set; }
+        public string Location { get; private set; }
 
-        public string ContractId { get; set; }
+        public string CustomerId { get; private set; }
 
-        public virtual ProjectLocation Location { get; set; }
+        public string ContractId { get; private set; }        
 
-        public virtual Company Customer { get; set; }
+        public virtual Company Customer { get; private set; }
 
-        public virtual CompanyContract Contract { get; set; }
+        public virtual CompanyContract Contract { get; private set; }
+
+        public void SetProjectLocation(Location location)
+        {
+            this.Location = location;
+        }
+
+        public void AddContract(string htmlContent, Employee createdBy)
+        {
+            var contract = CompanyContract.Create(htmlContent, createdBy, this);
+            this.Contract = contract;
+            this.ContractId = contract.Id;
+        }
     }
 }

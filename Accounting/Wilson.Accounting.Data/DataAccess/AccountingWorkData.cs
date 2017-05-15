@@ -24,6 +24,7 @@ namespace Wilson.Accounting.Data.DataAccess
             this.repositories = new Dictionary<Type, object>();
         }
 
+        public IRepository<Company> Companies => this.GetRepository<Company>();
         public IRepository<Invoice> Invoices => this.GetRepository<Invoice>();
         public IRepository<Storehouse> Storehouses => this.GetRepository<Storehouse>();
         public IRepository<Bill> Bills => this.GetRepository<Bill>();

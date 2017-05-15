@@ -1,44 +1,52 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using System.Linq;
+using System.Threading.Tasks;
+using Wilson.Accounting.Core.Entities;
+using Wilson.Accounting.Data.DataAccess;
 using Wilson.Companies.Core.Entities;
 using Wilson.Companies.Data.DataAccess;
-using Wilson.Web.Models.InstallViewModels;
-using Wilson.Web.Seed;
-using Wilson.Web.Models.SharedViewModels;
 using Wilson.Scheduler.Data.DataAccess;
+using Wilson.Web.Events;
+using Wilson.Web.Events.Interfaces;
+using Wilson.Web.Models.InstallViewModels;
+using Wilson.Web.Models.SharedViewModels;
+using Wilson.Web.Seed;
 
 namespace Wilson.Web.Controllers
 {
 
     public class InstallController : BaseController
     {
-        private readonly UserManager<User> userManager;
+        private readonly UserManager<ApplicationUser> userManager;
         private readonly ILogger logger;
         private readonly IDatabaseSeeder dataSeeder;
         private readonly IRolesSeder rolesSeeder;
         private readonly IServiceScopeFactory services;
+        private readonly IEventsFactory eventsFactory;
 
         public InstallController(
-            UserManager<User> userManager, 
+            UserManager<ApplicationUser> userManager, 
             ICompanyWorkData companyWorkData,
             ISchedulerWorkData schedulerWorkData,
+            IAccountingWorkData accountingWorkData,
             IMapper mapper, 
             ILoggerFactory loggerFactory,
             IDatabaseSeeder dataSeeder,
             IRolesSeder rolesSeeder,
-            IServiceScopeFactory services) 
-            : base(companyWorkData, schedulerWorkData, mapper)
+            IServiceScopeFactory services,
+            IEventsFactory eventsFactory) 
+            : base(companyWorkData, schedulerWorkData, accountingWorkData, mapper)
         {
             this.userManager = userManager;
             this.dataSeeder = dataSeeder;
             this.rolesSeeder = rolesSeeder;
             this.services = services;
+            this.eventsFactory = eventsFactory;
             this.logger = loggerFactory.CreateLogger<InstallController>();
         }
 
@@ -71,13 +79,13 @@ namespace Wilson.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = this.Mapper.Map<UserViewModel, User>(model.User);
+                var systemUser = this.Mapper.Map<UserViewModel, ApplicationUser>(model.User);
 
                 // Set the Username!
-                user.UserName = model.User.Email;
+                systemUser.UserName = model.User.Email;
 
                 // Create User.
-                var result = await this.userManager.CreateAsync(user, model.User.Password);
+                var result = await this.userManager.CreateAsync(systemUser, model.User.Password);
                 if (result.Succeeded)
                 {
                     this.logger.LogInformation(3, "Admin was created.");
@@ -85,19 +93,18 @@ namespace Wilson.Web.Controllers
                     this.logger.LogInformation(3, "Roles were seeded into the database.");
 
                     // Make the user administrator.
-                    await userManager.AddToRoleAsync(user, Constants.Roles.Administrator);
-                      
+                    await userManager.AddToRoleAsync(systemUser, Constants.Roles.Administrator);
+
                     // Create home company.
-                    var company = this.Mapper.Map<CompanyViewModel, Company>(model.Company);
-                    var companyAddress = this.Mapper.Map<AddressViewModel, Address>(model.Company.Address);
+                    var companyAddress = this.Mapper.Map<AddressViewModel, Accounting.Core.Entities.Address>(model.Company.Address);
+                    var company = Accounting.Core.Entities.Company.Create(
+                        model.Company.Name, model.Company.RegistrationNumber, companyAddress, model.Company.VatNumber);
 
-                    // Set the company address and the shipping address.
-                    company.AddressId = companyAddress.Id;
-                    company.ShippingAddressId = companyAddress.Id;
+                    this.AccountingWorkData.Companies.Add(company);
+                    this.AccountingWorkData.Complete();
 
-                    this.CompanyWorkData.Companies.Add(company);
-                    this.CompanyWorkData.Addresses.Add(companyAddress);
-
+                    this.eventsFactory.Raise(new CompanyCreated(company));
+                    
                     // Set company Base Pay Rate
                     model.PayRate.IsBaseRate = true;
                     var payRate = this.Mapper.Map<PayRateViewModel, Scheduler.Core.Entities.PayRate>(model.PayRate);

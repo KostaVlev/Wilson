@@ -1,8 +1,8 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using Wilson.Companies.Core.Entities
 
-@inject SignInManager<User> SignInManager
-@inject UserManager<User> UserManager
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
 
 <nav class="navbar navbar-inverse navbar-fixed-top">
     <div class="container">
@@ -24,11 +24,6 @@
                     <li><a asp-area="" 
                            asp-controller="Home" 
                            asp-action=@nameof(HomeController.Index)>Home</a>
-                    </li>
-                    <li>
-                        <a asp-area=""
-                           asp-controller="Home"
-                           asp-action=@nameof(HomeController.Sync)>Sync</a>
                     </li>
                 </ul>
                 <form asp-area="" asp-controller="Account" asp-action=@nameof(AccountController.Logout)method="post" id="logoutForm" class="navbar-right">

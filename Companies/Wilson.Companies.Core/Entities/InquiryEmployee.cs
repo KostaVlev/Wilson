@@ -2,12 +2,25 @@
 {
     public class InquiryEmployee : IEntity
     {
-        public string InquiryId { get; set; }
+        private InquiryEmployee()
+        {
+        }
 
-        public string EmployeeId { get; set; }
+        public string InquiryId { get; private set; }
 
-        public virtual Inquiry Inquiry { get; set; }
+        public string EmployeeId { get; private set; }
 
-        public virtual Employee Employee { get; set; }
+        public virtual Inquiry Inquiry { get; private set; }
+
+        public virtual Employee Employee { get; private set; }
+
+        public static InquiryEmployee Create(string assigneeId, string inquiryId)
+        {
+            return new InquiryEmployee()
+            {
+                InquiryId = assigneeId,
+                EmployeeId = assigneeId,
+            };
+        }
     }
 }

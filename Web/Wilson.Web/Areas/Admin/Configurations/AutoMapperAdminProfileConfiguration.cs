@@ -10,8 +10,8 @@ namespace Wilson.Web.Areas.Admin.Configurations
         public AutoMapperAdminProfileConfiguration()
         {
             // Admin area mappings.
-            CreateMap<User, UserViewModel>();
-            CreateMap<RegisterUserViewModel, User>()
+            CreateMap<ApplicationUser, UserViewModel>();
+            CreateMap<RegisterUserViewModel, ApplicationUser>()
                 .ForSourceMember(x => x.EmployeePosition, opt => opt.Ignore())
                 .ForSourceMember(x => x.EmployeePositions, opt => opt.Ignore())
                 .ForSourceMember(x => x.Password, opt => opt.Ignore())
