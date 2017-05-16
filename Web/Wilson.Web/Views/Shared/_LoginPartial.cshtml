@@ -26,7 +26,7 @@
                            asp-action=@nameof(HomeController.Index)>Home</a>
                     </li>
                 </ul>
-                <form asp-area="" asp-controller="Account" asp-action=@nameof(AccountController.Logout)method="post" id="logoutForm" class="navbar-right">
+                <form asp-area="" asp-controller="Account" asp-action=@nameof(AccountController.Logout) method="post" id="logoutForm" class="navbar-right">
                     <ul class="nav navbar-nav navbar-right">
                         <li>
                             <a asp-area="" 
@@ -48,7 +48,7 @@
                         {
                             <li>
                                 <a asp-area=@Constants.Areas.Accounting a
-                                   sp-controller=@nameof(Wilson.Web.Areas.Accounting.Controllers.HomeController.Index) 
+                                   asp-controller=@nameof(Wilson.Web.Areas.Accounting.Controllers.HomeController.Index) 
                                    asp-action="Index">Accounting</a>
                             </li>
                         }                        
