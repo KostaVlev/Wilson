@@ -9,20 +9,28 @@ namespace Wilson.Companies.Core.Entities
         {
         }
 
+        [JsonProperty]
         public string Country { get; private set; }
 
+        [JsonProperty]
         public string PostCode { get; private set; }
 
+        [JsonProperty]
         public string City { get; private set; }
 
+        [JsonProperty]
         public string Street { get; private set; }
 
+        [JsonProperty]
         public string StreetNumber { get; private set; }
 
+        [JsonProperty]
         public int? Floor { get; private set; }
 
+        [JsonProperty]
         public string UnitNumber { get; private set; }
 
+        [JsonProperty]
         public string Note { get; private set; }
 
         public static Address Create(

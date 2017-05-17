@@ -13,7 +13,9 @@ namespace Wilson.Projects.Data
             : base(options)
         {
         }
-        
+
+        public virtual DbSet<Employee> Employees { get; set; }
+        public virtual DbSet<Company> Companies { get; set; }
         public virtual DbSet<Project> Projects { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)

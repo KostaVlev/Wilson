@@ -12,7 +12,7 @@ namespace Wilson.Projects.Data.Migrations
                 name: "Projects");
 
             migrationBuilder.CreateTable(
-                name: "Company",
+                name: "Companies",
                 schema: "Projects",
                 columns: table => new
                 {
@@ -21,11 +21,11 @@ namespace Wilson.Projects.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Company", x => x.Id);
+                    table.PrimaryKey("PK_Companies", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Employee",
+                name: "Employees",
                 schema: "Projects",
                 columns: table => new
                 {
@@ -36,7 +36,7 @@ namespace Wilson.Projects.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Employee", x => x.Id);
+                    table.PrimaryKey("PK_Employees", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -58,17 +58,17 @@ namespace Wilson.Projects.Data.Migrations
                 {
                     table.PrimaryKey("PK_Projects", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Projects_Company_CustomerId",
+                        name: "FK_Projects_Companies_CustomerId",
                         column: x => x.CustomerId,
                         principalSchema: "Projects",
-                        principalTable: "Company",
+                        principalTable: "Companies",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Projects_Employee_ManagerId",
+                        name: "FK_Projects_Employees_ManagerId",
                         column: x => x.ManagerId,
                         principalSchema: "Projects",
-                        principalTable: "Employee",
+                        principalTable: "Employees",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -93,11 +93,11 @@ namespace Wilson.Projects.Data.Migrations
                 schema: "Projects");
 
             migrationBuilder.DropTable(
-                name: "Company",
+                name: "Companies",
                 schema: "Projects");
 
             migrationBuilder.DropTable(
-                name: "Employee",
+                name: "Employees",
                 schema: "Projects");
         }
     }

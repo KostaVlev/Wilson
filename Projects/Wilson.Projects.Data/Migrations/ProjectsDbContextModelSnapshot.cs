@@ -29,7 +29,7 @@ namespace Wilson.Projects.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Company");
+                    b.ToTable("Companies");
                 });
 
             modelBuilder.Entity("Wilson.Projects.Core.Entities.Employee", b =>
@@ -50,7 +50,7 @@ namespace Wilson.Projects.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Employee");
+                    b.ToTable("Employees");
                 });
 
             modelBuilder.Entity("Wilson.Projects.Core.Entities.Project", b =>

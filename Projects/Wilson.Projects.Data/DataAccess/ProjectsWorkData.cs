@@ -24,6 +24,8 @@ namespace Wilson.Projects.Data.DataAccess
             this.repositories = new Dictionary<Type, object>();
         }
 
+        public IRepository<Employee> Employees => this.GetRepository<Employee>();
+        public IRepository<Company> Companies => this.GetRepository<Company>();
         public IRepository<Project> Projects => this.GetRepository<Project>();
 
         public int Complete()

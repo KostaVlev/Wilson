@@ -39,20 +39,5 @@ namespace Wilson.Accounting.Data
                 Activator.CreateInstance(type, builder);
             }
         }
-
-        //private void RegesterEntities(ModelBuilder builder)
-        //{
-        //    var typesToRegester = Assembly.Load(new AssemblyName("Wilson.Accounting.Core")).GetTypes()
-        //        .Where(e => !e.GetTypeInfo().IsAbstract && typeof(IEntity).IsAssignableFrom(e) && e.GetTypeInfo().IsClass);
-
-        //    foreach (var type in typesToRegester)
-        //    {
-        //        var entity = Activator.CreateInstance(type);
-        //        if (builder.Model.FindEntityType(type) == null)
-        //        {
-        //            builder.Model.AddEntityType(type);
-        //        }
-        //    }
-        //}
     }
 }

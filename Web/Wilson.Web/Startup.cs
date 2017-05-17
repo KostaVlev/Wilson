@@ -70,6 +70,9 @@ namespace Wilson.Web
             services.AddTransient<ISmsSender, AuthMessageSender>();
             services.AddTransient<AutoMapper.IConfigurationProvider, MapperConfiguration>();
 
+            services.AddTransient<IScheduleSevice, ScheduleSevice>();
+            services.AddTransient<IPayrollService, PayrollService>();
+
             services.AddScoped<IMapper>(sp =>
                 new Mapper(new MapperConfiguration(cfg => cfg.AddProfiles(Assembly.GetEntryAssembly()))));
             services.AddScoped<IDatabaseSeeder>(sp => new DatabaseSeeder());
@@ -80,11 +83,8 @@ namespace Wilson.Web
             services.AddTransient<IAccountingWorkData, AccountingWorkData>();
             services.AddTransient<IProjectsWorkData, ProjectsWorkData>();
             services.AddTransient<ISchedulerWorkData, SchedulerWorkData>();
-            services.AddTransient<IScheduleSevice, ScheduleSevice>();
-            services.AddTransient<IPayrollService, PayrollService>();
 
             // Add application events
-            services.AddTransient<IDomainEvent, ProjectCreated>();
             services.AddTransient<IEventsFactory, EventsFactory>();
         }
 

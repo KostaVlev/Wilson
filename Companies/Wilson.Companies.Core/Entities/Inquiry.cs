@@ -32,13 +32,13 @@ namespace Wilson.Companies.Core.Entities
 
         public virtual ICollection<Offer> Offers { get; private set; }
 
-        public static Inquiry Create(string description, Employee receivedBy, string customerId)
+        public static Inquiry Create(string description, string receivedById, string customerId)
         {
             return new Inquiry()
             {
                 ReceivedAt = DateTime.Now,
                 Description = description,
-                ReceivedById = receivedBy.Id,
+                ReceivedById = receivedById,
                 CustomerId = customerId,
                 Attachments = new HashSet<Attachment>(),
                 InfoRequests = new HashSet<InfoRequest>(),
@@ -72,9 +72,9 @@ namespace Wilson.Companies.Core.Entities
             }
         }
 
-        public void AddInfoRequest(string requestMessage, Employee sendBy, IEnumerable<IFormFile> files = null)
+        public void AddInfoRequest(string requestMessage, string sendById, IEnumerable<IFormFile> files = null)
         {
-            var infoRequest = InfoRequest.Create(requestMessage, this, sendBy);
+            var infoRequest = InfoRequest.Create(requestMessage, this.Id, sendById);
             if (files != null)
             {
                 infoRequest.AddAttachments(files, false);
@@ -100,9 +100,9 @@ namespace Wilson.Companies.Core.Entities
             }
         }
 
-        public void AddOffer(string htmlContent, Employee addedBy)
+        public void AddOffer(string htmlContent, string addedById)
         {
-            var offer = Offer.Create(htmlContent, this, addedBy);
+            var offer = Offer.Create(htmlContent, this.Id, addedById);
             this.Offers.Add(offer);
         }
     }

@@ -66,6 +66,10 @@ namespace Wilson.Accounting.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(70);
 
+                    b.Property<string>("OfficeEmail");
+
+                    b.Property<string>("OfficePhone");
+
                     b.Property<string>("RegistrationNumber")
                         .IsRequired()
                         .HasMaxLength(10);

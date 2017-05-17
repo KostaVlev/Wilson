@@ -9,7 +9,7 @@ using Wilson.Companies.Core.Enumerations;
 namespace Wilson.Companies.Data.Migrations
 {
     [DbContext(typeof(CompanyDbContext))]
-    [Migration("20170515150858_DDD")]
+    [Migration("20170517143622_DDD")]
     partial class DDD
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -534,7 +534,6 @@ namespace Wilson.Companies.Data.Migrations
                         .HasMaxLength(36);
 
                     b.Property<string>("ContractId")
-                        .IsRequired()
                         .HasMaxLength(36);
 
                     b.Property<string>("CustomerId")
@@ -765,8 +764,7 @@ namespace Wilson.Companies.Data.Migrations
                 {
                     b.HasOne("Wilson.Companies.Core.Entities.CompanyContract", "Contract")
                         .WithOne("Project")
-                        .HasForeignKey("Wilson.Companies.Core.Entities.Project", "ContractId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("Wilson.Companies.Core.Entities.Project", "ContractId");
 
                     b.HasOne("Wilson.Companies.Core.Entities.Company", "Customer")
                         .WithMany("Projects")

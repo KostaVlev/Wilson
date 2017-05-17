@@ -1,16 +1,16 @@
-﻿using AutoMapper;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Wilson.Web.Events.Interfaces;
 
 namespace Wilson.Web.Seed
 {
     public class DatabaseSeeder : IDatabaseSeeder
     {
-        public void Seed(IServiceScopeFactory services)
+        public void Seed(IServiceScopeFactory services, IEventsFactory eventsFactory)
         {
-            CompaniesDbSeeder.Seed(services);
-            ProjectsDbSeeder.Seed(services);
-            AccountingDbSeeder.Seed(services);
-            SchedulerDbSeeder.Seed(services);
+            AccountingDbSeeder.Seed(services, eventsFactory);
+            CompaniesDbSeeder.Seed(services, eventsFactory);
+            ProjectsDbSeeder.Seed(services, eventsFactory);            
+            SchedulerDbSeeder.Seed(services, eventsFactory);
         }
     }
 }

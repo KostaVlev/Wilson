@@ -69,7 +69,7 @@ namespace Wilson.Web.Areas.Scheduler.Controllers
             var success = await this.SchedulerWorkData.CompleteAsync();
             if (success != 0)
             {
-                this.EventsFactory.Raise<PaychecksCreated>(new PaychecksCreated(newPaycheks));
+                this.EventsFactory.Raise(new PaycheckCreated(newPaycheks));
                 return RedirectToAction(nameof(PayrollController.Index), new { Message = Constants.SuccessMessages.DatabaseUpdateSuccess });                
             }
 

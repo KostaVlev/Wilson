@@ -65,7 +65,7 @@ namespace Wilson.Companies.Core.Entities
         {
             if (!this.Offers.Contains(offer))
             {
-                offer.AddToContract(this);
+                offer.AddToContract(this.Id);
                 this.Offers.Add(offer);
             }
         }

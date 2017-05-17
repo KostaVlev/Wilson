@@ -1,12 +1,11 @@
-﻿using AutoMapper;
+﻿using System.Linq;
+using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using System.Linq;
-using System.Threading.Tasks;
-using Wilson.Accounting.Core.Entities;
 using Wilson.Accounting.Data.DataAccess;
 using Wilson.Companies.Core.Entities;
 using Wilson.Companies.Data.DataAccess;
@@ -98,7 +97,12 @@ namespace Wilson.Web.Controllers
                     // Create home company.
                     var companyAddress = this.Mapper.Map<AddressViewModel, Accounting.Core.Entities.Address>(model.Company.Address);
                     var company = Accounting.Core.Entities.Company.Create(
-                        model.Company.Name, model.Company.RegistrationNumber, companyAddress, model.Company.VatNumber);
+                        model.Company.Name, 
+                        model.Company.RegistrationNumber, 
+                        model.Company.OfficeEmail, 
+                        model.Company.OfficePhone, 
+                        companyAddress, 
+                        model.Company.VatNumber);
 
                     this.AccountingWorkData.Companies.Add(company);
                     this.AccountingWorkData.Complete();
@@ -121,7 +125,7 @@ namespace Wilson.Web.Controllers
                     // Seed the database. Keep this at the end.
                     if (model.SeedData)
                     {
-                        this.dataSeeder.Seed(this.services);
+                        this.dataSeeder.Seed(this.services, this.eventsFactory);
                         this.logger.LogInformation(3, "Data was seeded into the database.");
                     }                    
 

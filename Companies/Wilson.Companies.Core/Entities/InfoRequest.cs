@@ -30,13 +30,14 @@ namespace Wilson.Companies.Core.Entities
 
         public virtual ICollection<Attachment> ResponseAttachmnets { get; private set; }
 
-        public static InfoRequest Create(string requestMessage, Inquiry inquiry, Employee sentBy)
+        public static InfoRequest Create(string requestMessage, string inquiryId, string sentById)
         {
             return new InfoRequest()
             {
                 SentAt = DateTime.Now,
                 RequestMessage = requestMessage,
-                SentById = sentBy.Id,
+                SentById = sentById,
+                InquiryId = inquiryId,
                 RequestAttachmnets = new HashSet<Attachment>(),
                 ResponseAttachmnets = new HashSet<Attachment>()
             };

@@ -375,7 +375,7 @@ namespace Wilson.Companies.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(maxLength: 36, nullable: false),
-                    ContractId = table.Column<string>(maxLength: 36, nullable: false),
+                    ContractId = table.Column<string>(maxLength: 36, nullable: true),
                     CustomerId = table.Column<string>(maxLength: 36, nullable: false),
                     IsActive = table.Column<bool>(nullable: false, defaultValue: true),
                     Location = table.Column<string>(nullable: true),
@@ -390,7 +390,7 @@ namespace Wilson.Companies.Data.Migrations
                         principalSchema: "Companies",
                         principalTable: "CompanyContract",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Project_Companies_CustomerId",
                         column: x => x.CustomerId,

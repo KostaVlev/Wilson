@@ -15,9 +15,13 @@ namespace Wilson.Accounting.Core.Entities
 
         public string VatNumber { get; private set; }
 
-        public bool HasVatRegistration { get; private set; }
+        public string OfficeEmail { get; private set; }
+
+        public string OfficePhone { get; private set; }
 
         public string Address { get; private set; }
+
+        public bool HasVatRegistration { get; private set; }
 
         public virtual ICollection<Employee> Employees { get; private set; }
 
@@ -25,12 +29,14 @@ namespace Wilson.Accounting.Core.Entities
 
         public virtual ICollection<Invoice> BuyInvoices { get; private set; }
 
-        public static Company Create(string name, string registrationNumber, Address address, string vatNumber = null)
+        public static Company Create(string name, string registrationNumber, string email, string phone, Address address, string vatNumber = null)
         {
             var company = new Company()
             {
                 Name = name,
                 RegistrationNumber = registrationNumber,
+                OfficeEmail = email,
+                OfficePhone = phone,
                 Address = address,
                 SaleInvoices = new HashSet<Invoice>(),
                 BuyInvoices = new HashSet<Invoice>()

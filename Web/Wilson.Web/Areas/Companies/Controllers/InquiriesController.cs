@@ -130,7 +130,7 @@ namespace Wilson.Web.Areas.Companies.Controllers
                 var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 var currentUser = await this.CompanyWorkData.Users.FindAsync(x => x.Id == currentUserId);
                 
-                var inquiry = Inquiry.Create(model.Description, currentUser.FirstOrDefault().Employee, model.CustomerId);
+                var inquiry = Inquiry.Create(model.Description, currentUser.FirstOrDefault().Employee.Id, model.CustomerId);
                 inquiry.AddAssignees(model.AssigneesIds);
                 inquiry.AddAttachments(model.Attachments);
 

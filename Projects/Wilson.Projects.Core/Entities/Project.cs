@@ -24,17 +24,15 @@ namespace Wilson.Projects.Core.Entities
 
         public virtual Employee Manager { get; private set; }
 
-        public static Project Create(string name, DateTime startDate, DateTime endDate, Employee manager, Company customer)
+        public static Project Create(string name, DateTime startDate, DateTime endDate, string managerId, string customerId)
         {
             return new Project()
             {
                 Name = name,
                 StartDate = startDate,
                 EndDate = endDate,
-                Manager = manager,
-                ManagerId = manager.Id,
-                Customer = customer,
-                CustomerId = customer.Id,
+                ManagerId = managerId,
+                CustomerId = customerId,
                 IsActive = true
             };
         }

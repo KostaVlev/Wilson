@@ -38,15 +38,15 @@ namespace Wilson.Companies.Core.Entities
 
         public virtual CompanyContract Contract { get; private set; }
 
-        public static Offer Create(string htmlContent, Inquiry inquiry, Employee createdBy)
+        public static Offer Create(string htmlContent, string inquiryId, string createdById)
         {
             return new Offer()
             {
                 HtmlContent = htmlContent,
                 IsApproved = false,
                 IsSent = false,
-                Inquiry = inquiry,
-                InquiryId = inquiry.Id
+                InquiryId = inquiryId,
+                CreatedById = createdById
             };
         }
 
@@ -57,11 +57,10 @@ namespace Wilson.Companies.Core.Entities
             this.LastRevisedAt = DateTime.Now;
         }
 
-        public string Send(Employee sendBy)
+        public string Send(string sendById)
         {
             this.IsSent = true;
-            this.SentBy = sendBy;
-            this.SentById = sendBy.Id;
+            this.SentById = sendById;
             this.SentAt = DateTime.Now;
 
             return this.HtmlContent;
@@ -73,10 +72,9 @@ namespace Wilson.Companies.Core.Entities
             this.ApprovedAt = DateTime.Now;
         }
 
-        public void AddToContract(CompanyContract contract)
+        public void AddToContract(string contractId)
         {
-            this.Contract = contract;
-            this.ContractId = ContractId;
+            this.ContractId = contractId;
         }
     }
 }
