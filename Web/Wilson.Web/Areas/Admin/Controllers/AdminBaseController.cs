@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Wilson.Companies.Core.Interfaces;
 using Wilson.Companies.Data.DataAccess;
+using Wilson.Web.Events.Interfaces;
 
 namespace Wilson.Web.Areas.Admin.Controllers
 {
@@ -15,15 +16,18 @@ namespace Wilson.Web.Areas.Admin.Controllers
     {
         private ISettings settings;
 
-        public AdminBaseController(ICompanyWorkData companyWorkData, IMapper mapper)
+        public AdminBaseController(ICompanyWorkData companyWorkData, IMapper mapper, IEventsFactory eventsFactory)
         {
             this.CompanyWorkData = companyWorkData;
             this.Mapper = mapper;
+            this.EventsFactory = eventsFactory;
         }
 
         public ICompanyWorkData CompanyWorkData { get; set; }
 
         public IMapper Mapper { get; set; }
+
+        public IEventsFactory EventsFactory { get; set; }
 
         public void AddErrors(IdentityResult result)
         {

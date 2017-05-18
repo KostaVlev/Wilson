@@ -14,20 +14,24 @@ using Wilson.Companies.Core.Enumerations;
 using Wilson.Companies.Data.DataAccess;
 using Wilson.Web.Areas.Admin.Models.ControlPanelViewModels;
 using Wilson.Web.Areas.Admin.Models.SharedViewModels;
+using Wilson.Web.Events;
+using Wilson.Web.Events.Interfaces;
 
 namespace Wilson.Web.Areas.Admin.Controllers
 {
     public class ControlPanelController : AdminBaseController
     {
         private readonly UserManager<ApplicationUser> userManager;
+        private readonly RoleManager<ApplicationRole> roleManager;
         private ILogger logger;
 
         public ControlPanelController(
             ICompanyWorkData companyWorkData, 
             UserManager<ApplicationUser> userManager,
             ILoggerFactory loggerFactory, 
-            IMapper mapperr)
-            : base(companyWorkData, mapperr)
+            IMapper mapperr,
+            IEventsFactory eventsFactory)
+            : base(companyWorkData, mapperr, eventsFactory)
         {
             this.userManager = userManager;
             this.logger = loggerFactory.CreateLogger<ControlPanelController>();
@@ -79,7 +83,11 @@ namespace Wilson.Web.Areas.Admin.Controllers
                         settings.HomeCompanyId);                    
                     
                     this.CompanyWorkData.Employees.Add(employee);
-                    await this.CompanyWorkData.CompleteAsync();
+                    var success = await this.CompanyWorkData.CompleteAsync();
+                    if (success > 0)
+                    {
+                        this.EventsFactory.Raise(new EmployeeCreated(employee));
+                    }
 
                     // Create user from the employee.
                     var user = ApplicationUser.Create(employee, employee.GetEmail());
@@ -210,6 +218,8 @@ namespace Wilson.Web.Areas.Admin.Controllers
 
             return RedirectToAction(nameof(ShowAllUsers), new { Message = Constants.AccountManageMessagesEn.Error });
         }
+
+
 
         private List<SelectListItem> GetEmployeePositions()
         {

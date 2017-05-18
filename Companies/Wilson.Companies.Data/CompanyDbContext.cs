@@ -8,7 +8,7 @@ using Wilson.Companies.Data.Configurations;
 
 namespace Wilson.Companies.Data
 {
-    public class CompanyDbContext : IdentityDbContext<ApplicationUser>
+    public class CompanyDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, string>
     {
         public CompanyDbContext(DbContextOptions<CompanyDbContext> options)
             : base(options)
