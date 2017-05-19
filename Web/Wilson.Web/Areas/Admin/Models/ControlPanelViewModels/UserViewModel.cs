@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Wilson.Web.Areas.Admin.Models.ControlPanelViewModels
 {
@@ -25,6 +27,12 @@ namespace Wilson.Web.Areas.Admin.Models.ControlPanelViewModels
         [Display(Name = "Phone Number")]
         public string PhoneNumber { get; set; }
 
+        [Required]
+        [Display(Name = "Role")]
+        public string ApplicationRoleName { get; set; }
+
         public bool IsActive { get; set; }
+
+        public IEnumerable<SelectListItem> Roles { get; set; }
     }
 }

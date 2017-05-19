@@ -45,6 +45,12 @@ namespace Wilson.Web.Areas.Admin.Models.ControlPanelViewModels
         [Display(Name = "Employee Position")]
         public EmployeePosition EmployeePosition { get; set; }
 
+        [Required]
+        [Display(Name = "Role")]
+        public string ApplicationRoleName { get; set; }
+
         public List<SelectListItem> EmployeePositions { get; set; }
+
+        public IEnumerable<SelectListItem> Roles { get; set; }
     }
 }

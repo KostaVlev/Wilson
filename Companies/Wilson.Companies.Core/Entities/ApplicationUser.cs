@@ -32,7 +32,9 @@ namespace Wilson.Companies.Core.Entities
             {
                 FirstName = employee.FirstName,
                 LastName = employee.LastName,
-                Employee = employee,
+                UserName = username,
+                Email = employee.Email,
+                PhoneNumber = employee.Phone,
                 EmployeeId = employee.Id,
                 SentMessages = new HashSet<Message>(),
                 ReceivedMessages = new HashSet<Message>(),

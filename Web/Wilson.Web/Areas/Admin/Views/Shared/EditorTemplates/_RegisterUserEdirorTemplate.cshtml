@@ -50,6 +50,18 @@
     </div>
 </div>
 <div class="form-group">
+    <label asp-for="ApplicationRoleName" class="col-md-2 control-label"></label>
+    <div class="col-md-10">
+        <select class="form-control" asp-for="ApplicationRoleName" data-val="true" data-val-required="ApplicationRoleName">
+            @foreach (var role in @Model.Roles)
+            {
+                <option value=@role.Value>@role.Text</option>
+            }
+        </select>
+        <span asp-validation-for="ApplicationRoleName" class="text-danger"></span>
+    </div>
+</div>
+<div class="form-group">
     <label asp-for="Password" class="col-md-2 control-label"></label>
     <div class="col-md-10">
         <input asp-for="Password" class="form-control" />

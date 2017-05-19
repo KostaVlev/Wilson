@@ -110,21 +110,6 @@ namespace Wilson.Companies.Core.Entities
             return format(this);
         }
 
-        public string GetEmail()
-        {
-            return this.Email;
-        }
-
-        public string GetPhone()
-        {
-            return this.Phone;
-        }
-
-        public string GetPrivatePhone()
-        {
-            return this.PrivatePhone;
-        }
-
         public Address GetAddress()
         {
             return (Address)this.Address;
