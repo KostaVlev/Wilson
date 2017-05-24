@@ -13,15 +13,14 @@ using Wilson.Scheduler.Data.DataAccess;
 using Wilson.Web.Events;
 using Wilson.Web.Events.Interfaces;
 using Wilson.Web.Models.InstallViewModels;
-using Wilson.Web.Models.SharedViewModels;
 using Wilson.Web.Seed;
 
 namespace Wilson.Web.Controllers
 {
-
     public class InstallController : BaseController
     {
         private readonly UserManager<ApplicationUser> userManager;
+        private readonly RoleManager<ApplicationRole> roleManager;
         private readonly ILogger logger;
         private readonly IDatabaseSeeder dataSeeder;
         private readonly IRolesSeder rolesSeeder;
@@ -29,19 +28,21 @@ namespace Wilson.Web.Controllers
         private readonly IEventsFactory eventsFactory;
 
         public InstallController(
-            UserManager<ApplicationUser> userManager, 
+            UserManager<ApplicationUser> userManager,
+            RoleManager<ApplicationRole> roleManager,
             ICompanyWorkData companyWorkData,
             ISchedulerWorkData schedulerWorkData,
             IAccountingWorkData accountingWorkData,
-            IMapper mapper, 
+            IMapper mapper,
             ILoggerFactory loggerFactory,
             IDatabaseSeeder dataSeeder,
             IRolesSeder rolesSeeder,
             IServiceScopeFactory services,
-            IEventsFactory eventsFactory) 
+            IEventsFactory eventsFactory)
             : base(companyWorkData, schedulerWorkData, accountingWorkData, mapper)
         {
             this.userManager = userManager;
+            this.roleManager = roleManager;
             this.dataSeeder = dataSeeder;
             this.rolesSeeder = rolesSeeder;
             this.services = services;
@@ -55,16 +56,10 @@ namespace Wilson.Web.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> InstallDatabase()
         {
-            // Check again if a database was previously installed and return Error if true because in this case we should not
-            // be here and don't give explanations about the error.
-            var query = await this.CompanyWorkData.Settings.GetAllAsync();
-            var settings = query.FirstOrDefault();
+            var settings = await this.CompanyWorkData.Settings.SingleOrDefaultAsync(x => x.IsDatabaseInstalled);
             if (settings != null)
             {
-                if (!settings.IsDatabaseInstalled)
-                {
-                    return View("Error");
-                }                
+                return BadRequest($"The database is already installed");
             }
 
             return View();
@@ -74,69 +69,97 @@ namespace Wilson.Web.Controllers
         // POST: /Install/InstallDatabase
         [HttpPost]
         [AllowAnonymous]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> InstallDatabase(InstallDatabaseViewModel model)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                var systemUser = this.Mapper.Map<UserViewModel, ApplicationUser>(model.User);
-
-                // Set the Username!
-                systemUser.UserName = model.User.Email;
-
-                // Create User.
-                var result = await this.userManager.CreateAsync(systemUser, model.User.Password);
-                if (result.Succeeded)
-                {
-                    this.logger.LogInformation(3, "Admin was created.");
-                    this.rolesSeeder.Seed(this.services);
-                    this.logger.LogInformation(3, "Roles were seeded into the database.");
-
-                    // Make the user administrator.
-                    await userManager.AddToRoleAsync(systemUser, Constants.Roles.Administrator);
-
-                    // Create home company.
-                    var companyAddress = this.Mapper.Map<AddressViewModel, Accounting.Core.Entities.Address>(model.Company.Address);
-                    var company = Accounting.Core.Entities.Company.Create(
-                        model.Company.Name, 
-                        model.Company.RegistrationNumber, 
-                        model.Company.OfficeEmail, 
-                        model.Company.OfficePhone, 
-                        companyAddress, 
-                        model.Company.VatNumber);
-
-                    this.AccountingWorkData.Companies.Add(company);
-                    this.AccountingWorkData.Complete();
-
-                    this.eventsFactory.Raise(new CompanyCreated(company));
-                    
-                    // Set company Base Pay Rate
-                    model.PayRate.IsBaseRate = true;
-                    var payRate = this.Mapper.Map<PayRateViewModel, Scheduler.Core.Entities.PayRate>(model.PayRate);
-
-                    this.SchedulerWorkData.PayRates.Add(payRate);
-
-                    // Set database settings to installed and Save Home Company Id.
-                    this.CompanyWorkData.Settings.Add(new Settings() { IsDatabaseInstalled = true, HomeCompanyId = company.Id });
-                    
-                    // Save all changes. Don't use async here because the Data seeder might access the db before they to be completed.
-                    this.CompanyWorkData.Complete();
-                    this.SchedulerWorkData.Complete();
-                     
-                    // Seed the database. Keep this at the end.
-                    if (model.SeedData)
-                    {
-                        this.dataSeeder.Seed(this.services, this.eventsFactory);
-                        this.logger.LogInformation(3, "Data was seeded into the database.");
-                    }                    
-
-                    this.logger.LogInformation(3, "The database was installed successfully.");
-                    return RedirectToAction(nameof(AccountController.Login), "Account");
-                }
-
-                this.AddErrors(result);
+                return View(InstallDatabaseViewModel.ReBuild(model));
             }
 
-            return View(model);
+            var systemUser = ApplicationUser.CreateSystemUser(
+                model.User.FirstName, model.User.LastName, model.User.Email, model.User.PhoneNumber);
+
+            var maybeUser = await this.userManager.FindByEmailAsync(systemUser.Email);
+            if (maybeUser == null)
+            {
+                var result = await this.userManager.CreateAsync(systemUser, model.User.Password);
+                if (!result.Succeeded)
+                {
+                    this.logger.LogError(2, $"Failed to create system user.");
+                    result.Errors.ToList().ForEach(e => this.logger.LogError(2, $"{e.Code} -- {e.Description}"));
+                    this.AddErrors(result);
+
+                    return View(InstallDatabaseViewModel.ReBuild(model));
+                }
+
+                this.logger.LogInformation(3, $"System user with Id {systemUser.Id} was crated");
+            }
+            else
+            {
+                systemUser = maybeUser;
+            }
+            
+            if (this.roleManager.Roles == null || this.roleManager.Roles.Count() == 0)
+            {
+                this.rolesSeeder.Seed(this.services);
+            }
+
+            // Make the user administrator.
+            var addToRoleResult = await userManager.AddToRoleAsync(systemUser, Constants.Roles.Administrator);
+            if (!addToRoleResult.Succeeded)
+            {
+                this.logger.LogError(2, $"Failed to add role {Constants.Roles.Administrator} to user with id {systemUser.Id}");
+                addToRoleResult.Errors.ToList().ForEach(e => this.logger.LogError(2, $"{e.Code} -- {e.Description}"));
+                this.AddErrors(addToRoleResult);
+
+                return View(InstallDatabaseViewModel.ReBuild(model));
+            }
+
+            // Create home company.
+            var companyAddress = Accounting.Core.Entities.Address.Create(
+                model.Company.Address.Country,
+                model.Company.Address.PostCode,
+                model.Company.Address.City,
+                model.Company.Address.Street,
+                model.Company.Address.StreetNumber,
+                model.Company.Address.Floor,
+                model.Company.Address.UnitNumber,
+                model.Company.Address.Note);
+
+            var company = Accounting.Core.Entities.Company.Create(
+                model.Company.Name,
+                model.Company.RegistrationNumber,
+                model.Company.OfficeEmail,
+                model.Company.OfficePhone,
+                companyAddress,
+                model.Company.VatNumber);
+
+            this.AccountingWorkData.Companies.Add(company);
+            this.AccountingWorkData.Complete();
+
+            this.eventsFactory.Raise(new CompanyCreated(company));
+
+            // Set company Base Pay Rate
+            var payRate = Scheduler.Core.Entities.PayRate.Create(
+                model.PayRate.Hour, model.PayRate.ExtraHour, model.PayRate.HoidayHour, model.PayRate.BusinessTripHour, true);
+
+            this.SchedulerWorkData.PayRates.Add(payRate);
+            this.SchedulerWorkData.Complete();
+
+            // Set database settings to installed and Save Home Company Id.
+            this.CompanyWorkData.Settings.Add(Settings.Initialize(company.Id));
+            this.CompanyWorkData.Complete();
+            
+            // Seed the database. Keep this at the end.
+            if (model.SeedData)
+            {
+                this.dataSeeder.Seed(this.services, this.eventsFactory);
+                this.logger.LogInformation(3, "Data was seeded into the database.");
+            }
+
+            this.logger.LogInformation(3, "The database was installed successfully.");
+            return RedirectToAction(nameof(AccountController.Login), "Account");
         }
 
         private void AddErrors(IdentityResult result)

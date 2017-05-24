@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Wilson.Companies.Core.Interfaces;
 using Wilson.Companies.Data.DataAccess;
 using Wilson.Web.Events.Interfaces;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Wilson.Web.Areas.Admin.Controllers
 {

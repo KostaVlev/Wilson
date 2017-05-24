@@ -17,7 +17,7 @@ namespace Wilson.Companies.Data.Configurations
             builder.Property(x => x.FirstName).HasMaxLength(70).IsRequired();
             builder.Property(x => x.LastName).HasMaxLength(70).IsRequired();
             builder.Property(x => x.IsNew).HasDefaultValue(true);
-            builder.HasOne(x => x.Recipient).WithMany(x => x.RegistrationRequestMessages).HasForeignKey(x => x.RecipientId).OnDelete(DeleteBehavior.Restrict);
+            builder.HasOne(x => x.RecivedBy).WithMany(x => x.RegistrationRequestMessages).HasForeignKey(x => x.RecivedById).OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

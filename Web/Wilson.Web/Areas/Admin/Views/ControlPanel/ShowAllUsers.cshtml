@@ -1,4 +1,4 @@
-﻿@model IEnumerable<UserViewModel>
+﻿@model IEnumerable<ShortUserViewModel>
 
 <table class="table table-striped">
     <thead>
@@ -19,19 +19,17 @@
                 <td>@user.Email</td>
                 <td>@user.PhoneNumber</td>
                 <td>
-                    <button class="btn btn-sm">
-                        <a asp-area="Admin" asp-controller="ControlPanel" asp-action="EditUser" asp-route-id="@user.Id">Edit</a>
-                    </button>
+                    <a class="btn btn-sm btn-link" asp-area="Admin" asp-controller="ControlPanel" asp-action="EditUser" asp-route-id="@user.Id">Edit</a>
                     @if (user.IsActive)
                     {
                         <form asp-area="Admin" asp-controller="ControlPanel" asp-action="DeactivateUser" asp-route-id="@user.Id" method="post" class="form-horizontal" role="form">
-                            <button type="submit" class="btn btn-sm"><a>Deactivate</a></button>
+                            <button type="submit" class="btn btn-sm btn-link">Deactivate</button>
                         </form>
                     }
                     else
                     {
                         <form asp-area="Admin" asp-controller="ControlPanel" asp-action="ActivateUser" asp-route-id="@user.Id" method="post" class="form-horizontal" role="form">
-                            <button type="submit" class="btn btn-sm"><a>Activate</a></button>
+                            <button type="submit" class="btn btn-sm btn-link">Activate</button>
                         </form>
                     }
                 </td>

@@ -17,5 +17,15 @@ namespace Wilson.Web.Models.SharedViewModels
 
         [Display(Name = "Business Trip Rate")]
         public decimal BusinessTripHour { get; set; }
+
+        public static PayRateViewModel Create()
+        {
+            return new PayRateViewModel();
+        }
+
+        public static PayRateViewModel ReBuild(PayRateViewModel model)
+        {
+            return model;
+        }
     }
 }

@@ -24,21 +24,20 @@ namespace Wilson.Companies.Core.Entities
 
         public string PrivatePhone { get; private set; }
 
-        public string RecipientId { get; private set; }
+        public string RecivedById { get; private set; }
 
-        public virtual ApplicationUser Recipient { get; private set; }
+        public virtual ApplicationUser RecivedBy { get; private set; }
 
-        public static RegistrationRequestMessage Create(string firstName, string lastName, string privitePhone, Address address, ApplicationUser recipient)
+        public static RegistrationRequestMessage Create(string firstName, string lastName, string privitePhone, Address address)
         {
             return new RegistrationRequestMessage()
             {
                 SendAt = DateTime.Now,
                 IsNew = true,
+                PrivatePhone = privitePhone,
                 FirstName = firstName,
                 LastName = lastName,
-                Address = address,
-                Recipient = recipient,
-                RecipientId = recipient.Id
+                Address = address
             };
         }
 
@@ -51,6 +50,14 @@ namespace Wilson.Companies.Core.Entities
         public void Delete()
         {
             this.IsDeleted = true;
+        }
+
+        public void Recive(ApplicationUser user)
+        {
+            this.RecivedBy = user;
+            this.RecivedById = user.Id;
+            this.ReceivedAt = DateTime.Now;
+            this.IsNew = false;
         }
 
         public Address GetAddress()

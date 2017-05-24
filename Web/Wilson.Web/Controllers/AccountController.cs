@@ -8,6 +8,9 @@ using Microsoft.Extensions.Options;
 using Wilson.Companies.Core.Entities;
 using Wilson.Web.Models.AccountViewModels;
 using Wilson.Web.Services;
+using AutoMapper;
+using Wilson.Web.Models.SharedViewModels;
+using Wilson.Companies.Data.DataAccess;
 
 namespace Wilson.Web.Controllers
 {
@@ -18,6 +21,8 @@ namespace Wilson.Web.Controllers
         private readonly SignInManager<ApplicationUser> signInManager;
         private readonly ILogger logger;
         private readonly string externalCookieScheme;
+        private readonly IMapper mapper;
+        private readonly ICompanyWorkData companyWorkData;
 
         public AccountController(
             UserManager<ApplicationUser> userManager,
@@ -25,12 +30,16 @@ namespace Wilson.Web.Controllers
             IOptions<IdentityCookieOptions> identityCookieOptions,
             IEmailSender emailSender,
             ISmsSender smsSender,
-            ILoggerFactory loggerFactory)
+            ILoggerFactory loggerFactory,
+            IMapper mapper,
+            ICompanyWorkData companyWorkData)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
             this.externalCookieScheme = identityCookieOptions.Value.ExternalCookieAuthenticationScheme;
             this.logger = loggerFactory.CreateLogger<AccountController>();
+            this.mapper = mapper;
+            this.companyWorkData = companyWorkData;
         }
 
         //
@@ -201,6 +210,34 @@ namespace Wilson.Web.Controllers
         public IActionResult AccessDenied()
         {
             return View();
+        }
+
+        //
+        // GET /Account/RegisterRequest
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult RegisterRequest()
+        {
+            return View();
+        }
+
+        //
+        // POST /Account/RegisterRequest
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<IActionResult> RegisterRequest(RegistrationRequestMessageViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var address = this.mapper.Map<AddressViewModel, Address>(model.Address);
+                var message = RegistrationRequestMessage.Create(model.FirstName, model.LastName, model.PrivatePhone, address);
+                this.companyWorkData.RegistrationRequestMessages.Add(message);
+                await this.companyWorkData.CompleteAsync();
+
+                return RedirectToAction(nameof(AccountController.Login), "Account");
+            }
+
+            return View(model);
         }
 
         #region Helpers

@@ -1,23 +1,9 @@
-@model UserViewModel
+@model EditUserViewModel
 
 <form asp-area="Admin" asp-controller="ControlPanel" asp-action="EditUser" method="post" class="form-horizontal">
-    <h4>Edit User</h4>
+    <h4>Editing User - @Model.FullName</h4>
     <hr />
-    <div asp-validation-summary="All" class="text-danger"></div>
-    <div class="form-group">
-        <label asp-for="FirstName" class="col-md-2 control-label"></label>
-        <div class="col-md-10">
-            <input asp-for="FirstName" class="form-control" />
-            <span asp-validation-for="FirstName" class="text-danger"></span>
-        </div>
-    </div>
-    <div class="form-group">
-        <label asp-for="LastName" class="col-md-2 control-label"></label>
-        <div class="col-md-10">
-            <input asp-for="LastName" class="form-control" />
-            <span asp-validation-for="LastName" class="text-danger"></span>
-        </div>
-    </div>
+    <div asp-validation-summary="All" class="text-danger"></div>    
     <div class="form-group">
         <label asp-for="PhoneNumber" class="col-md-2 control-label"></label>
         <div class="col-md-10">
@@ -26,17 +12,10 @@
         </div>
     </div>
     <div class="form-group">
-        <label asp-for="Email" class="col-md-2 control-label"></label>
-        <div class="col-md-10">
-            <input asp-for="Email" class="form-control" />
-            <span asp-validation-for="Email" class="text-danger"></span>
-        </div>
-    </div>
-    <div class="form-group">
         <label asp-for="ApplicationRoleName" class="col-md-2 control-label"></label>
         <div class="col-md-10">
             <select class="form-control" asp-for="ApplicationRoleName" data-val="true" data-val-required="ApplicationRoleName">
-                @foreach (var role in @Model.Roles)
+                @foreach (var role in @Model.ApplicationRoles)
             {
                     <option value=@role.Value>@role.Text</option>
                 }

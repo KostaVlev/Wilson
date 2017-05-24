@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Wilson.Companies.Core.Entities;
 using Wilson.Web.Areas.Admin.Models.ControlPanelViewModels;
-using Wilson.Web.Areas.Admin.Models.SharedViewModels;
+using Wilson.Web.Models.SharedViewModels;
 
 namespace Wilson.Web.Areas.Admin.Configurations
 {
@@ -10,17 +10,14 @@ namespace Wilson.Web.Areas.Admin.Configurations
         public AutoMapperAdminProfileConfiguration()
         {
             // Admin area mappings.
-            CreateMap<ApplicationUser, UserViewModel>();
-            CreateMap<RegisterUserViewModel, ApplicationUser>()
+            CreateMap<ApplicationUser, ShortUserViewModel>();
+            CreateMap<EmployeeViewModel, ApplicationUser>()
                 .ForSourceMember(x => x.EmployeePosition, opt => opt.Ignore())
                 .ForSourceMember(x => x.EmployeePositions, opt => opt.Ignore())
-                .ForSourceMember(x => x.Password, opt => opt.Ignore())
-                .ForSourceMember(x => x.ConfirmPassword, opt => opt.Ignore())
                 .ForSourceMember(x => x.PrivatePhone, opt => opt.Ignore());
-            CreateMap<RegisterUserViewModel, Employee>()
-                .ForSourceMember(x => x.Password, opt => opt.Ignore())
-                .ForSourceMember(x => x.ConfirmPassword, opt => opt.Ignore())
+            CreateMap<EmployeeViewModel, Employee>()
                 .ForSourceMember(x => x.EmployeePositions, opt => opt.Ignore());
+            CreateMap<Employee, EmployeeViewModel>();
             CreateMap<AddressViewModel, Address>();
         }
     }

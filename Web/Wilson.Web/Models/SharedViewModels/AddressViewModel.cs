@@ -1,4 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using AutoMapper;
+using Wilson.Companies.Core.Entities;
 
 namespace Wilson.Web.Models.SharedViewModels
 {
@@ -36,8 +38,24 @@ namespace Wilson.Web.Models.SharedViewModels
         [Display(Name = "Apartment Number")]
         public string UnitNumber { get; set; }
 
-        [StringLength(70, ErrorMessage = "The {0} must be max {1} characters long.", MinimumLength = 0)]
+        [StringLength(70, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long." , MinimumLength = 0)]
         [Display(Name = "Note")]
         public string Note { get; set; }
+
+        public static AddressViewModel Create()
+        {
+            return new AddressViewModel();
+        }
+
+        public static AddressViewModel CreateForEdit(Address address, IMapper mapper)
+        {
+            var model = mapper.Map<Address, AddressViewModel>(address);
+            return model;
+        }
+
+        public static AddressViewModel ReBuild(AddressViewModel model)
+        {
+            return model;
+        }
     }
 }

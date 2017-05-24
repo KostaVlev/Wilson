@@ -42,6 +42,26 @@ namespace Wilson.Companies.Core.Entities
             };
         }
 
+        public static ApplicationUser CreateSystemUser(string firstName, string lastName, string email, string phone)
+        {
+            return new ApplicationUser()
+            {
+                FirstName = firstName,
+                LastName = lastName,
+                UserName = email,
+                Email = email,
+                PhoneNumber = phone,
+                SentMessages = new HashSet<Message>(),
+                ReceivedMessages = new HashSet<Message>(),
+                RegistrationRequestMessages = new HashSet<RegistrationRequestMessage>()
+            };
+        }
+
+        public void UpdatePhone(string phoneNumber)
+        {
+            this.PhoneNumber = phoneNumber;
+        }
+
         public void ChangeNames(string firstName, string lastName)
         {
             this.FirstName = firstName;

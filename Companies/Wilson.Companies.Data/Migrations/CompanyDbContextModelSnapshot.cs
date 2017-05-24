@@ -586,13 +586,13 @@ namespace Wilson.Companies.Data.Migrations
 
                     b.Property<DateTime?>("ReceivedAt");
 
-                    b.Property<string>("RecipientId");
+                    b.Property<string>("RecivedById");
 
                     b.Property<DateTime>("SendAt");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("RecipientId");
+                    b.HasIndex("RecivedById");
 
                     b.ToTable("RegistrationRequestMessage");
                 });
@@ -775,9 +775,9 @@ namespace Wilson.Companies.Data.Migrations
 
             modelBuilder.Entity("Wilson.Companies.Core.Entities.RegistrationRequestMessage", b =>
                 {
-                    b.HasOne("Wilson.Companies.Core.Entities.ApplicationUser", "Recipient")
+                    b.HasOne("Wilson.Companies.Core.Entities.ApplicationUser", "RecivedBy")
                         .WithMany("RegistrationRequestMessages")
-                        .HasForeignKey("RecipientId");
+                        .HasForeignKey("RecivedById");
                 });
         }
     }

@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace Wilson.Companies.Data.Migrations
 {
-    public partial class ApplicationRoles : Migration
+    public partial class DDD : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -355,15 +355,15 @@ namespace Wilson.Companies.Data.Migrations
                     LastName = table.Column<string>(maxLength: 70, nullable: false),
                     PrivatePhone = table.Column<string>(nullable: true),
                     ReceivedAt = table.Column<DateTime>(nullable: true),
-                    RecipientId = table.Column<string>(nullable: true),
+                    RecivedById = table.Column<string>(nullable: true),
                     SendAt = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_RegistrationRequestMessage", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_RegistrationRequestMessage_AspNetUsers_RecipientId",
-                        column: x => x.RecipientId,
+                        name: "FK_RegistrationRequestMessage_AspNetUsers_RecivedById",
+                        column: x => x.RecivedById,
                         principalSchema: "Companies",
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
@@ -732,10 +732,10 @@ namespace Wilson.Companies.Data.Migrations
                 column: "CustomerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RegistrationRequestMessage_RecipientId",
+                name: "IX_RegistrationRequestMessage_RecivedById",
                 schema: "Companies",
                 table: "RegistrationRequestMessage",
-                column: "RecipientId");
+                column: "RecivedById");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

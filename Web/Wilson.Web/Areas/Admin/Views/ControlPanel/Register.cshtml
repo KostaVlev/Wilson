@@ -1,12 +1,27 @@
 ﻿@model RegisterViewModel
 
-<h2>Register new User</h2>
+<h2>Register</h2>
 
 <form  asp-controller="ControlPanel" asp-action="Register"  method="post" class="form-horizontal">
     <div asp-validation-summary="All" class="text-danger"></div>
     <hr />
-    @Html.EditorFor(x => x.User, "_RegisterUserEdirorTemplate")    
-    @Html.EditorFor(x => x.Address, "_AddressEditorTemplate")
+    <h4>Create User from existing Employee</h4>
+    <hr />
+    <div class="form-group">
+        <label asp-for="EmployeeId" class="col-md-2 control-label"></label>
+        <div class="col-md-10">
+            <select class="form-control" asp-for="EmployeeId" data-val="true" data-val-required="EmployeeId">
+                <option value="">Create User from existing Employee</option>
+                @foreach (var employee in @Model.Employees)
+                {
+                    <option value=@employee.Value>@employee.Text</option>
+                }
+            </select>
+            <span asp-validation-for="EmployeeId" class="text-danger"></span>
+        </div>
+    </div>
+    <h4>User data</h4>
+    @Html.EditorFor(x => x.User, "_RegisterUserEdirorTemplate")  
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
             <button type="submit" class="btn btn-default">Register</button>

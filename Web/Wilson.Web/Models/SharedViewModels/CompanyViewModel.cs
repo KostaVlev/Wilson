@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Wilson.Web.Models.SharedViewModels
 {
@@ -33,5 +29,16 @@ namespace Wilson.Web.Models.SharedViewModels
         public string OfficePhone { get; set; }
 
         public AddressViewModel Address { get; set; }
+
+        public static CompanyViewModel Create()
+        {
+            return new CompanyViewModel() { Address = AddressViewModel.Create() };
+        }
+
+        public static CompanyViewModel ReBuild(CompanyViewModel model)
+        {
+            model.Address = AddressViewModel.ReBuild(model.Address);
+            return model;
+        }
     }
 }
