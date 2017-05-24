@@ -15,6 +15,8 @@ namespace Wilson.Companies.Data.Configurations
         {
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Id).HasMaxLength(36);
+            builder.Property(x => x.HomeCompanyId).HasMaxLength(36);
+            builder.HasOne(x => x.HomeCompany).WithOne().HasForeignKey<Settings>(x => x.HomeCompanyId);
         }
     }
 }

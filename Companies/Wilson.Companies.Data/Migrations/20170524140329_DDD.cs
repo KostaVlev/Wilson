@@ -64,20 +64,6 @@ namespace Wilson.Companies.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Settings",
-                schema: "Companies",
-                columns: table => new
-                {
-                    Id = table.Column<string>(maxLength: 36, nullable: false),
-                    HomeCompanyId = table.Column<string>(nullable: true),
-                    IsDatabaseInstalled = table.Column<bool>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Settings", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 schema: "Companies",
                 columns: table => new
@@ -130,6 +116,27 @@ namespace Wilson.Companies.Data.Migrations
                         principalTable: "Companies",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Settings",
+                schema: "Companies",
+                columns: table => new
+                {
+                    Id = table.Column<string>(maxLength: 36, nullable: false),
+                    HomeCompanyId = table.Column<string>(maxLength: 36, nullable: true),
+                    IsDatabaseInstalled = table.Column<bool>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Settings", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Settings_Companies_HomeCompanyId",
+                        column: x => x.HomeCompanyId,
+                        principalSchema: "Companies",
+                        principalTable: "Companies",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -736,6 +743,13 @@ namespace Wilson.Companies.Data.Migrations
                 schema: "Companies",
                 table: "RegistrationRequestMessage",
                 column: "RecivedById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Settings_HomeCompanyId",
+                schema: "Companies",
+                table: "Settings",
+                column: "HomeCompanyId",
+                unique: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

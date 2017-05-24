@@ -9,7 +9,7 @@ using Wilson.Companies.Core.Enumerations;
 namespace Wilson.Companies.Data.Migrations
 {
     [DbContext(typeof(CompanyDbContext))]
-    [Migration("20170520161605_DDD")]
+    [Migration("20170524140329_DDD")]
     partial class DDD
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -604,11 +604,15 @@ namespace Wilson.Companies.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasMaxLength(36);
 
-                    b.Property<string>("HomeCompanyId");
+                    b.Property<string>("HomeCompanyId")
+                        .HasMaxLength(36);
 
                     b.Property<bool>("IsDatabaseInstalled");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("HomeCompanyId")
+                        .IsUnique();
 
                     b.ToTable("Settings");
                 });
@@ -779,6 +783,13 @@ namespace Wilson.Companies.Data.Migrations
                     b.HasOne("Wilson.Companies.Core.Entities.ApplicationUser", "RecivedBy")
                         .WithMany("RegistrationRequestMessages")
                         .HasForeignKey("RecivedById");
+                });
+
+            modelBuilder.Entity("Wilson.Companies.Core.Entities.Settings", b =>
+                {
+                    b.HasOne("Wilson.Companies.Core.Entities.Company", "HomeCompany")
+                        .WithOne()
+                        .HasForeignKey("Wilson.Companies.Core.Entities.Settings", "HomeCompanyId");
                 });
         }
     }

@@ -30,35 +30,47 @@
                 <td>@inquiry.Customer.Name</td>
                 <td>@inquiry.Description</td>
                 <td>
-                    @foreach (var inquiryEmployee in inquiry.Assignees)
+                    @if (inquiry.Assignees != null)
                     {
-                        <p>@inquiryEmployee.Employee.ToString()</p>
+                        @foreach (var inquiryEmployee in inquiry.Assignees)
+                        {
+                            <p>@inquiryEmployee.Employee.ToString()</p>
+                        }
                     }
                 </td>
                 <td>
-                    @foreach (var attachment in inquiry.Attachmnets)
+                    @if (inquiry.Attachmnets != null)
                     {
-                        <p>
-                            <a href="#">@attachment.ToString()</a>
-                        </p>
+                        @foreach (var attachment in inquiry.Attachmnets)
+                        {
+                            <p>
+                                <a href="#">@attachment.ToString()</a>
+                            </p>
+                        }
                     }
                 </td>
                 <td>
-                    @foreach (var infoRequest in inquiry.InfoRequests)
+                    @if (inquiry.InfoRequests != null)
                     {
-                        <p>
-                            <a asp-area="" asp-controller="" asp-action="" asp-route-id="">
-                                @infoRequest.SentAt.ToString(Constants.DateTimeFormats.Short)
-                            </a>
-                        </p>
+                        @foreach (var infoRequest in inquiry.InfoRequests)
+                        {
+                            <p>
+                                <a asp-area="" asp-controller="" asp-action="" asp-route-id="">
+                                    @infoRequest.SentAt.ToString(Constants.DateTimeFormats.Short)
+                                </a>
+                            </p>
+                        }
                     }
                 </td>
                 <td>
-                    @foreach (var offer in inquiry.Offers)
+                    @if (inquiry.Offers != null)
                     {
-                        <p>
-                            <a href="#">@offer.SentAt.ToString(Constants.DateTimeFormats.Short)</a>
-                        </p>
+                        @foreach (var offer in inquiry.Offers)
+                        {
+                            <p>
+                                <a href="#">@offer.SentAt.ToString(Constants.DateTimeFormats.Short)</a>
+                            </p>
+                        }
                     }
                 </td>
                 <td><a href="#">Edit</a></td>

@@ -45,7 +45,7 @@ namespace Wilson.Web.Areas.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> Register()
         {
-            return View(await RegisterViewModel.CreateAsync(roleManager, this.CompanyWorkData));
+            return View(await RegisterViewModel.CreateAsync(this.roleManager, this.CompanyWorkData));
         }
 
         //
