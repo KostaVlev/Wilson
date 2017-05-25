@@ -11,7 +11,6 @@ using Microsoft.EntityFrameworkCore;
 using Wilson.Scheduler.Core.Entities;
 using Wilson.Scheduler.Core.Enumerations;
 using Wilson.Web.Areas.Scheduler.Models.HomeViewModels;
-using Wilson.Web.Areas.Scheduler.Models.SharedViewModels;
 
 namespace Wilson.Web.Areas.Scheduler.Services
 {
@@ -24,58 +23,8 @@ namespace Wilson.Web.Areas.Scheduler.Services
 
         public async Task<IEnumerable<Employee>> Employees()
         {
-            var employees = await this.SchedulerWorkData.Employees
+            return await this.SchedulerWorkData.Employees
                 .FindAsync(e => !e.IsFired, x => x.Include(s => s.Schedules).ThenInclude(p => p.Project));
-
-            return employees;
-        }
-
-        public async Task<Schedule> FindScheduleById(string id)
-        {
-            var employees = await this.Employees();
-            var schedule = employees.FirstOrDefault(e => e.Schedules.Any(s => s.Id == id)).Schedules.FirstOrDefault(s => s.Id == id);
-
-            return schedule;
-        }
-
-        public async Task<IEnumerable<Schedule>> FindAllSchedulesForDate(string dateTime)
-        {
-            var employees = await this.Employees();
-            DateTime date = Convert.ToDateTime(dateTime);
-            string dateFormat = Constants.DateTimeFormats.Short;
-            var shrotDate = date.ToString(dateFormat);            
-            var schedules = employees
-                .Where(e => e.Schedules.Any(s => s.Date.ToString(dateFormat) == shrotDate))
-                .SelectMany(e => e.Schedules)
-                .Where(s => s.Date.ToString(dateFormat) == shrotDate);
-
-            return schedules;
-        }
-
-        public async Task<EmployeesShceduleViewModel> PrepareEmployeesShceduleViewModel()
-        {
-            // Get all the employees to schedule.
-            var employees = await this.Employees();
-            var employeeModels = this.Mapper.Map<IEnumerable<Employee>, IEnumerable<EmployeeViewModel>>(employees);
-
-            // Check if today's schedule was created.
-            var today = DateTime.Now.ToString(Constants.DateTimeFormats.Short);
-            var employeesRecentSchedules = await this.FindEmployeeSchedules();
-            bool isTodayShceduleCreated =
-                employeeModels.Any(s => s.Schedules.Any(x => x.Date.ToString(Constants.DateTimeFormats.Short) == today));
-
-            if (!isTodayShceduleCreated)
-            {
-                await this.SetupEmployeeNewSchedule(employeeModels);
-            }
-
-            return new EmployeesShceduleViewModel()
-            {
-                LastScheduledEmployees = employeesRecentSchedules,
-                Employees = employeeModels,
-                IsTodayScheduleCreated = isTodayShceduleCreated,
-                Today = today
-            };
         }
 
         public async Task SetupEmployeeNewSchedule(IEnumerable<EmployeeViewModel> employeeModels)
@@ -99,59 +48,10 @@ namespace Wilson.Web.Areas.Scheduler.Services
                 employee.NewSchedule.ScheduleOptions = scheduleOptions;
             }
         }
-
-        public async Task<IEnumerable<ScheduleViewModel>> SetupScheduleModelForEdit(IEnumerable<Schedule> schedules)
-        {
-            var scheduleModels = this.Mapper.Map<IEnumerable<Schedule>, IEnumerable<ScheduleViewModel>>(schedules);
-            var projectOptions = await this.GetProjectOptions();
-            var scheduleOptions = this.GetScheduleOptions();
-
-            foreach (var scheduleModel in scheduleModels)
-            {
-                scheduleModel.ProjectOptions = projectOptions;
-                scheduleModel.ScheduleOptions = scheduleOptions;
-            }
-
-            return scheduleModels;
-        }
-
-        public async Task SetupScheduleModelForEdit(IEnumerable<ScheduleViewModel> scheduleModels)
-        {
-            var projectOptions = await this.GetProjectOptions();
-            var scheduleOptions = this.GetScheduleOptions();
-
-            foreach (var scheduleModel in scheduleModels)
-            {
-                scheduleModel.ProjectOptions = projectOptions;
-                scheduleModel.ScheduleOptions = scheduleOptions;
-            }
-        }
-
-        public async Task<ScheduleViewModel> SetupScheduleModelForEdit(Schedule schedule)
-        {
-            var scheduleModel = this.Mapper.Map<Schedule, ScheduleViewModel>(schedule);
-            var projectOptions = await this.GetProjectOptions();
-            var scheduleOptions = this.GetScheduleOptions();
-
-            scheduleModel.ProjectOptions = projectOptions;
-            scheduleModel.ScheduleOptions = scheduleOptions;
-
-            return scheduleModel;
-        }
-
-        public async Task SetupScheduleModelForEdit(ScheduleViewModel scheduleModel)
-        {
-            var projectOptions = await this.GetProjectOptions();
-            var scheduleOptions = this.GetScheduleOptions();
-
-            scheduleModel.ProjectOptions = projectOptions;
-            scheduleModel.ScheduleOptions = scheduleOptions;
-        }
-
-        public async Task<IEnumerable<EmployeeViewModel>> FindEmployeeSchedules(
+                
+        public IEnumerable<EmployeeViewModel> FindEmployeeSchedules(IEnumerable<Employee> employees,
             DateTime? from = null, DateTime? to = null, string employeeId = null, string projectId = null, ScheduleOption? scheduleOption = null)
         {
-            var employees = await this.Employees();
             var employeeModels = this.Mapper.Map<IEnumerable<Employee>, IEnumerable<EmployeeViewModel>>(employees);
 
             // Because the date will be xx.xx.xxxx 12:00 AM for a correct search we need to add 23 hours 59 min and 59 sec or just 1 day.
@@ -208,31 +108,20 @@ namespace Wilson.Web.Areas.Scheduler.Services
             }
             else
             {
-                throw new InvalidOperationException("Get Schedules Grouped By Employee cannot be completed. Check the method parameters.");
+                throw new InvalidOperationException("Can not find Employee schedules");
             }
 
             return employeeModels;
         }
 
-        public async Task<SearchViewModel> SetupSearchModel(IEnumerable<EmployeeViewModel> employees = null)
+        public async Task<List<SelectListItem>> GetShdeduleProjectOptions()
         {
-            // Giving some start values for the SearchModel dates.
-            var to = DateTime.Now;
-            var from = to.AddDays(-7);
+            return await this.GetProjectOptions();
+        }
 
-            var projectOptions = await this.GetProjectOptions();
-            var scheduleOptions = this.GetScheduleOptions();
-            var employeeOptions = await this.GetEmployeeOptions();
-
-            return new SearchViewModel()
-            {
-                To = to,
-                From = from,
-                ProjectOptions = projectOptions,
-                ScheduleOptions = scheduleOptions,
-                EmployeeOptions = employeeOptions,
-                Employees = employees != null ? employees.Where(e => e.Schedules != null && e.Schedules.Count() > 0) : employees
-            };
+        public async Task<List<SelectListItem>> GetShdeduleEmployeeOptions()
+        {
+            return await this.GetEmployeeOptions();
         }
 
         public string GetShceduleOptionName(ScheduleOption scheduleOption)

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Wilson.Scheduler.Core.Entities;
 using Wilson.Scheduler.Data.DataAccess;
+using Wilson.Web.Areas.Scheduler.Models.HomeViewModels;
 using Wilson.Web.Areas.Scheduler.Models.PayrollViewModels;
 using Wilson.Web.Areas.Scheduler.Models.SharedViewModels;
 
@@ -42,8 +43,8 @@ namespace Wilson.Web.Areas.Scheduler.Services
         /// /// <param name="periodTo">End of the search period in format Month/Year - xx/yyyy.</param>
         /// <param name="employeeId">Employee who will be checked for paychecks for the period if
         /// NULL checks all the employees.</param>
-        /// <returns>Collection of <see cref="EmployeeViewModel"/></returns>
-        Task<IEnumerable<EmployeeViewModel>> FindEmployeesPayshecks(string periodFrom, string periodTo, string employeeId);
+        /// <returns>Collection of <see cref="EmployeeConciseViewModel"/></returns>
+        Task<IEnumerable<EmployeeConciseViewModel>> FindEmployeesPayshecks(string periodFrom, string periodTo, string employeeId);
 
         /// <summary>
         /// Converts string date xx/yyyy to the <see cref="DateTime"/>, first or last day of the month.

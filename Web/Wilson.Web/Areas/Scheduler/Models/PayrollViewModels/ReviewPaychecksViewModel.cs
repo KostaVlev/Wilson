@@ -23,6 +23,6 @@ namespace Wilson.Web.Areas.Scheduler.Models.PayrollViewModels
 
         public IEnumerable<SelectListItem> PeriodOptions { get; set; }
 
-        public IEnumerable<EmployeeViewModel> Employees { get; set; }
+        public IEnumerable<EmployeeConciseViewModel> Employees { get; set; }
     }
 }

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Wilson.Scheduler.Core.Entities;
+using Wilson.Web.Areas.Scheduler.Models.HomeViewModels;
 using Wilson.Web.Areas.Scheduler.Models.PayrollViewModels;
 using Wilson.Web.Areas.Scheduler.Models.SharedViewModels;
 
@@ -55,7 +56,7 @@ namespace Wilson.Web.Areas.Scheduler.Services
             return employeesWithoutPaychecks;
         }
 
-        public async Task<IEnumerable<EmployeeViewModel>> FindEmployeesPayshecks(string periodFrom, string periodTo, string employeeId)
+        public async Task<IEnumerable<EmployeeConciseViewModel>> FindEmployeesPayshecks(string periodFrom, string periodTo, string employeeId)
         {
             var employees = await this.Employees();
             if (!string.IsNullOrEmpty(employeeId))
@@ -68,7 +69,7 @@ namespace Wilson.Web.Areas.Scheduler.Services
             employees = employees.Where(e => e.Paychecks.Any(p => p.From >= dateFrom && p.To <= dateTo));
             employees.ToList().ForEach(e => e.Paychecks.OrderBy(p => p.From));
 
-            var employeeModels = this.Mapper.Map<IEnumerable<Employee>, IEnumerable<EmployeeViewModel>>(employees); 
+            var employeeModels = this.Mapper.Map<IEnumerable<Employee>, IEnumerable<EmployeeConciseViewModel>>(employees); 
 
             return employeeModels;
         }

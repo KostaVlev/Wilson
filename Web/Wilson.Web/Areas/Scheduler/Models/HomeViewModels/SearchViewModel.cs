@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Wilson.Web.Areas.Scheduler.Models.SharedViewModels;
 using Wilson.Scheduler.Core.Enumerations;
+using Wilson.Web.Areas.Scheduler.Services;
+using System.Linq;
 
 namespace Wilson.Web.Areas.Scheduler.Models.HomeViewModels
 {
@@ -31,5 +34,53 @@ namespace Wilson.Web.Areas.Scheduler.Models.HomeViewModels
         public IEnumerable<SelectListItem> ScheduleOptions { get; set; }
 
         public IEnumerable<EmployeeViewModel> Employees { get; set; }
+
+        public async static Task<SearchViewModel> Create(
+            IScheduleSevice services, 
+            IMapper mapper)
+        {            
+            return new SearchViewModel()
+            {
+                // Giving some start values for the SearchModel dates.
+                To = DateTime.Now,
+                From = DateTime.Now.AddDays(-7),
+                ProjectOptions = await services.GetShdeduleProjectOptions(),
+                ScheduleOptions = services.GetScheduleOptions(),
+                EmployeeOptions = await services.GetShdeduleEmployeeOptions(),
+                Employees = new HashSet<EmployeeViewModel>()
+            };
+        }
+
+        public async static Task<SearchViewModel> Create(
+            IScheduleSevice services,
+            IMapper mapper,
+            IEnumerable<EmployeeViewModel> employees)
+        {
+            return new SearchViewModel()
+            {
+                // Giving some start values for the SearchModel dates.
+                To = DateTime.Now,
+                From = DateTime.Now.AddDays(-7),
+                ProjectOptions = await services.GetShdeduleProjectOptions(),
+                ScheduleOptions = services.GetScheduleOptions(),
+                EmployeeOptions = await services.GetShdeduleEmployeeOptions(),
+                Employees = employees.Where(e => e.Schedules != null && e.Schedules.Count() > 0)
+            };
+        }
+
+        public async static Task<SearchViewModel> ReBuild(
+            SearchViewModel model,
+            IScheduleSevice services,
+            IMapper mapper)
+        {
+            model.To = DateTime.Now;
+            model.From = model.To.AddDays(-7);
+            model.ProjectOptions = await services.GetShdeduleProjectOptions();
+            model.ScheduleOptions = services.GetScheduleOptions();
+            model.EmployeeOptions = await services.GetShdeduleEmployeeOptions();
+            model.Employees = new HashSet<EmployeeViewModel>();
+
+            return model;
+        }
     }
 }

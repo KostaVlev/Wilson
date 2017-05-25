@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -7,7 +8,6 @@ using Microsoft.EntityFrameworkCore;
 using Wilson.Scheduler.Core.Entities;
 using Wilson.Scheduler.Data.DataAccess;
 using Wilson.Web.Areas.Scheduler.Models.HomeViewModels;
-using Wilson.Web.Areas.Scheduler.Models.SharedViewModels;
 using Wilson.Web.Areas.Scheduler.Services;
 using Wilson.Web.Events.Interfaces;
 
@@ -16,9 +16,9 @@ namespace Wilson.Web.Areas.Scheduler.Controllers
     public class HomeController : SchedulerBaseController
     {
         public HomeController(
-            ISchedulerWorkData schedulerWorkData, 
-            IMapper mapper, 
-            IScheduleSevice scheduleSevice, 
+            ISchedulerWorkData schedulerWorkData,
+            IMapper mapper,
+            IScheduleSevice scheduleSevice,
             IEventsFactory eventsFactory)
             : base(schedulerWorkData, mapper, eventsFactory)
         {
@@ -39,47 +39,35 @@ namespace Wilson.Web.Areas.Scheduler.Controllers
         //
         // GET: Scheduler/Home/EmployeesScheduler
         [HttpGet]
-        public async Task<IActionResult> EmployeesScheduler(string message)
+        public async Task<IActionResult> EmployeesScheduler()
         {
-            ViewData["StatusMessage"] = message ?? "";
-            return View(await this.ScheduleSevice.PrepareEmployeesShceduleViewModel());
+            return View(await EmployeesShcedulerViewModel.CreateAsync(this.ScheduleSevice, this.Mapper));
         }
 
         //
         // POST: Scheduler/Home/EmployeesScheduler
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EmployeesScheduler(EmployeesShceduleViewModel model)
+        public async Task<IActionResult> EmployeesScheduler(EmployeesShcedulerViewModel model)
         {
-            if (model == null)
+            if (!ModelState.IsValid)
             {
-                return BadRequest();
+                return View(await EmployeesShcedulerViewModel.ReBuildAsync(model, this.ScheduleSevice, this.Mapper));
             }
 
-            if (ModelState.IsValid)
-            {
-                var employees = await this.SchedulerWorkData.Employees.FindAsync(
-                    e => model.Employees.Any(me => me.NewSchedule.EmployeeId == e.Id), 
-                    x => x.Include(s => s.Schedules));
+            var shcedules = new List<Schedule>();
+            model.Employees.ToList().ForEach(e => shcedules.Add(Schedule.Create(
+                DateTime.Now,
+                e.NewSchedule.ScheduleOption,
+                e.NewSchedule.EmployeeId,
+                e.NewSchedule.ProjectId,
+                e.NewSchedule.WorkHours,
+                e.NewSchedule.ExtraWorkHours)));
 
-                foreach (var employee in employees)
-                {
-                    var scheduleModel = model.Employees.Where(e => e.NewSchedule.EmployeeId == employee.Id).FirstOrDefault().NewSchedule;
+            this.SchedulerWorkData.Schedules.AddRange(shcedules);
+            await this.SchedulerWorkData.CompleteAsync();
 
-                    //// Since this is the today schedule we assign today to the Date property.
-                    //scheduleModel.Date = DateTime.Now;
-
-                    var schedule = this.Mapper.Map<ScheduleViewModel, Schedule>(scheduleModel);
-                    employee.AddNewSchedule(schedule);
-                }
-
-                await this.SchedulerWorkData.CompleteAsync();
-
-                return RedirectToAction(nameof(Index));
-            }
-
-            model = await this.ScheduleSevice.PrepareEmployeesShceduleViewModel();
-            return View(model);
+            return View(await EmployeesShcedulerViewModel.CreateAsync(this.ScheduleSevice, this.Mapper));
         }
 
         //
@@ -87,20 +75,17 @@ namespace Wilson.Web.Areas.Scheduler.Controllers
         [HttpGet]
         public async Task<IActionResult> EditSchedules(string dateTime)
         {
-            if (dateTime == null)
+            DateTime date;
+            if (!DateTime.TryParse(dateTime, out date))
             {
-                return BadRequest();
+                return BadRequest($"No valid date. Try again and if the problem persist contact administrator.");
             }
 
-            var schedules = await this.ScheduleSevice.FindAllSchedulesForDate(dateTime);            
-            if (schedules == null || schedules.Count() == 0)
-            {
-                return NotFound();
-            }
-            
-            var scheduleModels = await this.ScheduleSevice.SetupScheduleModelForEdit(schedules);
+            var schedules = await this.SchedulerWorkData.Schedules.FindAsync(
+                s => s.Date.ToString(Constants.DateTimeFormats.Short) == date.ToString(Constants.DateTimeFormats.Short),
+                i => i.Include(x => x.Employee));
 
-            return View(scheduleModels);
+            return View(await ScheduleViewModel.CreateCollectionForEditAsync(schedules, this.ScheduleSevice, this.Mapper));
         }
 
         //
@@ -109,32 +94,23 @@ namespace Wilson.Web.Areas.Scheduler.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditSchedules(IEnumerable<ScheduleViewModel> models)
         {
-            if (models == null)
+            if (!ModelState.IsValid)
             {
-                return BadRequest();
+                return View(await ScheduleViewModel.ReBuildCollectionForEditAsync(models, this.ScheduleSevice));
             }
 
-            if (ModelState.IsValid)
+            var schedules = await this.SchedulerWorkData.Schedules.FindAsync(
+                x => models.Any(s => s.Id == x.Id), i => i.Include(x => x.Employee));
+
+            foreach (var schedule in schedules)
             {
-                var schedules = await this.SchedulerWorkData.Schedules.FindAsync(x => models.Any(s => s.Id == x.Id));
-                foreach (var schedule in schedules)
-                {
-                    var model = models.FirstOrDefault(x => x.Id == schedule.Id);
-                    schedule.Update(model.WorkHours, model.ExtraWorkHours, model.ScheduleOption, model.ProjectId);
-                }
-
-                var updateSuccess = await this.SchedulerWorkData.CompleteAsync();
-
-                if (updateSuccess != 0)
-                {
-                    return RedirectToAction(nameof(EmployeesScheduler), new { Message = Constants.SuccessMessages.DatabaseUpdateSuccess });
-                }
+                var model = models.FirstOrDefault(x => x.Id == schedule.Id);
+                schedule.Update(model.WorkHours, model.ExtraWorkHours, model.ScheduleOption, model.ProjectId);
             }
 
-            ModelState.AddModelError("", Constants.ExceptionMessages.DatabaseUpdateError);
-            await this.ScheduleSevice.SetupScheduleModelForEdit(models);
+            await this.SchedulerWorkData.CompleteAsync();
 
-            return View(models);
+            return RedirectToAction(nameof(EmployeesScheduler));
         }
 
         //
@@ -142,20 +118,13 @@ namespace Wilson.Web.Areas.Scheduler.Controllers
         [HttpGet]
         public async Task<IActionResult> EditSchedule(string id)
         {
-            if (id == null)
-            {
-                return BadRequest();
-            }
-
-            var schedule = await this.ScheduleSevice.FindScheduleById(id);
+            var schedule = await this.SchedulerWorkData.Schedules.SingleOrDefaultAsync(s => s.Id == id, i => i.Include(x => x.Employee));
             if (schedule == null)
             {
-                return NotFound();
+                return NotFound($"Schedule not found. Please try again and if the problem persist contact the administrator");
             }
-                        
-            var scheduleModel = await this.ScheduleSevice.SetupScheduleModelForEdit(schedule);
 
-            return View(scheduleModel);
+            return View(await ScheduleViewModel.CreateForEditAsync(schedule, this.ScheduleSevice, this.Mapper));
         }
 
         //
@@ -164,40 +133,34 @@ namespace Wilson.Web.Areas.Scheduler.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditSchedule(ScheduleViewModel model)
         {
-            if (model == null)
+            if (!ModelState.IsValid)
             {
-                return BadRequest();
+                return View(await ScheduleViewModel.ReBuildForEditAsync(model, this.ScheduleSevice));
             }
 
-            if (ModelState.IsValid)
+            var schedules = await this.SchedulerWorkData.Schedules.FindAsync(s => s.Id == model.Id, i => i.Include(x => x.Employee));
+            var schedule = schedules.FirstOrDefault();
+            if (schedule == null)
             {
-                var schedule = await this.ScheduleSevice.FindScheduleById(model.Id);
-                if (schedule == null)
-                {
-                    return NotFound();
-                }
+                ModelState.AddModelError(
+                    string.Empty,
+                    $"Schedule to edit not found. Please try again and if the problem persist contact the administrator.");
 
-                schedule.Update(model.WorkHours, model.ExtraWorkHours, model.ScheduleOption, model.ProjectId);
-
-                var updateSuccess = await this.SchedulerWorkData.CompleteAsync();
-
-                if (updateSuccess != 0)
-                {
-                    return RedirectToAction(nameof(EmployeesScheduler), new { Message = Constants.SuccessMessages.DatabaseUpdateSuccess });
-                }
+                return View(await ScheduleViewModel.ReBuildForEditAsync(model, this.ScheduleSevice));
             }
 
-            ModelState.AddModelError("", Constants.ExceptionMessages.DatabaseUpdateError);
-            await this.ScheduleSevice.SetupScheduleModelForEdit(model);
-            return View(model);
+            schedule.Update(model.WorkHours, model.ExtraWorkHours, model.ScheduleOption, model.ProjectId);
+            await this.SchedulerWorkData.CompleteAsync();
+
+            return RedirectToAction(nameof(EmployeesScheduler));
         }
 
         //
         // GET: Scheduler/Home/Search
         [HttpGet]
         public async Task<IActionResult> Search()
-        {            
-            return View(await this.ScheduleSevice.SetupSearchModel());
+        {
+            return View(await SearchViewModel.Create(this.ScheduleSevice, this.Mapper));
         }
 
         //
@@ -206,29 +169,22 @@ namespace Wilson.Web.Areas.Scheduler.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Search(SearchViewModel model)
         {
-            if (model == null)
+            if (!ModelState.IsValid)
             {
-                return BadRequest();
+                return View(await SearchViewModel.ReBuild(model, this.ScheduleSevice, this.Mapper));
             }
 
-            if (ModelState.IsValid)
+            if (model.From > model.To)
             {
-                if (model.From > model.To)
-                {
-                    ModelState.AddModelError("", Constants.ValidationMessages.IncorectDate);
-                    return View(await this.ScheduleSevice.SetupSearchModel());
-                }
-
-                var employeesResult = await this.ScheduleSevice.FindEmployeeSchedules(
-                    model.From, model.To, model.EmployeeId, model.ProjectId, model.ScheduleOption);
-
-                var returnModel = await this.ScheduleSevice.SetupSearchModel(employeesResult);
-
-                return View(returnModel);
+                ModelState.AddModelError(string.Empty, Constants.ValidationMessages.IncorectDate);
+                return View(await SearchViewModel.ReBuild(model, this.ScheduleSevice, this.Mapper));
             }
 
-            ModelState.AddModelError("", Constants.ValidationMessages.Error);
-            return View(await this.ScheduleSevice.SetupSearchModel());
-        }               
+            var employees = await this.ScheduleSevice.Employees();
+            var employeesResult = this.ScheduleSevice.FindEmployeeSchedules(
+                employees, model.From, model.To, model.EmployeeId, model.ProjectId, model.ScheduleOption);
+
+            return View(await SearchViewModel.Create(this.ScheduleSevice, this.Mapper, employeesResult));
+        }
     }
 }
