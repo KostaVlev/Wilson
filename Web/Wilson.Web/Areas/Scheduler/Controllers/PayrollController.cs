@@ -8,15 +8,17 @@ using Wilson.Web.Areas.Scheduler.Models.PayrollViewModels;
 using Wilson.Web.Areas.Scheduler.Services;
 using Wilson.Web.Events;
 using Wilson.Web.Events.Interfaces;
+using System.Collections.Generic;
+using Wilson.Scheduler.Core.Entities;
 
 namespace Wilson.Web.Areas.Scheduler.Controllers
 {
     public class PayrollController : SchedulerBaseController
     {
         public PayrollController(
-            ISchedulerWorkData schedulerWorkData, 
+            ISchedulerWorkData schedulerWorkData,
             IMapper mapper,
-            IPayrollService payrollService, 
+            IPayrollService payrollService,
             IEventsFactory eventsFactory)
             : base(schedulerWorkData, mapper, eventsFactory)
         {
@@ -31,9 +33,7 @@ namespace Wilson.Web.Areas.Scheduler.Controllers
         [HttpGet]
         public IActionResult Index(string message)
         {
-            ViewData["StatusMessage"] = message ?? "";
-
-            return View(this.PayrollService.PrepareIndexViewModel());
+            return View(IndexViewModel.Create(this.PayrollService, message));
         }
 
         //
@@ -42,19 +42,18 @@ namespace Wilson.Web.Areas.Scheduler.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> PreparePayrolls([FromForm]string period)
         {
-            DateTime paycheckIssueDate = DateTime.Now;
-            DateTime fromDate;
-            if (!string.IsNullOrEmpty(period))
+            DateTime paycheckIssueDate = DateTime.Today;
+
+            // If period is null, make sure fromDate is Today. In this case we create paychecks for the current period.
+            DateTime fromDate = DateTime.Today;
+            if (period != null && !this.PayrollService.TryParsePeriod(period, out fromDate))
             {
-                fromDate = this.PayrollService.TryParsePeriod(period);
-                if (fromDate > DateTime.Now)
-                {
-                    return RedirectToAction(nameof(PayrollController.Index), new { Message = Constants.PayrollMessages.PeriodError });
-                }
+                return BadRequest($"Invalid period.");
             }
-            else
+
+            if (fromDate.Date > paycheckIssueDate)
             {
-                fromDate = DateTime.Now;
+                return BadRequest($"Period start date can not be after the end date.");
             }
 
             var employeesWithoutPaychecks = await this.PayrollService.GetEmployeesWithoutPaycheks(fromDate);
@@ -64,16 +63,13 @@ namespace Wilson.Web.Areas.Scheduler.Controllers
                 return RedirectToAction(nameof(PayrollController.Index), new { Message = Constants.PayrollMessages.PayrollsCreted });
             }
 
-            var newPaycheks = this.PayrollService.AddNewPaychecks(employeesWithoutPaychecks, paycheckIssueDate, fromDate);            
+            var newPaycheks = new Stack<Paycheck>();
+            employeesWithoutPaychecks.ToList().ForEach(e => newPaycheks.Push(e.AddNewPaycheck(paycheckIssueDate, fromDate)));
 
-            var success = await this.SchedulerWorkData.CompleteAsync();
-            if (success != 0)
-            {
-                this.EventsFactory.Raise(new PaycheckCreated(newPaycheks));
-                return RedirectToAction(nameof(PayrollController.Index), new { Message = Constants.SuccessMessages.DatabaseUpdateSuccess });                
-            }
+            await this.SchedulerWorkData.CompleteAsync();
+            this.EventsFactory.Raise(new PaycheckCreated(newPaycheks));
 
-            return RedirectToAction(nameof(PayrollController.Index), new { Message = Constants.ExceptionMessages.DatabaseUpdateError });
+            return RedirectToAction(nameof(PayrollController.Index), new { Message = Constants.SuccessMessages.DatabaseUpdateSuccess });
         }
 
         //
@@ -81,32 +77,34 @@ namespace Wilson.Web.Areas.Scheduler.Controllers
         [HttpGet]
         public async Task<IActionResult> ReviewPaychecks()
         {
-            var model = await this.PayrollService.PrepareReviewPaychecksViewModel();
-
-            return View(model);
+            return View(await ReviewPaychecksViewModel.CreateAsync(this.PayrollService));
         }
+
         //
         // POST: Scheduler/Home/ReviewPaychecks
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ReviewPaychecks(ReviewPaychecksViewModel model)
         {
-            if (model == null)
+            if (!ModelState.IsValid)
             {
-                return BadRequest();
+                return View(await ReviewPaychecksViewModel.ReBuildAsync(model, this.PayrollService));
             }
 
-            var modelToReturn = await this.PayrollService.PrepareReviewPaychecksViewModel();
-
-            if (ModelState.IsValid)
+            DateTime dateFrom = default(DateTime);
+            DateTime dateTo = default(DateTime);
+            if (!this.PayrollService.TryParsePeriod(model.From, out dateFrom) && 
+                !this.PayrollService.TryParsePeriod(model.To, out dateTo, false) &&
+                dateFrom.Date <= dateTo.Date)
             {
-                var employeeModels = await this.PayrollService.FindEmployeesPayshecks(model.From, model.To, model.EmployeeId);
-                modelToReturn.Employees = employeeModels;
-                modelToReturn.From = model.From;
-                modelToReturn.To = model.To;
+                ModelState.AddModelError(
+                    string.Empty,
+                    $"Invalid dates. Make sure the end period date is later then the start date. Try again and if the problem persist contact administrator.");
+
+                return View(await ReviewPaychecksViewModel.ReBuildAsync(model, this.PayrollService));
             }
-            
-            return View(modelToReturn);
+
+            return View(await ReviewPaychecksViewModel.CreateAsync(model, dateFrom, dateTo, this.PayrollService, this.Mapper));
         }
     }
 }

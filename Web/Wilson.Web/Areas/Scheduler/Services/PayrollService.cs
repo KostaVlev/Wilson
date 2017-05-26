@@ -1,13 +1,11 @@
-﻿using AutoMapper;
-using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Wilson.Scheduler.Core.Entities;
-using Wilson.Web.Areas.Scheduler.Models.HomeViewModels;
 using Wilson.Web.Areas.Scheduler.Models.PayrollViewModels;
-using Wilson.Web.Areas.Scheduler.Models.SharedViewModels;
 
 namespace Wilson.Web.Areas.Scheduler.Services
 {
@@ -18,19 +16,9 @@ namespace Wilson.Web.Areas.Scheduler.Services
         {
         }
 
-        public async Task<IEnumerable<Employee>> Employees()
+        public async Task<IEnumerable<Employee>> GetEmployees()
         {
-            var employees = await this.SchedulerWorkData.Employees
-                .FindAsync(e => !e.IsFired, x => x.Include(s => s.Schedules).Include(p => p.Paychecks).Include(p => p.PayRate));
-
-            return employees;
-        }
-
-        public IndexViewModel PrepareIndexViewModel()
-        {
-            var periodOptions = this.GetPeriodsOptions();
-
-            return new IndexViewModel() { PeriodOptions = periodOptions };
+            return await this.Employees();
         }
 
         public async Task<ReviewPaychecksViewModel> PrepareReviewPaychecksViewModel()
@@ -56,7 +44,7 @@ namespace Wilson.Web.Areas.Scheduler.Services
             return employeesWithoutPaychecks;
         }
 
-        public async Task<IEnumerable<EmployeeConciseViewModel>> FindEmployeesPayshecks(string periodFrom, string periodTo, string employeeId)
+        public async Task<IEnumerable<Employee>> FindEmployeesPayshecks(DateTime from, DateTime to, string employeeId)
         {
             var employees = await this.Employees();
             if (!string.IsNullOrEmpty(employeeId))
@@ -64,49 +52,72 @@ namespace Wilson.Web.Areas.Scheduler.Services
                 employees = employees.Where(e => e.Id == employeeId);
             }
 
-            var dateFrom = this.TryParsePeriod(periodFrom);
-            var dateTo = this.TryParsePeriod(periodTo, false);
-            employees = employees.Where(e => e.Paychecks.Any(p => p.From >= dateFrom && p.To <= dateTo));
+            employees = employees.Where(e => e.Paychecks.Any(p => p.From.Date >= from.Date && p.To.Date <= to.Date));
             employees.ToList().ForEach(e => e.Paychecks.OrderBy(p => p.From));
-
-            var employeeModels = this.Mapper.Map<IEnumerable<Employee>, IEnumerable<EmployeeConciseViewModel>>(employees); 
-
-            return employeeModels;
+            
+            return employees;
         }
 
-        public DateTime TryParsePeriod(string period, bool isBeggingOfThePeriod = true)
+        public async Task<List<SelectListItem>> GetShdeduleEmployeeOptions()
+        {
+            return await this.GetEmployeeOptions();
+        }
+
+        public bool TryParsePeriod(string period, out DateTime date, bool isBeggingOfThePeriod = true)
         {
             try
             {
                 var month = int.Parse(period.Substring(0, 2));
                 var year = int.Parse(period.Substring(3, 4));
                 var firstDayOfTheMonth = new DateTime(year, month, 1);
-                var lastDayOfTheMonth = firstDayOfTheMonth.AddMonths(1).AddTicks(-1);
                 if (isBeggingOfThePeriod)
                 {
-                    return firstDayOfTheMonth;
+                    date = firstDayOfTheMonth;
                 }
                 else
                 {
-                    return lastDayOfTheMonth;
+                    date = firstDayOfTheMonth.AddMonths(1).AddTicks(-1);
                 }
+
+                return true;
             }
             catch
             {
-
-                throw new ArgumentException("Period cannot be parsed.", "period");
+                date = default(DateTime);
+                return false;
             }
         }
 
-        public IEnumerable<Paycheck> AddNewPaychecks(IEnumerable<Employee> employees, DateTime paycheckIssueDate, DateTime fromDate)
+        public List<SelectListItem> GetPeriodsOptions()
         {
-            var paychecks = new Stack<Paycheck>();
-            foreach (var employee in employees)
+            var options = new List<SelectListItem>();
+            var years = Enumerable.Range(DateTime.Today.AddYears(-5).Year, 6).Reverse();
+            var months = Enumerable.Range(1, 12);
+
+            foreach (var year in years)
             {
-                paychecks.Push(employee.AddNewPaycheck(paycheckIssueDate, fromDate));
+                foreach (var month in months)
+                {
+                    string optionText = CrteatePeriodOptionText(month, year);
+                    var option = new SelectListItem()
+                    {
+                        Text = optionText,
+                        Value = optionText
+                    };
+
+                    options.Add(option);
+                }
             }
 
-            return paychecks;
+            return options;
+        }
+
+        private string CrteatePeriodOptionText(int month, int year)
+        {
+            string monthText = month.ToString().Length == 1 ? month.ToString().PadLeft(2, '0') : month.ToString();
+            string yearText = year.ToString();
+
+            return string.Format("{0}/{1}", monthText, yearText);
         }
     }
 }

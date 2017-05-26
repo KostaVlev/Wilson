@@ -3,10 +3,6 @@
     @await Html.PartialAsync("_ShedulerPartial")
 }
 
-<div class="container-fluid">
-    <h4 class="text-info">@ViewData["StatusMessage"]</h4>
-</div>
-
 @section Scripts {
     @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
 }

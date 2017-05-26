@@ -7,10 +7,10 @@ using System.Reflection;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 using Wilson.Scheduler.Core.Entities;
 using Wilson.Scheduler.Core.Enumerations;
 using Wilson.Web.Areas.Scheduler.Models.HomeViewModels;
+using Wilson.Web.Areas.Scheduler.Models.SharedViewModels;
 
 namespace Wilson.Web.Areas.Scheduler.Services
 {
@@ -21,10 +21,9 @@ namespace Wilson.Web.Areas.Scheduler.Services
         {
         }
 
-        public async Task<IEnumerable<Employee>> Employees()
+        public async Task<IEnumerable<Employee>> GetEmployees()
         {
-            return await this.SchedulerWorkData.Employees
-                .FindAsync(e => !e.IsFired, x => x.Include(s => s.Schedules).ThenInclude(p => p.Project));
+            return await this.Employees();
         }
 
         public async Task SetupEmployeeNewSchedule(IEnumerable<EmployeeViewModel> employeeModels)

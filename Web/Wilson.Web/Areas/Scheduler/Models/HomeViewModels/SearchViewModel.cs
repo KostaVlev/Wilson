@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Wilson.Scheduler.Core.Enumerations;
 using Wilson.Web.Areas.Scheduler.Services;
 using System.Linq;
+using Wilson.Web.Areas.Scheduler.Models.SharedViewModels;
 
 namespace Wilson.Web.Areas.Scheduler.Models.HomeViewModels
 {

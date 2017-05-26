@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
+using Wilson.Web.Areas.Scheduler.Models.HomeViewModels;
 using Wilson.Web.Areas.Scheduler.Models.PayrollViewModels;
 
-namespace Wilson.Web.Areas.Scheduler.Models.HomeViewModels
+namespace Wilson.Web.Areas.Scheduler.Models.SharedViewModels
 {
     public class EmployeeViewModel
     {

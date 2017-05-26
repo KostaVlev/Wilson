@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Wilson.Scheduler.Core.Entities;
 using Wilson.Scheduler.Core.Enumerations;
-using Wilson.Web.Areas.Scheduler.Models.HomeViewModels;
+using Wilson.Web.Areas.Scheduler.Models.SharedViewModels;
 using Wilson.Scheduler.Data.DataAccess;
 
 namespace Wilson.Web.Areas.Scheduler.Services
@@ -62,6 +62,6 @@ namespace Wilson.Web.Areas.Scheduler.Services
 
         Task<List<SelectListItem>> GetShdeduleProjectOptions();
 
-        Task<IEnumerable<Employee>> Employees();
+        Task<IEnumerable<Employee>> GetEmployees();
     }
 }

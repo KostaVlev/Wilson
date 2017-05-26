@@ -17,13 +17,6 @@ namespace Wilson.Web.Areas.Scheduler.Services
         ISchedulerWorkData SchedulerWorkData { get; set; }
         
         /// <summary>
-        /// Creates Collection of periods in format MM/YYYY.
-        /// </summary>
-        /// <returns><see cref="List{T}"/> where {T} is <see cref="SelectListItem"/> with 
-        /// value the MM/YYYY and text MM/YYYY</returns>
-        List<SelectListItem> GetPeriodsOptions();
-
-        /// <summary>
         /// Asynchronous method that creates Collection of Project as options for drop-down lists.
         /// </summary>
         /// <returns><see cref="List{T}"/> where {T} is <see cref="SelectListItem"/> with 

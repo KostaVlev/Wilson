@@ -180,7 +180,7 @@ namespace Wilson.Web.Areas.Scheduler.Controllers
                 return View(await SearchViewModel.ReBuild(model, this.ScheduleSevice, this.Mapper));
             }
 
-            var employees = await this.ScheduleSevice.Employees();
+            var employees = await this.ScheduleSevice.GetEmployees();
             var employeesResult = this.ScheduleSevice.FindEmployeeSchedules(
                 employees, model.From, model.To, model.EmployeeId, model.ProjectId, model.ScheduleOption);
 

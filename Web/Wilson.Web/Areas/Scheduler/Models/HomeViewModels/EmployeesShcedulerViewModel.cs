@@ -6,6 +6,7 @@ using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Wilson.Scheduler.Core.Entities;
 using Wilson.Web.Areas.Scheduler.Services;
+using Wilson.Web.Areas.Scheduler.Models.SharedViewModels;
 
 namespace Wilson.Web.Areas.Scheduler.Models.HomeViewModels
 {

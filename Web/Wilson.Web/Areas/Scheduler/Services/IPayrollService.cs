@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Wilson.Scheduler.Core.Entities;
 using Wilson.Scheduler.Data.DataAccess;
-using Wilson.Web.Areas.Scheduler.Models.HomeViewModels;
 using Wilson.Web.Areas.Scheduler.Models.PayrollViewModels;
-using Wilson.Web.Areas.Scheduler.Models.SharedViewModels;
 
 namespace Wilson.Web.Areas.Scheduler.Services
 {
@@ -15,13 +14,7 @@ namespace Wilson.Web.Areas.Scheduler.Services
         /// Scheduler context that will be used for Db Operations.
         /// </summary>
         ISchedulerWorkData SchedulerWorkData { get; set; }
-
-        /// <summary>
-        /// Creates <see cref="IndexViewModel"/>
-        /// </summary>
-        /// <returns><see cref="IndexViewModel"/></returns>
-        IndexViewModel PrepareIndexViewModel();
-
+        
         /// <summary>
         /// Creates <see cref="ReviewPaychecksViewModel"/>.
         /// </summary>
@@ -39,29 +32,30 @@ namespace Wilson.Web.Areas.Scheduler.Services
         /// <summary>
         /// Finds all the employees who have paychecks for given period;
         /// </summary>
-        /// <param name="periodFrom">Beginning of the search period in format Month/Year - xx/yyyy.</param>
-        /// /// <param name="periodTo">End of the search period in format Month/Year - xx/yyyy.</param>
+        /// <param name="from">Beginning of the search period in format Month/Year - xx/yyyy.</param>
+        /// /// <param name="to">End of the search period in format Month/Year - xx/yyyy.</param>
         /// <param name="employeeId">Employee who will be checked for paychecks for the period if
         /// NULL checks all the employees.</param>
-        /// <returns>Collection of <see cref="EmployeeConciseViewModel"/></returns>
-        Task<IEnumerable<EmployeeConciseViewModel>> FindEmployeesPayshecks(string periodFrom, string periodTo, string employeeId);
+        /// <returns>Collection of <see cref="Employee"/></returns>
+        Task<IEnumerable<Employee>> FindEmployeesPayshecks(DateTime from, DateTime to, string employeeId);
 
         /// <summary>
         /// Converts string date xx/yyyy to the <see cref="DateTime"/>, first or last day of the month.
         /// </summary>
         /// <param name="period">String to convert.</param>
         /// <param name="isBeggingOfThePeriod">Indicates if is the beginning or end of the period.</param>
-        /// <returns>If true returns first day of the month otherwise last day if the month.</returns>
-        /// <exception cref="ArgumentException">Thrown if the period cannot be converted.</exception>
-        DateTime TryParsePeriod(string period, bool isBeggingOfThePeriod = true);
-
+        /// <returns>True if conversion is successful, otherwise false.</returns>
+        bool TryParsePeriod(string period, out DateTime date, bool isBeggingOfThePeriod = true);
+        
         /// <summary>
-        /// Adds new <see cref="Paycheck"/> for selected employees.
+        /// Creates Collection of periods in format MM/YYYY.
         /// </summary>
-        /// <param name="employees">The employees for which paychecks will be created.</param>
-        /// <param name="paycheckIssueDate">The Paycheck issue date.</param>
-        /// <param name="fromDate">Beginning of the month for which paychecks will be generated.</param>
-        /// <returns>Collection of <see cref="Paycheck"/></returns>
-        IEnumerable<Paycheck> AddNewPaychecks(IEnumerable<Employee> employees, DateTime paycheckIssueDate, DateTime fromDate);
+        /// <returns><see cref="List{T}"/> where {T} is <see cref="SelectListItem"/> with 
+        /// value the MM/YYYY and text MM/YYYY</returns>
+        List<SelectListItem> GetPeriodsOptions();
+
+        Task<List<SelectListItem>> GetShdeduleEmployeeOptions();
+
+        Task<IEnumerable<Employee>> GetEmployees();
     }
 }
