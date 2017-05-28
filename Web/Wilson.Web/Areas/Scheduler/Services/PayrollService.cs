@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Wilson.Scheduler.Core.Entities;
-using Wilson.Web.Areas.Scheduler.Models.PayrollViewModels;
 
 namespace Wilson.Web.Areas.Scheduler.Services
 {
@@ -21,14 +20,6 @@ namespace Wilson.Web.Areas.Scheduler.Services
             return await this.Employees();
         }
 
-        public async Task<ReviewPaychecksViewModel> PrepareReviewPaychecksViewModel()
-        {
-            var employeeOptions = await this.GetEmployeeOptions();
-            var periodOptions = this.GetPeriodsOptions();
-
-            return new ReviewPaychecksViewModel() { EmployeeOptions = employeeOptions, PeriodOptions = periodOptions };
-        }
-
         public async Task<IEnumerable<Employee>> GetEmployeesWithoutPaycheks(DateTime? date)
         {
             var dateValue = date.GetValueOrDefault();
@@ -39,23 +30,9 @@ namespace Wilson.Web.Areas.Scheduler.Services
 
             var employees = await this.Employees();
             var employeesWithoutPaychecks = employees.Where(e => !e.Paychecks.Any(p =>
-                p.Date.Month == dateValue.Month && p.Date.Year == dateValue.Year));
+                p.From.Month == dateValue.Month && p.From.Year == dateValue.Year));
 
             return employeesWithoutPaychecks;
-        }
-
-        public async Task<IEnumerable<Employee>> FindEmployeesPayshecks(DateTime from, DateTime to, string employeeId)
-        {
-            var employees = await this.Employees();
-            if (!string.IsNullOrEmpty(employeeId))
-            {
-                employees = employees.Where(e => e.Id == employeeId);
-            }
-
-            employees = employees.Where(e => e.Paychecks.Any(p => p.From.Date >= from.Date && p.To.Date <= to.Date));
-            employees.ToList().ForEach(e => e.Paychecks.OrderBy(p => p.From));
-            
-            return employees;
         }
 
         public async Task<List<SelectListItem>> GetShdeduleEmployeeOptions()

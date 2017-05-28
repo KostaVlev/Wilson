@@ -53,21 +53,17 @@ namespace Wilson.Web.Areas.Scheduler.Controllers
 
             if (fromDate.Date > paycheckIssueDate)
             {
-                return BadRequest($"Period start date can not be after the end date.");
+                return RedirectToAction(
+                    nameof(PayrollController.Index),
+                    new { Message = $"Can not create payrolls for period later then {paycheckIssueDate.Month}.{paycheckIssueDate.Year}!"});
             }
 
-            var employeesWithoutPaychecks = await this.PayrollService.GetEmployeesWithoutPaycheks(fromDate);
-
-            if (employeesWithoutPaychecks.Count() == 0)
-            {
-                return RedirectToAction(nameof(PayrollController.Index), new { Message = Constants.PayrollMessages.PayrollsCreted });
-            }
-
-            var newPaycheks = new Stack<Paycheck>();
-            employeesWithoutPaychecks.ToList().ForEach(e => newPaycheks.Push(e.AddNewPaycheck(paycheckIssueDate, fromDate)));
-
+            var paycheks = new Stack<Paycheck>();
+            var employees = await this.PayrollService.GetEmployees();
+            employees.ToList().ForEach(e => paycheks.Push(e.AddOrUpdatePaycheck(paycheckIssueDate, fromDate)));
+            
             await this.SchedulerWorkData.CompleteAsync();
-            this.EventsFactory.Raise(new PaycheckCreated(newPaycheks));
+            this.EventsFactory.Raise(new PaycheckCreatedOrUpdated(paycheks));
 
             return RedirectToAction(nameof(PayrollController.Index), new { Message = Constants.SuccessMessages.DatabaseUpdateSuccess });
         }
@@ -77,7 +73,7 @@ namespace Wilson.Web.Areas.Scheduler.Controllers
         [HttpGet]
         public async Task<IActionResult> ReviewPaychecks()
         {
-            return View(await ReviewPaychecksViewModel.CreateAsync(this.PayrollService));
+            return View(await ReviewPaychecksViewModel.CreateAsync(this.PayrollService, this.Mapper));
         }
 
         //
@@ -93,9 +89,9 @@ namespace Wilson.Web.Areas.Scheduler.Controllers
 
             DateTime dateFrom = default(DateTime);
             DateTime dateTo = default(DateTime);
-            if (!this.PayrollService.TryParsePeriod(model.From, out dateFrom) && 
-                !this.PayrollService.TryParsePeriod(model.To, out dateTo, false) &&
-                dateFrom.Date <= dateTo.Date)
+            if (!this.PayrollService.TryParsePeriod(model.From, out dateFrom) || 
+                !this.PayrollService.TryParsePeriod(model.To, out dateTo, false) ||
+                dateFrom.Date >= dateTo.Date)
             {
                 ModelState.AddModelError(
                     string.Empty,

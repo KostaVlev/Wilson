@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Wilson.Scheduler.Core.Enumerations;
 
 namespace Wilson.Scheduler.Core.Entities
@@ -39,12 +40,20 @@ namespace Wilson.Scheduler.Core.Entities
             return employee;
         }
 
-        public Paycheck AddNewPaycheck(DateTime issueDate, DateTime from)
+        public Paycheck AddOrUpdatePaycheck(DateTime issueDate, DateTime from)
         {
-            var paycheck = Paycheck.Create(this, DateTime.Now, from);
-            this.Paychecks.Add(paycheck);
-
-            return paycheck;
+            var maybePaychek = this.Paychecks.SingleOrDefault(p => p.From == from);            
+            if (maybePaychek != null)
+            {
+                maybePaychek.Update(this);
+                return maybePaychek;
+            }
+            else
+            {
+                var paycheck = Paycheck.Create(this, DateTime.Now, from);
+                this.Paychecks.Add(paycheck);
+                return paycheck;
+            }    
         }
 
         public void ApplayPayRate(PayRate payRate)

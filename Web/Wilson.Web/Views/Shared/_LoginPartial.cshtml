@@ -47,9 +47,9 @@
                         @if (User.IsInRole("Admin") || User.IsInRole("Accouter"))
                         {
                             <li>
-                                <a asp-area=@Constants.Areas.Accounting a
-                                   asp-controller=@nameof(Wilson.Web.Areas.Accounting.Controllers.HomeController.Index) 
-                                   asp-action="Index">Accounting</a>
+                                <a asp-area=@Constants.Areas.Accounting
+                                   asp-controller="Home" 
+                                   asp-action=@nameof(Wilson.Web.Areas.Accounting.Controllers.HomeController.Index)>Accounting</a>
                             </li>
                         }                        
                         @if (User.IsInRole("Admin"))

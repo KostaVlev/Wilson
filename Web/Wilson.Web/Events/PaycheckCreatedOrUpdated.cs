@@ -5,15 +5,15 @@ using Wilson.Web.Events.Interfaces;
 
 namespace Wilson.Web.Events
 {
-    public class PaycheckCreated : IDomainEvent
+    public class PaycheckCreatedOrUpdated : IDomainEvent
     {
-        public PaycheckCreated(Paycheck paycheck)
+        public PaycheckCreatedOrUpdated(Paycheck paycheck)
         {
             this.Paycheck = paycheck;
             this.DateOccurred = DateTime.Now;
         }
 
-        public PaycheckCreated(IEnumerable<Paycheck> paychecks)
+        public PaycheckCreatedOrUpdated(IEnumerable<Paycheck> paychecks)
         {
             this.Paychecks = paychecks;
             this.DateOccurred = DateTime.Now;

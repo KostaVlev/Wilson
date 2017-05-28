@@ -63,6 +63,21 @@ namespace Wilson.Scheduler.Core.Entities
             return paycheck;
         }
 
+        public Paycheck Update(Employee employee)
+        {
+            if (this.EmployeeId != employee.Id)
+            {
+                throw new ArgumentException("The old paycheck does not belong to the employee.");
+            }
+
+            CalculateHours(this, employee.Schedules.Where(s =>
+                s.Date >= this.From && s.Date <= this.To));
+
+            CalculatePayments(this, employee.PayRate);
+
+            return this;
+        }
+
         private static void CalculateHours(Paycheck paycheck, IEnumerable<Schedule> schedules)
         {
             paycheck.PaidDaysOff = schedules.Where(x => x.ScheduleOption == ScheduleOption.PaidDayOff).Count();

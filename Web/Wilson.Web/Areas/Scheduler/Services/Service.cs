@@ -23,7 +23,11 @@ namespace Wilson.Web.Areas.Scheduler.Services
         public async Task<IEnumerable<Employee>> Employees()
         {
             return await this.SchedulerWorkData.Employees
-                .FindAsync(e => !e.IsFired, x => x.Include(s => s.Schedules).ThenInclude(p => p.Project).Include(pr => pr.PayRate));
+                .FindAsync(e => !e.IsFired, i => i
+                .Include(x => x.Schedules)
+                .ThenInclude(x => x.Project)
+                .Include(x => x.PayRate)
+                .Include(x => x.Paychecks));
         }
 
         public async Task<List<SelectListItem>> GetProjectOptions()
