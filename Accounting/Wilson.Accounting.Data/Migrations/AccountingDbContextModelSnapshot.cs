@@ -15,7 +15,7 @@ namespace Wilson.Accounting.Data.Migrations
         {
             modelBuilder
                 .HasDefaultSchema("Accounting")
-                .HasAnnotation("ProductVersion", "1.1.1")
+                .HasAnnotation("ProductVersion", "1.1.2")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("Wilson.Accounting.Core.Entities.Bill", b =>

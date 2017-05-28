@@ -75,8 +75,7 @@ namespace Wilson.Web.Areas.Scheduler.Controllers
         [HttpGet]
         public async Task<IActionResult> EditSchedules(string dateTime)
         {
-            DateTime date;
-            if (!DateTime.TryParse(dateTime, out date))
+            if (!DateTime.TryParse(dateTime, out DateTime date))
             {
                 return BadRequest($"No valid date. Try again and if the problem persist contact administrator.");
             }

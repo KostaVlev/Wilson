@@ -79,21 +79,9 @@ namespace Wilson.Web.Events.Handlers
                 await schedulerDbContext.Set<Scheduler.Core.Entities.Project>().AddAsync(schedulerProject);
             }
 
-            try
-            {
-                await accDbContext.SaveChangesAsync();
-                await schedulerDbContext.SaveChangesAsync();
-                await companyDbContext.SaveChangesAsync();
-            }
-            catch (Exception e)
-            {
-
-                throw;
-            }
-
-            //await accDbContext.SaveChangesAsync();
-            //await schedulerDbContext.SaveChangesAsync();
-            //await companyDbContext.SaveChangesAsync();
+            await accDbContext.SaveChangesAsync();
+            await schedulerDbContext.SaveChangesAsync();
+            await companyDbContext.SaveChangesAsync();
         }
     }
 }

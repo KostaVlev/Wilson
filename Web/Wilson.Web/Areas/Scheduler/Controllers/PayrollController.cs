@@ -55,13 +55,13 @@ namespace Wilson.Web.Areas.Scheduler.Controllers
             {
                 return RedirectToAction(
                     nameof(PayrollController.Index),
-                    new { Message = $"Can not create payrolls for period later then {paycheckIssueDate.Month}.{paycheckIssueDate.Year}!"});
+                    new { Message = $"Can not create payrolls for period later then {paycheckIssueDate.Month}.{paycheckIssueDate.Year}!" });
             }
 
             var paycheks = new Stack<Paycheck>();
             var employees = await this.PayrollService.GetEmployees();
             employees.ToList().ForEach(e => paycheks.Push(e.AddOrUpdatePaycheck(paycheckIssueDate, fromDate)));
-            
+
             await this.SchedulerWorkData.CompleteAsync();
             this.EventsFactory.Raise(new PaycheckCreatedOrUpdated(paycheks));
 
@@ -87,10 +87,8 @@ namespace Wilson.Web.Areas.Scheduler.Controllers
                 return View(await ReviewPaychecksViewModel.ReBuildAsync(model, this.PayrollService));
             }
 
-            DateTime dateFrom = default(DateTime);
-            DateTime dateTo = default(DateTime);
-            if (!this.PayrollService.TryParsePeriod(model.From, out dateFrom) || 
-                !this.PayrollService.TryParsePeriod(model.To, out dateTo, false) ||
+            if (!this.PayrollService.TryParsePeriod(model.From, out DateTime dateFrom) ||
+                !this.PayrollService.TryParsePeriod(model.To, out DateTime dateTo, false) ||
                 dateFrom.Date >= dateTo.Date)
             {
                 ModelState.AddModelError(
