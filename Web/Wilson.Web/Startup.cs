@@ -72,6 +72,7 @@ namespace Wilson.Web
 
             services.AddTransient<IScheduleSevice, ScheduleSevice>();
             services.AddTransient<IPayrollService, PayrollService>();
+            services.AddTransient<Areas.Accounting.Services.IPayrollService, Areas.Accounting.Services.PayrollService>();
 
             services.AddScoped<IMapper>(sp =>
                 new Mapper(new MapperConfiguration(cfg => cfg.AddProfiles(Assembly.GetEntryAssembly()))));

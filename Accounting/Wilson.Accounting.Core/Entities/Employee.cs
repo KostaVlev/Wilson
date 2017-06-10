@@ -19,5 +19,10 @@ namespace Wilson.Accounting.Core.Entities
         public virtual Company Company { get; private set; }
 
         public virtual ICollection<Paycheck> Paycheks { get; private set; }
+
+        public override string ToString()
+        {
+            return this.FirstName + " " + this.LastName;
+        }
     }
 }

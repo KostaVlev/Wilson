@@ -3,14 +3,19 @@ using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using Wilson.Accounting.Data.DataAccess;
 using Wilson.Web.Areas.Accounting.Models.HomeViewModels;
+using Wilson.Web.Areas.Accounting.Services;
 using Wilson.Web.Events.Interfaces;
 
 namespace Wilson.Web.Areas.Accounting.Controllers
 {
     public class HomeController : AccountingBaseController
     {
-        public HomeController(IAccountingWorkData accountingWorkData, IMapper mapper, IEventsFactory eventsFactory)
-            : base(accountingWorkData, mapper, eventsFactory)
+        public HomeController(
+            IAccountingWorkData accountingWorkData, 
+            IPayrollService payrollService, 
+            IMapper mapper, 
+            IEventsFactory eventsFactory)
+            : base(accountingWorkData, payrollService, mapper, eventsFactory)
         {
         }
 
@@ -27,7 +32,7 @@ namespace Wilson.Web.Areas.Accounting.Controllers
         [HttpGet]
         public async Task<IActionResult> Payroll()
         {
-            return View(new PayrollViewModel());
+            return View(await PayrollViewModel.Create(this.PayrollService));
         }
     }
 }

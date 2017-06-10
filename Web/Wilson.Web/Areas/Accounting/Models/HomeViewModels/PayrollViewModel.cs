@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using Wilson.Web.Areas.Accounting.Services;
 
 namespace Wilson.Web.Areas.Accounting.Models.HomeViewModels
 {
@@ -24,5 +25,10 @@ namespace Wilson.Web.Areas.Accounting.Models.HomeViewModels
         public DateTime To { get; set; }
 
         public IEnumerable<SelectListItem> EmployeeOptions { get; set; }
+
+        public static async Task<PayrollViewModel> Create(IPayrollService services)
+        {
+            return new PayrollViewModel() { EmployeeOptions = await services.GetAccountingEmployeeOptions() };
+        }
     }
 }

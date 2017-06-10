@@ -38,7 +38,7 @@ namespace Wilson.Web.Areas.Scheduler.Services
         
         public async Task<List<SelectListItem>> GetEmployeeOptions()
         {
-            var employees = await this.SchedulerWorkData.Employees.GetAllAsync();
+            var employees = await this.SchedulerWorkData.Employees.FindAsync(e => !e.IsFired);
             return employees.Select(x => new SelectListItem() { Value = x.Id, Text = x.ToString() }).ToList();
         }   
     }
