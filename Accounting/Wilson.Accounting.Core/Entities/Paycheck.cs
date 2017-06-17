@@ -72,11 +72,21 @@ namespace Wilson.Accounting.Core.Entities
 
         public decimal GetPaidAmount()
         {
+            if (string.IsNullOrEmpty(this.Payments))
+            {
+                return 0;
+            }
+
             return this.GetPayments().Sum();
         }
 
         public ListOfPayments GetPayments()
         {
+            if (string.IsNullOrEmpty(this.Payments))
+            {
+                return ListOfPayments.Create();
+            }
+
             return (ListOfPayments)this.Payments;
         }
 

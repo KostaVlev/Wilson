@@ -20,31 +20,32 @@
             <th>Total</th>
         </tr>
     </thead>
-    @foreach (var employee in Model)
-    {
-        <tr>
-            <td class="bg-success text-primary" colspan="15">@employee.ToString()</td>
-        </tr>
-        @foreach (var paycheck in employee.Paychecks)
+    <tbody>
+        @foreach (var employee in Model)
         {
             <tr>
-                <td>@paycheck.Date.ToString(Constants.DateTimeFormats.Short)</td>
-                <td>@paycheck.From.ToString(Constants.DateTimeFormats.Short) | @paycheck.To.ToString(Constants.DateTimeFormats.Short)</td>
-                <td>@paycheck.Hours</td>
-                <td class="text-primary">@paycheck.PayForHours</td>
-                <td>@paycheck.HourOnBusinessTrip</td>
-                <td class="text-primary">@paycheck.PayBusinessTrip</td>
-                <td>@paycheck.HourOnHolidays</td>
-                <td class="text-primary">@paycheck.PayForHolidayHours</td>
-                <td>@paycheck.ExtraHours</td>
-                <td class="text-primary">@paycheck.PayForExtraHours</td>
-                <td>@paycheck.PaidDaysOff</td>
-                <td class="text-primary">@paycheck.PayForPayedDaysOff</td>
-                <td>@paycheck.UnpaidDaysOff</td>
-                <td>@paycheck.SickDaysOff</td>
-                <td class="text-success">@paycheck.Total</td>
+                <td class="bg-success text-primary" colspan="15">@employee.ToString()</td>
             </tr>
+            @foreach (var paycheck in employee.Paychecks)
+            {
+                <tr>
+                    <td>@paycheck.Date.ToString(Constants.DateTimeFormats.Short)</td>
+                    <td>@paycheck.From.ToString(Constants.DateTimeFormats.Short) | @paycheck.To.ToString(Constants.DateTimeFormats.Short)</td>
+                    <td>@paycheck.Hours</td>
+                    <td class="text-primary">@paycheck.PayForHours</td>
+                    <td>@paycheck.HourOnBusinessTrip</td>
+                    <td class="text-primary">@paycheck.PayBusinessTrip</td>
+                    <td>@paycheck.HourOnHolidays</td>
+                    <td class="text-primary">@paycheck.PayForHolidayHours</td>
+                    <td>@paycheck.ExtraHours</td>
+                    <td class="text-primary">@paycheck.PayForExtraHours</td>
+                    <td>@paycheck.PaidDaysOff</td>
+                    <td class="text-primary">@paycheck.PayForPayedDaysOff</td>
+                    <td>@paycheck.UnpaidDaysOff</td>
+                    <td>@paycheck.SickDaysOff</td>
+                    <td class="text-success">@paycheck.Total</td>
+                </tr>
+            }
         }
-    }
-    <tbody></tbody>
+    </tbody>
 </table>

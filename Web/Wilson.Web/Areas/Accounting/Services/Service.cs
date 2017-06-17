@@ -19,15 +19,10 @@ namespace Wilson.Web.Areas.Accounting.Services
         public IAccountingWorkData AccountingWorkData { get; set; }
 
         public IMapper Mapper { get; set; }
-                
-        public async Task<IEnumerable<Employee>> Employees()
-        {
-            return await this.AccountingWorkData.Employees.FindAsync(e => !e.IsFired);
-        }
 
         public async Task<List<SelectListItem>> GetEmployeeOptions()
         {
-            var employees = await this.Employees();
+            var employees = await this.AccountingWorkData.Employees.FindAsync(e => !e.IsFired);
             return employees.Select(x => new SelectListItem() { Value = x.Id, Text = x.ToString() }).ToList();
         }
     }

@@ -33,7 +33,7 @@ namespace Wilson.Web.Areas.Scheduler.Models.PayrollViewModels
 
         public IEnumerable<EmployeeViewModel> Employees { get; set; }
 
-        public async static Task<ReviewPaychecksViewModel> CreateAsync(IPayrollService services, IMapper mapper)
+        public async static Task<ReviewPaychecksViewModel> CreateAsync(IPayrollService services)
         {
             return new ReviewPaychecksViewModel()
             {

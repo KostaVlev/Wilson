@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 
 namespace Wilson.Accounting.Core.Entities
 {
@@ -8,8 +9,10 @@ namespace Wilson.Accounting.Core.Entities
         {
         }
 
+        [JsonProperty]
         public DateTime Date { get; private set; }
 
+        [JsonProperty]
         public decimal Amount { get; private set; }
 
         public static Payment Create(DateTime date, decimal amount)

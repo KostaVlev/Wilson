@@ -73,7 +73,7 @@ namespace Wilson.Web.Areas.Scheduler.Controllers
         [HttpGet]
         public async Task<IActionResult> ReviewPaychecks()
         {
-            return View(await ReviewPaychecksViewModel.CreateAsync(this.PayrollService, this.Mapper));
+            return View(await ReviewPaychecksViewModel.CreateAsync(this.PayrollService));
         }
 
         //

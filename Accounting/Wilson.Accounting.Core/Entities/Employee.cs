@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Wilson.Accounting.Core.Entities
 {
@@ -23,6 +25,11 @@ namespace Wilson.Accounting.Core.Entities
         public override string ToString()
         {
             return this.FirstName + " " + this.LastName;
+        }
+
+        public void FilterPaycheksByDate(DateTime from, DateTime to)
+        {
+            this.Paycheks.Where(p => p.From >= from && p.To <= to);
         }
     }
 }

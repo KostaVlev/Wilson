@@ -1,7 +1,6 @@
 @model PayrollViewModel
 
-<h4 class="text-info">Missing payrolls for the period</h4>
-<form asp-area=@Constants.Areas.Accounting asp-controller="Home" asp-action=@nameof(HomeController.Payroll) method="post">
+<form asp-area=@Constants.Areas.Accounting asp-controller="Home" asp-action=@nameof(HomeController.Payroll) method="post" class="form-horizontal">
     @Html.AntiForgeryToken()
     <div asp-validation-summary="All" class="text-danger"></div>
     <h4 class="text-primary">Find Payrolls</h4>
@@ -18,15 +17,15 @@
             </select>
         </div>
     </div>
-    <div class="form-group-sm">
-        <label asp-for="From" class="col-md-6 control-label"></label>
-        <div class="col-md-6">
+    <div class="form-group">
+        <label asp-for="From" class="col-md-2 control-label"></label>
+        <div class="col-md-10">
             <input asp-for="From" class="form-control" type="date" />
         </div>
     </div>
-    <div class="form-group-sm">
-        <label asp-for="To" class="col-md-6 control-label"></label>
-        <div class="col-md-6">
+    <div class="form-group">
+        <label asp-for="To" class="col-md-2 control-label"></label>
+        <div class="col-md-10">
             <input asp-for="To" class="form-control" type="date" />
         </div>
     </div>
@@ -36,6 +35,55 @@
         </div>
     </div>
 </form>
+
+@if (Model.Employees != null)
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Issuing Date</th>
+                <th>Period</th>
+                <th>Total</th>
+                <th>Payments</th>
+                <th>Total Payed</th>
+                <th>Difference</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var employee in Model.Employees)
+            {
+                <tr>
+                    <td class="bg-success text-primary" colspan="7">@employee.ToString()</td>
+                </tr>
+                @foreach (var paycheck in employee.Paycheks)
+                {
+                    <tr>
+                        <td>@paycheck.Date.ToString(Constants.DateTimeFormats.Short)</td>
+                        <td>@paycheck.From.ToString(Constants.DateTimeFormats.Short) | @paycheck.To.ToString(Constants.DateTimeFormats.Short)</td>
+                        <td class="text-success">@paycheck.Total</td>
+                        <td>
+                            @foreach (var payment in paycheck.Payments)
+                            {
+                                <p>@payment.Date.ToString(Constants.DateTimeFormats.Short) - @payment.Amount</p>
+                            }
+                        </td>
+                        <td class="text-primary">@paycheck.PayedAmount</td>
+                        <td class="text-danger">@paycheck.Diffrence</td>                        
+                    </tr>
+                }
+            }
+            <tr class="text-danger">
+                <td colspan="2">Sum</td>
+                <td>@Model.TotalPaycheksSum</td>
+                <td></td>
+                <td>@Model.TotalPaymentsSum</td>
+                <td>@Model.TotalDiffrenceToBePayed</td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+}
 
 
 

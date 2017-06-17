@@ -28,11 +28,25 @@ namespace Wilson.Web.Areas.Accounting.Controllers
         }
 
         //
-        // GET: /Accounting/Payrolls
+        // GET: /Accounting/Payroll
         [HttpGet]
         public async Task<IActionResult> Payroll()
         {
-            return View(await PayrollViewModel.Create(this.PayrollService));
+            return View(await PayrollViewModel.CreateAsync(this.PayrollService));
+        }
+
+        //
+        // POST: /Accounting/Payroll
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Payroll(PayrollViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(await PayrollViewModel.ReBuildAsync(model, this.PayrollService));
+            }
+
+            return View(await PayrollViewModel.CreateAsync(model.From, model.To, model.EmployeeId, this.PayrollService, this.Mapper));
         }
     }
 }
