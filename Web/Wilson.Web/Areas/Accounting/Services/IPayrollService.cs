@@ -9,6 +9,11 @@ namespace Wilson.Web.Areas.Accounting.Services
     public interface IPayrollService
     {
         Task<List<SelectListItem>> GetAccountingEmployeeOptions();
+
         Task<IEnumerable<Employee>> GetEmployeesWihtPayrolls(string employeeId = null);
+
+        Task AddPayment(Paycheck paychek, DateTime paymentDate, decimal amount);
+
+        Task<Paycheck> FindEmployeePaycheck(string employeeId, string paychekId);
     }
 }

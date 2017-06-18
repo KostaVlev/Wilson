@@ -41,13 +41,19 @@
     <table class="table table-striped">
         <thead>
             <tr>
+                <th colspan="7">
+                    <div id="cover" hidden></div>
+                    <div id="message" role="alert" hidden></div>
+                </th>
+            </tr>
+            <tr>
                 <th>Issuing Date</th>
                 <th>Period</th>
                 <th>Total</th>
                 <th>Payments</th>
                 <th>Total Payed</th>
                 <th>Difference</th>
-                <th></th>
+                <th>Make Payment</th>
             </tr>
         </thead>
         <tbody>
@@ -69,8 +75,11 @@
                             }
                         </td>
                         <td class="text-primary">@paycheck.PayedAmount</td>
-                        <td class="text-danger">@paycheck.Diffrence</td>                        
-                    </tr>
+                        <td class="text-danger">@paycheck.Diffrence</td> 
+                        <td>@await Component.InvokeAsync(
+                           "AddPaycheckPayment", 
+                           new { From = paycheck.From, To = paycheck.To, EmployeeId = employee.Id, PaycheckId = paycheck.Id })</td>
+                    </tr>                    
                 }
             }
             <tr class="text-danger">

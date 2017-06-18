@@ -2,6 +2,7 @@
 using AutoMapper;
 using Wilson.Accounting.Core.Entities;
 using Wilson.Web.Areas.Accounting.Models.HomeViewModels;
+using Wilson.Web.Areas.Accounting.Models.SharedViewModels;
 
 namespace Wilson.Web.Areas.Accounting.Configurations
 {

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Threading.Tasks;
 using Wilson.Accounting.Data.DataAccess;
 using Wilson.Web.Areas.Accounting.Models.HomeViewModels;
@@ -28,15 +29,21 @@ namespace Wilson.Web.Areas.Accounting.Controllers
         }
 
         //
-        // GET: /Accounting/Payroll
+        // GET: /Accounting/Home/Payroll
         [HttpGet]
-        public async Task<IActionResult> Payroll()
+        public async Task<IActionResult> Payroll(string errorMessage, DateTime from, DateTime to, string employeeId)
         {
+            if (!string.IsNullOrEmpty(errorMessage))
+            {
+                ModelState.AddModelError(string.Empty, errorMessage);
+                return View(await PayrollViewModel.CreateAsync(from, to, employeeId, this.PayrollService, this.Mapper));
+            }
+
             return View(await PayrollViewModel.CreateAsync(this.PayrollService));
         }
 
         //
-        // POST: /Accounting/Payroll
+        // POST: /Accounting/Home/Payroll
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Payroll(PayrollViewModel model)

@@ -19,10 +19,11 @@ namespace Wilson.Web.Areas.Accounting.Models.HomeViewModels
 
         [Required]
         [Display(Name = "From")]
-        [DataType(DataType.Duration)]
+        [DataType(DataType.Date, ErrorMessage = "Select From date.")]
         public DateTime From { get; set; }
 
         [Required]
+        [DataType(DataType.Date, ErrorMessage = "Select To date.")]
         [Display(Name = "To")]
         public DateTime To { get; set; }
 

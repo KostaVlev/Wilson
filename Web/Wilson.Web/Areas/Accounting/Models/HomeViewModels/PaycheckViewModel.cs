@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Wilson.Web.Areas.Accounting.Models.SharedViewModels;
 
 namespace Wilson.Web.Areas.Accounting.Models.HomeViewModels
 {
     public class PaycheckViewModel
     {
+        public string Id { get; set; }
+
         public DateTime Date { get; set; }
 
         public DateTime From { get; set; }
