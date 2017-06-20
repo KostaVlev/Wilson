@@ -9,10 +9,10 @@ namespace Wilson.Web.Areas.Accounting.Models.PayrollViewModels
         public DateTime From { get; set; }
         
         public DateTime To { get; set; }
-
+        
         [StringLength(36)]
         public string EmployeeId { get; set; }
-
+        
         [StringLength(36)]
         public string PaycheckId { get; set; }
 

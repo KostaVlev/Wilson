@@ -66,8 +66,11 @@ namespace Wilson.Accounting.Core.Entities
             {
                 throw new ArgumentOutOfRangeException("amount", "Payment amount can't be negative number.");
             }
-            
-            this.Payments = this.GetPayments().Add(Payment.Create(date, amount));
+
+            if (amount > 0)
+            {
+                this.Payments = this.GetPayments().Add(Payment.Create(date, amount));
+            }
         }
 
         public decimal GetPaidAmount()

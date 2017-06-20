@@ -15,5 +15,9 @@ namespace Wilson.Web.Areas.Accounting.Services
         Task AddPayment(Paycheck paychek, DateTime paymentDate, decimal amount);
 
         Task<Paycheck> FindEmployeePaycheck(string employeeId, string paychekId);
+
+        Task<IEnumerable<Paycheck>> FindEmployeePaychecks(IEnumerable<string> paychekIds);
+
+        Task AddPayments(IEnumerable<Paycheck> paycheks, DateTime paymentDate, IDictionary<string, decimal> paycheckIdAmountPair);
     }
 }

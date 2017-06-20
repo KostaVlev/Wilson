@@ -75,11 +75,13 @@
                             }
                         </td>
                         <td class="text-primary">@paycheck.PayedAmount</td>
-                        <td class="text-danger">@paycheck.Diffrence</td> 
-                        <td>@await Component.InvokeAsync(
-                           "AddPaycheckPayment", 
-                           new { From = paycheck.From, To = paycheck.To, EmployeeId = employee.Id, PaycheckId = paycheck.Id })</td>
-                    </tr>                    
+                        <td class="text-danger">@paycheck.Diffrence</td>
+                        <td>
+                            @await Component.InvokeAsync(
+                           "AddPaycheckPayment",
+                           new { From = paycheck.From, To = paycheck.To, EmployeeId = employee.Id, PaycheckId = paycheck.Id })
+                    </td>
+                </tr>
                 }
             }
             <tr class="text-danger">
@@ -88,7 +90,13 @@
                 <td></td>
                 <td>@Model.TotalPaymentsSum</td>
                 <td>@Model.TotalDiffrenceToBePayed</td>
-                <td></td>
+                <td>
+                    <div class="col-sm-6">
+                        <div class="input-group">
+                            <button onclick="addPaychecksPayments()" type="submit" class="btn btn-default">Pay All</button>
+                        </div>
+                    </div>
+                </td>
             </tr>
         </tbody>
     </table>

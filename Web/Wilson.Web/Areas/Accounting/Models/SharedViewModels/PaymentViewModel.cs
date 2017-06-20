@@ -8,7 +8,7 @@ namespace Wilson.Web.Areas.Accounting.Models.SharedViewModels
         public DateTime Date { get; set; }
         
         [Required(ErrorMessage = "Amount is required.")]
-        [Range(typeof(decimal), "0.01", "999999999", ErrorMessage = "Amount can't be less then 0.")]
+        [Range(typeof(decimal), "0", "999999999", ErrorMessage = "Amount can't be less then 0.")]
         [Display(Name = "Amount")]
         public decimal Amount { get; set; }
 

@@ -33,7 +33,7 @@ namespace Wilson.Web.Areas.Accounting.Controllers
         [HttpGet]
         public async Task<IActionResult> Payroll(string errorMessage, DateTime from, DateTime to, string employeeId)
         {
-            if (!string.IsNullOrEmpty(errorMessage))
+            if (errorMessage != null)
             {
                 ModelState.AddModelError(string.Empty, errorMessage);
                 return View(await PayrollViewModel.CreateAsync(from, to, employeeId, this.PayrollService, this.Mapper));
