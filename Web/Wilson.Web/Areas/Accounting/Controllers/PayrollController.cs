@@ -31,24 +31,24 @@ namespace Wilson.Web.Areas.Accounting.Controllers
             if (!ModelState.IsValid)
             {
                 var errorMessage = ViewData.ModelState.Values.FirstOrDefault(v => v.Errors.Any()).Errors.FirstOrDefault().ErrorMessage;
-                return RedirectToHomePayrollWithErrorMessage(errorMessage, employeeId: model.EmployeeId);
+                return RedirectToHomePayrollWithMessage(errorMessage, employeeId: model.EmployeeId);
             }
 
             var paycheck = await this.PayrollService.FindEmployeePaycheck(model.EmployeeId, model.PaycheckId);
             if (paycheck == null)
             {
-                return RedirectToHomePayrollWithErrorMessage("Paycheck not found.");
+                return RedirectToHomePayrollWithMessage("Paycheck not found.");
             }
 
             if (paycheck.Total < paycheck.GetPaidAmount() + model.Payment.Amount)
             {
                 var errorMessage = string.Format("Maximum amount that can be payed is {0}", paycheck.Total - paycheck.GetPaidAmount());
-                return RedirectToHomePayrollWithErrorMessage(errorMessage, employeeId: model.EmployeeId);
+                return RedirectToHomePayrollWithMessage(errorMessage, employeeId: model.EmployeeId);
             }
 
             if (model.Payment.Amount < 0)
             {
-                return RedirectToHomePayrollWithErrorMessage("Amount can't be negative number.", employeeId: model.EmployeeId);
+                return RedirectToHomePayrollWithMessage("Amount can't be negative number.", employeeId: model.EmployeeId);
             }
 
             await this.PayrollService.AddPayment(paycheck, DateTime.Today, model.Payment.Amount);
@@ -64,14 +64,14 @@ namespace Wilson.Web.Areas.Accounting.Controllers
             if (!ModelState.IsValid)
             {
                 var errorMessage = ViewData.ModelState.Values.FirstOrDefault(v => v.Errors.Any()).Errors.FirstOrDefault().ErrorMessage;
-                return RedirectToHomePayrollWithErrorMessage(errorMessage);
+                return RedirectToHomePayrollWithMessage(errorMessage);
             }
 
             var paycheckIds = model.Select(m => m.PaycheckId);
             var paychecks = await this.PayrollService.FindEmployeePaychecks(paycheckIds);
             if (paychecks == null || paychecks.Count() <= 0)
             {
-                return RedirectToHomePayrollWithErrorMessage("Paycheck not found.");
+                return RedirectToHomePayrollWithMessage("Paycheck not found.");
             }
             
             var paycheckAmountPair = model.Select(m =>
@@ -81,21 +81,21 @@ namespace Wilson.Web.Areas.Accounting.Controllers
             {
                 var paycheck = paychecks.FirstOrDefault(p => p.Total < p.GetPaidAmount() - paycheckAmountPair[p.Id]);
                 var errorMessage = string.Format("Maximum amount that can be payed is {0}", paycheck.Total - paycheck.GetPaidAmount());
-                return RedirectToHomePayrollWithErrorMessage(errorMessage, employeeId: paycheck.EmployeeId);
+                return RedirectToHomePayrollWithMessage(errorMessage, employeeId: paycheck.EmployeeId);
             }
 
             if (model.Select(m => m.Payment.Amount).Any(a => a < 0))
             {
-                return RedirectToHomePayrollWithErrorMessage("Only positive amount numbers are allowed.");
+                return RedirectToHomePayrollWithMessage("Only positive amount numbers are allowed.");
             }
             
             await this.PayrollService.AddPayments(paychecks, DateTime.Today, paycheckAmountPair);
 
 
-            return RedirectToHomePayrollWithErrorMessage("Payments have been updated.");
+            return RedirectToHomePayrollWithMessage("Payments have been updated.");
         }
 
-        private RedirectToActionResult RedirectToHomePayrollWithErrorMessage(
+        private RedirectToActionResult RedirectToHomePayrollWithMessage(
             string errorMessage, DateTime? from = null, DateTime? to = null, string employeeId = null)
         {
             return RedirectToAction(
