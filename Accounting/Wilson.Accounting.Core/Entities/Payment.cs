@@ -21,7 +21,7 @@ namespace Wilson.Accounting.Core.Entities
             return new Payment() { Date = date, Amount = amount };
         }
 
-        protected override bool EqualsCore(Payment other)
+        public override bool EqualsCore(Payment other)
         {
             if (other == null)
             {
@@ -31,7 +31,7 @@ namespace Wilson.Accounting.Core.Entities
             return this.Date == other.Date && this.Amount == other.Amount;
         }
 
-        protected override int GetHashCodeCore()
+        public override int GetHashCodeCore()
         {
             unchecked
             {

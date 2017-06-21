@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26228.4
+VisualStudioVersion = 15.0.26430.12
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Accounting", "Accounting", "{ECBDCA68-7255-43B2-B393-6717F5480697}"
 EndProject
@@ -30,6 +30,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wilson.Projects.Core", "Projects\Wilson.Projects.Core\Wilson.Projects.Core.csproj", "{5582CA8B-EE58-4CCB-A0A6-6357196422F8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wilson.Projects.Data", "Projects\Wilson.Projects.Data\Wilson.Projects.Data.csproj", "{6D4A4E3A-B409-466B-80B1-5EED0B91984B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wilson.Accounting.Tests", "Accounting\Wilson.Accounting.Tests\Wilson.Accounting.Tests.csproj", "{776F8F68-3C42-48A8-9C30-2048051F2CD1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -73,6 +75,10 @@ Global
 		{6D4A4E3A-B409-466B-80B1-5EED0B91984B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6D4A4E3A-B409-466B-80B1-5EED0B91984B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6D4A4E3A-B409-466B-80B1-5EED0B91984B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{776F8F68-3C42-48A8-9C30-2048051F2CD1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{776F8F68-3C42-48A8-9C30-2048051F2CD1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{776F8F68-3C42-48A8-9C30-2048051F2CD1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{776F8F68-3C42-48A8-9C30-2048051F2CD1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -87,5 +93,6 @@ Global
 		{54E8555A-C582-4F91-9DB0-D210ED8229B4} = {66B6543F-979C-4904-9AD3-E2A9FD1F87B4}
 		{5582CA8B-EE58-4CCB-A0A6-6357196422F8} = {A3DB2DD8-15A8-440F-93BC-3F2758BEDE1C}
 		{6D4A4E3A-B409-466B-80B1-5EED0B91984B} = {A3DB2DD8-15A8-440F-93BC-3F2758BEDE1C}
+		{776F8F68-3C42-48A8-9C30-2048051F2CD1} = {ECBDCA68-7255-43B2-B393-6717F5480697}
 	EndGlobalSection
 EndGlobal

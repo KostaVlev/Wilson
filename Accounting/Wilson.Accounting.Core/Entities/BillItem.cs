@@ -46,7 +46,7 @@ namespace Wilson.Accounting.Core.Entities
             this.Quantity += quantity;
         }
 
-        protected override bool EqualsCore(BillItem other)
+        public override bool EqualsCore(BillItem other)
         {
             if (other == null)
             {
@@ -56,7 +56,7 @@ namespace Wilson.Accounting.Core.Entities
             return this.StorehouseItem.Equals(other);
         }
 
-        protected override int GetHashCodeCore()
+        public override int GetHashCodeCore()
         {
             unchecked
             {

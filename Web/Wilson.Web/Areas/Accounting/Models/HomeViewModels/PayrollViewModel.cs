@@ -56,9 +56,9 @@ namespace Wilson.Web.Areas.Accounting.Models.HomeViewModels
         {
             var model = await PayrollViewModel.CreateAsync(services);
             var employees = await services.GetEmployeesWihtPayrolls(employeeId);
-            employees.ToList().ForEach(e => e.FilterPaycheksByDate(from, to));
+            var employeessWithFilteredPaycheks = services.FilterEmployeesPaycheksByDate(from, to, employees);
 
-            model.Employees = mapper.Map<IEnumerable<Employee>, IEnumerable<EmployeeViewModel>>(employees);
+            model.Employees = mapper.Map<IEnumerable<Employee>, IEnumerable<EmployeeViewModel>>(employeessWithFilteredPaycheks);
             model.From = from;
             model.To = to;
             model.TotalPaycheksSum = employees.Sum(e => e.Paycheks.Select(p => p.Total).Sum());

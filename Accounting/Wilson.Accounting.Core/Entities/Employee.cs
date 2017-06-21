@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Wilson.Accounting.Core.Entities
 {
     public class Employee : Entity
     {
-        private Employee()
+        protected Employee()
         {
         }
 
@@ -27,9 +26,9 @@ namespace Wilson.Accounting.Core.Entities
             return this.FirstName + " " + this.LastName;
         }
 
-        public void FilterPaycheksByDate(DateTime from, DateTime to)
+        public string GetName(Func<Employee, string> format)
         {
-            this.Paycheks.Where(p => p.From >= from && p.To <= to);
-        }
+            return format(this);
+        }        
     }
 }

@@ -63,5 +63,12 @@ namespace Wilson.Web.Areas.Accounting.Services
 
             await this.AccountingWorkData.CompleteAsync();
         }
+
+        public IEnumerable<Employee> FilterEmployeesPaycheksByDate(DateTime from, DateTime to, IEnumerable<Employee> employees)
+        {
+            employees.ToList().ForEach(e => e.Paycheks.Where(p => p.From >= from && p.To <= to));
+
+            return employees;
+        }
     }
 }

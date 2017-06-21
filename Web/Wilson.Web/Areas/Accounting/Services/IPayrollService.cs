@@ -52,5 +52,14 @@ namespace Wilson.Web.Areas.Accounting.Services
         /// <param name="paymentDate">The payment date. The date is the same for all the payments that will be made.</param>
         /// <param name="paycheckIdAmountPair">Collection of "paycheck id - amount that will be payed" pair.</param>
         Task AddPayments(IEnumerable<Paycheck> paycheks, DateTime paymentDate, IDictionary<string, decimal> paycheckIdAmountPair);
+
+        /// <summary>
+        /// Filter given collection of employees by paychecks issued in given time period.
+        /// </summary>
+        /// <param name="from">The period start date.</param>
+        /// <param name="to">The period end date.</param>
+        /// <param name="employees">The collection of employees that will be processed.</param>
+        /// <returns><see cref="IEnumerable{T}"/> where T is <see cref="Employee"/></returns>
+        IEnumerable<Employee> FilterEmployeesPaycheksByDate(DateTime from, DateTime to, IEnumerable<Employee> employees);
     }
 }

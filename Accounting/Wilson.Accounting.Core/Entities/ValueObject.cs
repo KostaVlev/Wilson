@@ -15,7 +15,7 @@ namespace Wilson.Accounting.Core.Entities
         }
 
 
-        protected abstract bool EqualsCore(TEntity other);
+        public abstract bool EqualsCore(TEntity other);
 
 
         public override int GetHashCode()
@@ -24,7 +24,7 @@ namespace Wilson.Accounting.Core.Entities
         }
 
 
-        protected abstract int GetHashCodeCore();
+        public abstract int GetHashCodeCore();
 
 
         public static bool operator ==(ValueObject<TEntity> a, ValueObject<TEntity> b)

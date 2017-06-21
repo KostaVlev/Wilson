@@ -63,12 +63,12 @@ namespace Wilson.Accounting.Core.Entities
             return this.GetEnumerator();
         }
 
-        protected override bool EqualsCore(ListOfBillItems other)
+        public override bool EqualsCore(ListOfBillItems other)
         {
             throw new NotImplementedException();
         }
 
-        protected override int GetHashCodeCore()
+        public override int GetHashCodeCore()
         {
             unchecked
             {

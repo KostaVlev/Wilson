@@ -61,7 +61,7 @@ namespace Wilson.Accounting.Core.Entities
             return address;
         }
 
-        protected override bool EqualsCore(Address other)
+        public override bool EqualsCore(Address other)
         {
             if (this.Country.Equals(other.Country) && this.PostCode.Equals(other.PostCode) &&
                 this.City.Equals(other.City) && this.Street.Equals(other.Street) &&
@@ -75,7 +75,7 @@ namespace Wilson.Accounting.Core.Entities
             }
         }
 
-        protected override int GetHashCodeCore()
+        public override int GetHashCodeCore()
         {
             unchecked
             {
