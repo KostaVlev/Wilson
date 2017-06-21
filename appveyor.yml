@@ -8,14 +8,14 @@ init:
 before_build:
 - appveyor-retry dotnet restore -v Minimal
 build_script:
-- dotnet build "Wilson\Accounting\Wilson.Accounting.Core" -c %CONFIGURATION% --no-dependencies --version-suffix %LABEL%
-- dotnet build "Wilson\Accounting\Wilson.Accounting.Data" -c %CONFIGURATION% --no-dependencies --version-suffix %LABEL%
-- dotnet build "Wilson\Companies\Wilson.Accounting.Core" -c %CONFIGURATION% --no-dependencies --version-suffix %LABEL%
-- dotnet build "Wilson\Companies\Wilson.Accounting.Data" -c %CONFIGURATION% --no-dependencies --version-suffix %LABEL%
-- dotnet build "Wilson\Scheduler\Wilson.Accounting.Core" -c %CONFIGURATION% --no-dependencies --version-suffix %LABEL%
-- dotnet build "Wilson\Scheduler\Wilson.Accounting.Data" -c %CONFIGURATION% --no-dependencies --version-suffix %LABEL%
-- dotnet build "Wilson\Projects\Wilson.Accounting.Core" -c %CONFIGURATION% --no-dependencies --version-suffix %LABEL%
-- dotnet build "Wilson\Projects\Wilson.Accounting.Data" -c %CONFIGURATION% --no-dependencies --version-suffix %LABEL%
+- dotnet build "Wilson\Accounting\Wilson.Accounting.Core\" -c %CONFIGURATION% --no-dependencies --version-suffix %LABEL%
+- dotnet build "Wilson\Accounting\Wilson.Accounting.Data\" -c %CONFIGURATION% --no-dependencies --version-suffix %LABEL%
+- dotnet build "Wilson\Companies\Wilson.Accounting.Core\" -c %CONFIGURATION% --no-dependencies --version-suffix %LABEL%
+- dotnet build "Wilson\Companies\Wilson.Accounting.Data\" -c %CONFIGURATION% --no-dependencies --version-suffix %LABEL%
+- dotnet build "Wilson\Scheduler\Wilson.Accounting.Core\" -c %CONFIGURATION% --no-dependencies --version-suffix %LABEL%
+- dotnet build "Wilson\Scheduler\Wilson.Accounting.Data\" -c %CONFIGURATION% --no-dependencies --version-suffix %LABEL%
+- dotnet build "Wilson\Projects\Wilson.Accounting.Core\" -c %CONFIGURATION% --no-dependencies --version-suffix %LABEL%
+- dotnet build "Wilson\Projects\Wilson.Accounting.Data\" -c %CONFIGURATION% --no-dependencies --version-suffix %LABEL%
 - dotnet build "Wilson\Projects\Wilson.Web" -c %CONFIGURATION% --no-dependencies --version-suffix %LABEL%
 test_script:
-- dotnet test "Wilson\Accounting\Wilson.Accounting.Tests\Common" -c %CONFIGURATION%
+- dotnet test "Wilson\Accounting\Wilson.Accounting.Tests\Common\" -c %CONFIGURATION%
