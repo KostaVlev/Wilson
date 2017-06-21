@@ -10,4 +10,4 @@ before_build:
 build_script:
 - dotnet build 
 test_script:
-- dotnet test
+- dotnet test "\Wilson\Accounting\Wilson.Accounting.Tests"
