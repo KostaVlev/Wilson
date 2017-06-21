@@ -1,6 +1,7 @@
 @model AddPaymentViewModel
 
-<form name="paymentForm" asp-area=@Constants.Areas.Accounting asp-controller="Payroll" asp-action=@nameof(PayrollController.AddPaycheckPayment) method="post" class="form-inline">
+<form asp-area=@Constants.Areas.Accounting asp-controller="Payroll" asp-action=@nameof(PayrollController.AddPaycheckPayment)
+      name="paymentForm" method="post" class="form-inline">
     @Html.AntiForgeryToken()
     <input asp-for="From" class="form-control" type="hidden" value="@Model.From" />
     <input asp-for="To" class="form-control" type="hidden" value="@Model.To" />

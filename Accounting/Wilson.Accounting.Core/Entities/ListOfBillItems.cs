@@ -6,8 +6,10 @@ using Newtonsoft.Json;
 
 namespace Wilson.Accounting.Core.Entities
 {
-    public class ListOfBillItems : IValueObject<ListOfBillItems>, IEnumerable<BillItem>
+    [JsonObject]
+    public class  ListOfBillItems : ValueObject<ListOfBillItems>, IEnumerable<BillItem>
     {
+        [JsonProperty]
         private IList<BillItem> BillItems { get; set; }
 
         protected ListOfBillItems()
@@ -59,6 +61,20 @@ namespace Wilson.Accounting.Core.Entities
         IEnumerator IEnumerable.GetEnumerator()
         {
             return this.GetEnumerator();
+        }
+
+        protected override bool EqualsCore(ListOfBillItems other)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override int GetHashCodeCore()
+        {
+            unchecked
+            {
+                int hashCode = this.BillItems.GetHashCode();
+                return hashCode;
+            }
         }
 
         public static explicit operator ListOfBillItems(string billItemsList)

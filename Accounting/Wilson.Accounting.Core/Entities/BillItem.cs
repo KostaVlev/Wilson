@@ -1,19 +1,25 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 
 namespace Wilson.Accounting.Core.Entities
 {
-    public class BillItem : IValueObject<BillItem>
+    [JsonObject]
+    public class BillItem : ValueObject<BillItem>
     {
         private BillItem()
         {
         }
 
+        [JsonProperty]
         public int Quantity { get; private set; }
 
+        [JsonProperty]
         public decimal Price { get; private set; }
 
-        public string StorehouseItemId { get; set; }
+        [JsonProperty]
+        public string StorehouseItemId { get; private set; }
 
+        [JsonProperty]
         public string StorehouseId { get; private set; }
 
         public virtual StorehouseItem StorehouseItem { get; private set; }
@@ -40,7 +46,7 @@ namespace Wilson.Accounting.Core.Entities
             this.Quantity += quantity;
         }
 
-        public bool Equals(BillItem other)
+        protected override bool EqualsCore(BillItem other)
         {
             if (other == null)
             {
@@ -48,6 +54,19 @@ namespace Wilson.Accounting.Core.Entities
             }
 
             return this.StorehouseItem.Equals(other);
+        }
+
+        protected override int GetHashCodeCore()
+        {
+            unchecked
+            {
+                int hashCode = StorehouseItemId.GetHashCode();
+                hashCode = (hashCode * 397) ^ StorehouseId.GetHashCode();
+                hashCode = (hashCode * 397) ^ Quantity;
+                hashCode = (hashCode * 397) ^ Price.GetHashCode();
+
+                return hashCode;
+            }
         }
     }
 }

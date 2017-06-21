@@ -1,7 +1,7 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
-using System;
+﻿using System;
 using System.Threading.Tasks;
+using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Wilson.Accounting.Data.DataAccess;
 using Wilson.Web.Areas.Accounting.Models.HomeViewModels;
 using Wilson.Web.Areas.Accounting.Services;

@@ -2,11 +2,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System;
 
 namespace Wilson.Accounting.Core.Entities
 {
-    public class ListOfPayments : IValueObject<ListOfPayments>, IEnumerable<Payment>
+    [JsonObject]
+    public class ListOfPayments : ValueObject<ListOfPayments>, IEnumerable<Payment>
     {
+        [JsonProperty]
         private IList<Payment> Payments { get; set; }
 
         protected ListOfPayments()
@@ -34,12 +37,6 @@ namespace Wilson.Accounting.Core.Entities
             return ListOfPayments.Create(this.Payments);
         }
 
-        public bool Equals(ListOfPayments other)
-        {
-            return Payments.OrderBy(x => x.Date).ThenBy(x => x.Amount)
-                .SequenceEqual(other.Payments.OrderBy(x => x.Date).ThenBy(x => x.Amount));
-        }
-
         public IEnumerator<Payment> GetEnumerator()
         {
             return this.Payments.GetEnumerator();
@@ -48,6 +45,21 @@ namespace Wilson.Accounting.Core.Entities
         IEnumerator IEnumerable.GetEnumerator()
         {
             return this.GetEnumerator();
+        }
+
+        protected override bool EqualsCore(ListOfPayments other)
+        {
+            return Payments.OrderBy(x => x.Date).ThenBy(x => x.Amount)
+                .SequenceEqual(other.Payments.OrderBy(x => x.Date).ThenBy(x => x.Amount));
+        }
+
+        protected override int GetHashCodeCore()
+        {
+            unchecked
+            {
+                int hashCode = this.Payments.GetHashCode();
+                return hashCode;
+            }
         }
 
         public static explicit operator ListOfPayments(string paymetnsList)

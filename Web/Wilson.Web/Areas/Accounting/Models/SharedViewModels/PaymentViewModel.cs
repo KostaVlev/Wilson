@@ -12,9 +12,9 @@ namespace Wilson.Web.Areas.Accounting.Models.SharedViewModels
         [Display(Name = "Amount")]
         public decimal Amount { get; set; }
 
-        public static PaymentViewModel Create()
+        public static PaymentViewModel Create(decimal amount = 0, DateTime date = default(DateTime))
         {
-            return new PaymentViewModel() { Date = DateTime.Today, Amount = 0 };
+            return new PaymentViewModel() { Date = date != default(DateTime) ? date : DateTime.Today, Amount = 0 };
         }
     }
 }

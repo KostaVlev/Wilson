@@ -3,7 +3,8 @@ using System;
 
 namespace Wilson.Accounting.Core.Entities
 {
-    public class Address : IValueObject<Address>
+    [JsonObject]
+    public class Address : ValueObject<Address>
     {
         protected Address()
         {
@@ -60,20 +61,13 @@ namespace Wilson.Accounting.Core.Entities
             return address;
         }
 
-        public bool Equals(Address other)
+        protected override bool EqualsCore(Address other)
         {
             if (this.Country.Equals(other.Country) && this.PostCode.Equals(other.PostCode) &&
                 this.City.Equals(other.City) && this.Street.Equals(other.Street) &&
                 this.StreetNumber.Equals(other.StreetNumber) && this.UnitNumber.Equals(other.UnitNumber))
             {
-                if (this.Floor != null && this.Floor == other.Floor)
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
+                return this.Floor != null && this.Floor == other.Floor ? true :  false;
             }
             else
             {
@@ -81,24 +75,19 @@ namespace Wilson.Accounting.Core.Entities
             }
         }
 
-        public static explicit operator Address(string address)
+        protected override int GetHashCodeCore()
         {
-            var result = JsonConvert.DeserializeObject<Address>(address);
+            unchecked
+            {
+                int hashCode = Country.GetHashCode();
+                hashCode = (hashCode * 397) ^ PostCode.GetHashCode();
+                hashCode = (hashCode * 397) ^ City.GetHashCode();
+                hashCode = (hashCode * 397) ^ Street.GetHashCode();
+                hashCode = (hashCode * 397) ^ PostCode.GetHashCode();
+                hashCode = (hashCode * 397) ^ StreetNumber.GetHashCode();
 
-            return Create(
-                result.Country, 
-                result.PostCode, 
-                result.City, 
-                result.Street, 
-                result.StreetNumber, 
-                result.Floor, 
-                result.UnitNumber,
-                result.Note);
-        }
-
-        public static implicit operator string(Address address)
-        {
-            return JsonConvert.SerializeObject(address);
+                return hashCode;
+            }
         }
 
         private static void Validate(Address address)
@@ -122,6 +111,6 @@ namespace Wilson.Accounting.Core.Entities
             {
                 throw new ArgumentNullException("address.StreetNumber", "Street Number is required.");
             }
-        }
+        }        
     }
 }

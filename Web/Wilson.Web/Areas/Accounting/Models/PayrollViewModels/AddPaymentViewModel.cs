@@ -6,8 +6,12 @@ namespace Wilson.Web.Areas.Accounting.Models.PayrollViewModels
 {
     public class AddPaymentViewModel
     {
+        [Required]
+        [DataType(DataType.Date, ErrorMessage = "Select From date.")]
         public DateTime From { get; set; }
-        
+
+        [Required]
+        [DataType(DataType.Date, ErrorMessage = "Select To date.")]
         public DateTime To { get; set; }
         
         [StringLength(36)]

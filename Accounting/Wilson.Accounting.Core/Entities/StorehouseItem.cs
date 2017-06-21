@@ -1,6 +1,8 @@
-﻿namespace Wilson.Accounting.Core.Entities
+﻿using System;
+
+namespace Wilson.Accounting.Core.Entities
 {
-    public class StorehouseItem : Entity, IValueObject<StorehouseItem>
+    public class StorehouseItem : Entity, IEquatable<StorehouseItem>
     {
         private StorehouseItem()
         {

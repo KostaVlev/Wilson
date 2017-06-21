@@ -18,8 +18,8 @@ namespace Wilson.Web.Areas.Accounting.Models.HomeViewModels
         public string EmployeeId { get; set; }
 
         [Required]
-        [Display(Name = "From")]
         [DataType(DataType.Date, ErrorMessage = "Select From date.")]
+        [Display(Name = "From")]        
         public DateTime From { get; set; }
 
         [Required]

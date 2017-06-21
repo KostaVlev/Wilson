@@ -2,7 +2,7 @@
 
 namespace Wilson.Accounting.Core.Entities
 {
-    public class Paycheck : Entity, IValueObject<Paycheck>
+    public class Paycheck : Entity, IEquatable<Paycheck>
     {
         private Paycheck()
         {
@@ -67,6 +67,7 @@ namespace Wilson.Accounting.Core.Entities
                 throw new ArgumentOutOfRangeException("amount", "Payment amount can't be negative number.");
             }
 
+            // Add new Payment only if the amount is greater then zero.
             if (amount > 0)
             {
                 this.Payments = this.GetPayments().Add(Payment.Create(date, amount));
@@ -75,22 +76,12 @@ namespace Wilson.Accounting.Core.Entities
 
         public decimal GetPaidAmount()
         {
-            if (string.IsNullOrEmpty(this.Payments))
-            {
-                return 0;
-            }
-
             return this.GetPayments().Sum();
         }
 
         public ListOfPayments GetPayments()
         {
-            if (string.IsNullOrEmpty(this.Payments))
-            {
-                return ListOfPayments.Create();
-            }
-
-            return (ListOfPayments)this.Payments;
+            return string.IsNullOrEmpty(this.Payments) ? ListOfPayments.Create() : (ListOfPayments)this.Payments;
         }
 
         public bool Equals(Paycheck other)

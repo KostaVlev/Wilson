@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Wilson.Accounting.Core.Enumerations;
 
 namespace Wilson.Accounting.Core.Entities
 {
-    public class Item : Entity, IValueObject<Item>
+    public class Item : Entity, IEquatable<Item>
     {
         private Item()
         {

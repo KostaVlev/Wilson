@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -7,7 +8,6 @@ using Wilson.Accounting.Data.DataAccess;
 using Wilson.Web.Areas.Accounting.Models.PayrollViewModels;
 using Wilson.Web.Areas.Accounting.Services;
 using Wilson.Web.Events.Interfaces;
-using System.Collections.Generic;
 
 namespace Wilson.Web.Areas.Accounting.Controllers
 {
@@ -21,7 +21,6 @@ namespace Wilson.Web.Areas.Accounting.Controllers
             : base(accountingWorkData, payrollService, mapper, eventsFactory)
         {
         }
-
 
         //POST: /Accounting/Payroll/AddPaycheckPayment
         [HttpPost]
@@ -52,8 +51,8 @@ namespace Wilson.Web.Areas.Accounting.Controllers
             }
 
             await this.PayrollService.AddPayment(paycheck, DateTime.Today, model.Payment.Amount);
-
-            return RedirectToAction(nameof(HomeController.Payroll), "Home");
+            
+            return RedirectToHomePayrollWithMessage(string.Empty);
         }
         
         //AJAX: /Accounting/Payroll/AddPaycheckPayment

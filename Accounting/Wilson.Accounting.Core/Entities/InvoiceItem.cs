@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Wilson.Accounting.Core.Entities
 {
-    public class InvoiceItem : Entity, IValueObject<InvoiceItem>
+    public class InvoiceItem : Entity, IEquatable<InvoiceItem>
     {
         private InvoiceItem()
         {

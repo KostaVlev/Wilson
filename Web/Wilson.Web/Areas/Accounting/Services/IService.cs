@@ -19,7 +19,7 @@ namespace Wilson.Web.Areas.Accounting.Services
         /// Asynchronous method that creates Collection of Employees as options for drop-down lists.
         /// </summary>
         /// <returns><see cref="List{T}"/> where {T} is <see cref="SelectListItem"/> with 
-        /// value the <see cref="EmployeeConciseViewModel.Id"/> and text <see cref="EmployeeConciseViewModel.ToString()"/></returns>
+        /// value the employee Id and text the employee Name</returns>
         Task<List<SelectListItem>> GetEmployeeOptions();
     }
 }

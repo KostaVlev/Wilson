@@ -3,7 +3,8 @@ using System;
 
 namespace Wilson.Accounting.Core.Entities
 {
-    public class Payment : IValueObject<Payment>
+    [JsonObject]
+    public class Payment : ValueObject<Payment>
     {
         private Payment()
         {
@@ -20,7 +21,7 @@ namespace Wilson.Accounting.Core.Entities
             return new Payment() { Date = date, Amount = amount };
         }
 
-        public bool Equals(Payment other)
+        protected override bool EqualsCore(Payment other)
         {
             if (other == null)
             {
@@ -28,6 +29,17 @@ namespace Wilson.Accounting.Core.Entities
             }
 
             return this.Date == other.Date && this.Amount == other.Amount;
+        }
+
+        protected override int GetHashCodeCore()
+        {
+            unchecked
+            {
+                int hashCode = Date.GetHashCode();
+                hashCode = (hashCode * 397) ^ Amount.GetHashCode();
+
+                return hashCode;
+            }
         }
     }
 }
