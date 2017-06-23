@@ -18,7 +18,7 @@ namespace Wilson.Accounting.Core.Entities
 
         public Storehouse CreateStorehouse(string name)
         {
-            return Storehouse.Create(name, this);
+            return Storehouse.Create(name, this.Id);
         }
     }
 }

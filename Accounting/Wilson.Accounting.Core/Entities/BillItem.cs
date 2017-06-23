@@ -6,7 +6,7 @@ namespace Wilson.Accounting.Core.Entities
     [JsonObject]
     public class BillItem : ValueObject<BillItem>
     {
-        private BillItem()
+        protected BillItem()
         {
         }
 
@@ -18,17 +18,12 @@ namespace Wilson.Accounting.Core.Entities
 
         [JsonProperty]
         public string StorehouseItemId { get; private set; }
-
-        [JsonProperty]
-        public string StorehouseId { get; private set; }
-
+        
         public virtual StorehouseItem StorehouseItem { get; private set; }
 
-        public virtual Storehouse Storehouse { get; private set; }
-
-        public static BillItem Create(int quantity, decimal price, StorehouseItem storehouseItem)
+        public static BillItem Create(int quantity, decimal price, string storehouseItemId, int storehouseItemQuantity)
         {
-            if (quantity > storehouseItem.Quantity || quantity < 0)
+            if (quantity > storehouseItemQuantity || quantity < 0)
             {
                 throw new ArgumentOutOfRangeException("quantity", "Quantity can't be more then the available quantity and less then zero.");
             }
@@ -38,7 +33,7 @@ namespace Wilson.Accounting.Core.Entities
                 throw new ArgumentOutOfRangeException("price", "Price can't be negative number or zero.");
             }
 
-            return new BillItem() { Quantity = quantity, StorehouseItem = storehouseItem, StorehouseItemId = storehouseItem.Id };
+            return new BillItem() { Quantity = quantity, StorehouseItemId = storehouseItemId };
         }
 
         public void AddQuantity(int quantity)
@@ -46,22 +41,21 @@ namespace Wilson.Accounting.Core.Entities
             this.Quantity += quantity;
         }
 
-        public override bool EqualsCore(BillItem other)
+        protected override bool EqualsCore(BillItem other)
         {
             if (other == null)
             {
                 return false;
             }
 
-            return this.StorehouseItem.Equals(other);
+            return this.StorehouseItemId == other.StorehouseItemId;
         }
 
-        public override int GetHashCodeCore()
+        protected override int GetHashCodeCore()
         {
             unchecked
             {
                 int hashCode = StorehouseItemId.GetHashCode();
-                hashCode = (hashCode * 397) ^ StorehouseId.GetHashCode();
                 hashCode = (hashCode * 397) ^ Quantity;
                 hashCode = (hashCode * 397) ^ Price.GetHashCode();
 

@@ -20,9 +20,9 @@ namespace Wilson.Accounting.Core.Entities
 
         public virtual InvoiceItem InvoiceItem { get; private set; }
 
-        public static StorehouseItem Create(int quantity, Storehouse storehouse, InvoiceItem invoiceItem)
+        public static StorehouseItem Create(int quantity, string storehouseId, string invoiceItemId, decimal invoiceItemPrice)
         {
-            return new StorehouseItem() { Quantity = quantity, Price = invoiceItem.Price, StorehouseId = storehouse.Id, InvoiceItemId = invoiceItem.Id };
+            return new StorehouseItem() { Quantity = quantity, Price = invoiceItemPrice, StorehouseId = storehouseId, InvoiceItemId = invoiceItemId };
         }
 
         public void AddQiantity(int quantity)

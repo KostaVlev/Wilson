@@ -5,7 +5,7 @@ namespace Wilson.Accounting.Core.Entities
 {
     public class Bill : Entity
     {
-        private Bill()
+        protected Bill()
         {
         }
 
@@ -29,41 +29,85 @@ namespace Wilson.Accounting.Core.Entities
 
         public virtual Invoice Invoice { get; private set; }
 
-        public static Bill Create(DateTime date, Project project)
+        public static Bill Create(DateTime date, ListOfBillItems billItems, string projectId)
         {
-            return new Bill() { Date = date, RevisionDate = date, Project = project, ProjectId = project.Id, HasInvoice = false };
+            return new Bill()
+            {
+                Date = date,
+                RevisionDate = date,
+                BillItems = billItems,
+                Amount = CalculateAmount(billItems),
+                ProjectId = projectId,
+                HasInvoice = false
+            };
         }
 
-        public void SetRevisionDate(DateTime date)
+        public void Revise(DateTime revisionDate, ListOfBillItems billItems)
         {
-            this.RevisionDate = date;
+            if (this.HasInvoice)
+            {
+                throw new InvalidOperationException("Invoice has been issued and the bill can not be changed.");
+            }
+
+            if (this.Date > revisionDate)
+            {
+                throw new ArgumentOutOfRangeException("revisionDate", "Revision date can't be prior then the creation date.");
+            }
+
+            if (this.RevisionDate > revisionDate)
+            {
+                throw new ArgumentOutOfRangeException("revisionDate", "Revision date can't be prior then the last revision date.");
+            }
+
+            this.RevisionDate = revisionDate;
+            this.BillItems = billItems;
+            this.Amount = CalculateAmount(billItems);
         }
-        
-        public void AttachInvoice(Invoice invoice)
+
+        public void AttachInvoice(string invoiceId)
         {
+            if (this.HasInvoice)
+            {
+                throw new InvalidOperationException("Invoice has been already issued.");
+            }
+
             this.HasInvoice = true;
-            this.InvoiceId = invoice.Id;
+            this.InvoiceId = invoiceId;
         }
 
-        public ListOfBillItems AddBillItem(BillItem billItem)
+        public void AddBillItem(BillItem billItem)
         {
+            if (this.HasInvoice)
+            {
+                throw new InvalidOperationException("Invoice has been issued and the bill can not be changed.");
+            }
+
             var billItems = this.GetBillItems();
             if (!billItems.Contains(billItem))
             {
-                billItems.Add(billItem);
+                this.BillItems = billItems.Add(billItem); 
             }
             else
             {
                 var billItemToUpdate = billItems.FirstOrDefault(x => x.Equals(billItem));
                 billItemToUpdate.AddQuantity(billItem.Quantity);
+                this.BillItems = billItems;
             }
-
-            return ListOfBillItems.Create(billItems);
         }
 
         public ListOfBillItems GetBillItems()
         {
+            if (string.IsNullOrEmpty(this.BillItems))
+            {
+                return ListOfBillItems.Create();
+            }
+
             return (ListOfBillItems)this.BillItems;
+        }
+
+        private static decimal CalculateAmount(ListOfBillItems billItems)
+        {
+            return billItems.Sum(i => i.Price * i.Quantity);
         }
     }
 }

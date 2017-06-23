@@ -59,7 +59,7 @@ namespace Wilson.Accounting.Core.Entities
 
             foreach (var storehouse in quantities.Keys)
             {
-                var storehouseItem = StorehouseItem.Create(quantities[storehouse], storehouse, invoiceItem);
+                var storehouseItem = StorehouseItem.Create(quantities[storehouse], storehouse.Id, invoiceItem.Id, invoiceItem.Price);
                 invoiceItem.AddToStorehouse(storehouse, quantities[storehouse]);
             }
 
@@ -73,7 +73,7 @@ namespace Wilson.Accounting.Core.Entities
 
         public void AddToStorehouse(Storehouse storehouse, int quantity)
         {
-            var storehouseItem = StorehouseItem.Create(this.Quantity, storehouse, this);
+            var storehouseItem = StorehouseItem.Create(this.Quantity, storehouse.Id, this.Id, this.Price);
             var storehouseItemToUpdate = this.StorehouseItems.FirstOrDefault(x => x.Equals(storehouseItem));
             if (storehouseItemToUpdate == null)
             {

@@ -127,7 +127,7 @@ namespace Wilson.Accounting.Core.Entities
                 Item.Create(
                     string.Format("Bill from {0} for Project: {0}", bill.Date, bill.Project.Name), Мeasure.Pcs), invoice);
 
-            bill.AttachInvoice(invoice);
+            bill.AttachInvoice(invoice.Id);
 
             return invoice;
         }

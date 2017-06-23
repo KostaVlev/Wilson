@@ -20,9 +20,9 @@ namespace Wilson.Accounting.Core.Entities
 
         public virtual ICollection<StorehouseItem> StorehouseItems { get; set; }        
 
-        public static Storehouse Create(string name, Project project)
+        public static Storehouse Create(string name, string projectId)
         {
-            return new Storehouse() { Name = name, ProjectId = project.Id, StorehouseItems = new HashSet<StorehouseItem>() };
+            return new Storehouse() { Name = name, ProjectId = projectId, StorehouseItems = new HashSet<StorehouseItem>() };
         }
 
         public void AddItem(int quantity, InvoiceItem item)
@@ -32,7 +32,7 @@ namespace Wilson.Accounting.Core.Entities
                 throw new ArgumentOutOfRangeException("quantity", "Not enough quantity available of the selected item.");
             }
 
-            var storehouseItem = StorehouseItem.Create(quantity, this, item);
+            var storehouseItem = StorehouseItem.Create(quantity, this.Id, item.Id, item.Price);
             var itemToUpdate = this.StorehouseItems.FirstOrDefault(x => x.Equals(storehouseItem));
             if (itemToUpdate == null)
             {

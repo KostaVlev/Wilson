@@ -47,13 +47,13 @@ namespace Wilson.Accounting.Core.Entities
             return this.GetEnumerator();
         }
 
-        public override bool EqualsCore(ListOfPayments other)
+        protected override bool EqualsCore(ListOfPayments other)
         {
             return Payments.OrderBy(x => x.Date).ThenBy(x => x.Amount)
                 .SequenceEqual(other.Payments.OrderBy(x => x.Date).ThenBy(x => x.Amount));
         }
 
-        public override int GetHashCodeCore()
+        protected override int GetHashCodeCore()
         {
             unchecked
             {
