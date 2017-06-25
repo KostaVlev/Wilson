@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Wilson.Accounting.Core.Entities.ValueObjects;
 using Wilson.Accounting.Core.Enumerations;
 
 namespace Wilson.Accounting.Core.Entities

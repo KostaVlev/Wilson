@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Wilson.Accounting.Core.Entities.ValueObjects;
 
 namespace Wilson.Accounting.Core.Entities
 {

@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 
-namespace Wilson.Accounting.Core.Entities
+namespace Wilson.Accounting.Core.Entities.ValueObjects
 {
     [JsonObject]
     public class BillItem : ValueObject<BillItem>

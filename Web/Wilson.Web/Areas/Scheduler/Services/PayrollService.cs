@@ -30,7 +30,7 @@ namespace Wilson.Web.Areas.Scheduler.Services
 
             var employees = await this.Employees();
             var employeesWithoutPaychecks = employees.Where(e => !e.Paychecks.Any(p =>
-                p.From.Month == dateValue.Month && p.From.Year == dateValue.Year));
+                p.GetPeriod().From.Month == dateValue.Month && p.GetPeriod().From.Year == dateValue.Year));
 
             return employeesWithoutPaychecks;
         }

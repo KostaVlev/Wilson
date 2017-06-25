@@ -59,7 +59,8 @@ namespace Wilson.Web.Areas.Scheduler.Models.PayrollViewModels
         {
             var employees = await services.GetEmployees();
             var employeeModels = mapper.Map<IEnumerable<Employee>, IEnumerable<EmployeeViewModel>>(employees);
-            employeeModels.ToList().ForEach(e => e.Paychecks = e.Paychecks.Where(p => from <= p.From && to >= p.To).OrderBy(p => p.From));
+            employeeModels.ToList().ForEach(e => 
+                e.Paychecks = e.Paychecks.Where(p => from <= p.Period.From && to >= p.Period.To).OrderBy(p => p.Period.From));
 
             model.EmployeeOptions = await services.GetShdeduleEmployeeOptions();
             model.PeriodOptions = services.GetPeriodsOptions();

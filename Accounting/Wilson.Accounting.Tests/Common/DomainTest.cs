@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Wilson.Accounting.Core.Entities;
+using Wilson.Accounting.Core.Entities.ValueObjects;
 using Xunit;
 
 namespace Wilson.Accounting.Tests.Common
@@ -150,6 +151,12 @@ namespace Wilson.Accounting.Tests.Common
 
             bill.AddBillItem(billItemA);
             Assert.True(bill.GetBillItems().Count() == 2);
+        }
+
+        [Fact]
+        public void Adding_Payment_To_Paycheck()
+        {
+            
         }
 
         private Address GetAddress()

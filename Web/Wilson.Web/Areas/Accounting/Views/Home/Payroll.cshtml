@@ -66,7 +66,7 @@
                 {
                     <tr>
                         <td>@paycheck.Date.ToString(Constants.DateTimeFormats.Short)</td>
-                        <td>@paycheck.From.ToString(Constants.DateTimeFormats.Short) | @paycheck.To.ToString(Constants.DateTimeFormats.Short)</td>
+                        <td>@paycheck.Period.From.ToString(Constants.DateTimeFormats.Short) | @paycheck.Period.To.ToString(Constants.DateTimeFormats.Short)</td>
                         <td class="text-success">@paycheck.Total</td>
                         <td>
                             @foreach (var payment in paycheck.Payments)
@@ -79,7 +79,7 @@
                         <td>
                             @await Component.InvokeAsync(
                            "AddPaycheckPayment",
-                           new { From = paycheck.From, To = paycheck.To, EmployeeId = employee.Id, PaycheckId = paycheck.Id })
+                           new { From = paycheck.Period.From, To = paycheck.Period.To, EmployeeId = employee.Id, PaycheckId = paycheck.Id })
                     </td>
                 </tr>
                 }

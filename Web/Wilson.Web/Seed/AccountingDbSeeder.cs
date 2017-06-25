@@ -4,6 +4,7 @@ using Wilson.Accounting.Core.Entities;
 using Wilson.Accounting.Data;
 using Wilson.Web.Events;
 using Wilson.Web.Events.Interfaces;
+using Wilson.Accounting.Core.Entities.ValueObjects;
 
 namespace Wilson.Web.Seed
 {

@@ -66,7 +66,7 @@ namespace Wilson.Web.Areas.Accounting.Services
 
         public IEnumerable<Employee> FilterEmployeesPaycheksByDate(DateTime from, DateTime to, IEnumerable<Employee> employees)
         {
-            employees.ToList().ForEach(e => e.Paycheks.Where(p => p.From >= from && p.To <= to));
+            employees.ToList().ForEach(e => e.Paycheks.Where(p => p.GetPeriod().From >= from && p.GetPeriod().To <= to));
 
             return employees;
         }

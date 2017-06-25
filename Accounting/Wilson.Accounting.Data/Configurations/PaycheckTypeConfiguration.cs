@@ -17,11 +17,10 @@ namespace Wilson.Accounting.Data.Configurations
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Id).HasMaxLength(36);
             builder.Property(x => x.EmployeeId).HasMaxLength(36).IsRequired();
-            builder.Property(x => x.PayForHours).HasPrecision(18, 4);
-            builder.Property(x => x.PayForExtraHours).HasPrecision(18, 4);
-            builder.Property(x => x.PayForHolidayHours).HasPrecision(18, 4);
-            builder.Property(x => x.PayForPayedDaysOff).HasPrecision(18, 4);
-            builder.Property(x => x.PayBusinessTrip).HasPrecision(18, 4);
+            builder.Property(x => x.Period).HasMaxLength(80).IsRequired();
+            builder.Property(x => x.SubTotals).HasMaxLength(250).IsRequired();
+            builder.Property(x => x.DaysOff).HasMaxLength(250).IsRequired();
+            builder.Property(x => x.WorkingHours).HasMaxLength(250).IsRequired();
             builder.Property(x => x.Total).HasPrecision(18, 4);
         }
     }

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
 
-namespace Wilson.Accounting.Core.Entities
+namespace Wilson.Accounting.Core.Entities.ValueObjects
 {
     [JsonObject]
     public class  ListOfBillItems : ValueObject<ListOfBillItems>, IEnumerable<BillItem>

@@ -9,9 +9,10 @@ using Wilson.Accounting.Core.Enumerations;
 namespace Wilson.Accounting.Data.Migrations
 {
     [DbContext(typeof(AccountingDbContext))]
-    partial class AccountingDbContextModelSnapshot : ModelSnapshot
+    [Migration("20170624164311_Paycheck")]
+    partial class Paycheck
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasDefaultSchema("Accounting")

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Wilson.Accounting.Core.Entities.ValueObjects;
 using Wilson.Web.Areas.Accounting.Models.SharedViewModels;
 
 namespace Wilson.Web.Areas.Accounting.Models.HomeViewModels
@@ -11,9 +12,7 @@ namespace Wilson.Web.Areas.Accounting.Models.HomeViewModels
 
         public DateTime Date { get; set; }
 
-        public DateTime From { get; set; }
-
-        public DateTime To { get; set; }
+        public Period Period { get; set; }
 
         public decimal Total { get; set; }
 

@@ -42,7 +42,7 @@ namespace Wilson.Scheduler.Core.Entities
 
         public Paycheck AddOrUpdatePaycheck(DateTime issueDate, DateTime from)
         {
-            var maybePaychek = this.Paychecks.SingleOrDefault(p => p.From == from);            
+            var maybePaychek = this.Paychecks.SingleOrDefault(p => p.GetPeriod().From == from);            
             if (maybePaychek != null)
             {
                 maybePaychek.Update(this);

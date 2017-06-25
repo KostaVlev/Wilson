@@ -117,7 +117,7 @@ namespace Wilson.Web.Controllers
             }
 
             // Create home company.
-            var companyAddress = Accounting.Core.Entities.Address.Create(
+            var companyAddress = Accounting.Core.Entities.ValueObjects.Address.Create(
                 model.Company.Address.Country,
                 model.Company.Address.PostCode,
                 model.Company.Address.City,

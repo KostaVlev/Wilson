@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace Wilson.Accounting.Core.Entities
+namespace Wilson.Accounting.Core.Entities.ValueObjects
 {
     public abstract class ValueObject<TEntity> where TEntity : ValueObject<TEntity>
     {

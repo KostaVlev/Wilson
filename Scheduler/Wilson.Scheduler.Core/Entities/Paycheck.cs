@@ -1,41 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Wilson.Scheduler.Core.Entities.ValueObjects;
 using Wilson.Scheduler.Core.Enumerations;
 
 namespace Wilson.Scheduler.Core.Entities
 {
-    public class Paycheck : Entity, IValueObject<Paycheck>
+    public class Paycheck : Entity
     {
         public DateTime Date { get; private set; }
 
-        public DateTime From { get; private set; }
+        public string Period { get; private set; }
 
-        public DateTime To { get; private set; }
+        public string WorkingHours { get; private set; }
 
-        public int Hours { get; private set; }
+        public string DaysOff { get; private set; }
 
-        public int HourOnBusinessTrip { get; private set; }
-
-        public int HourOnHolidays { get; private set; }
-
-        public int ExtraHours { get; private set; }
-
-        public int PaidDaysOff { get; private set; }
-
-        public int UnpaidDaysOff { get; private set; }
-
-        public int SickDaysOff { get; private set; }
-
-        public decimal PayForHours { get; private set; }
-
-        public decimal PayBusinessTrip { get; private set; }
-
-        public decimal PayForExtraHours { get; private set; }
-
-        public decimal PayForHolidayHours { get; private set; }
-
-        public decimal PayForPayedDaysOff { get; private set; }
+        public string SubTotals { get; private set; }
 
         public decimal Total { get; private set; }
 
@@ -44,26 +25,25 @@ namespace Wilson.Scheduler.Core.Entities
         public virtual Employee Employee { get; private set; }
 
         public static Paycheck Create(Employee employee, DateTime issuingDate, DateTime from)
-        {            
-            var firstDayOfMonth = GetFirstDayOfMonth(from);
-            var lastDayOfMonth = GetLastDayOfMonth(firstDayOfMonth);
+        {
+            var period = ValueObjects.Period.CreateForCurrentMonth(from);
             var paycheck = new Paycheck()
             {
                 EmployeeId = employee.Id,
                 Date = issuingDate,
-                From = firstDayOfMonth,
-                To = lastDayOfMonth
+                Period = period,
             };
 
             CalculateHours(paycheck, employee.Schedules.Where(s => 
-                s.Date >= firstDayOfMonth && s.Date <= lastDayOfMonth));
+                s.Date >= period.From && s.Date <= period.To));
 
-            CalculatePayments(paycheck, employee.PayRate);
+            paycheck.SubTotals = CalculateSubTotals(paycheck.GetWorkingHours(), paycheck.GetDaysOff(), employee.PayRate);
+            paycheck.Total = CalculateTotal(paycheck.GetSubTotals());
 
             return paycheck;
         }
 
-        public Paycheck Update(Employee employee)
+        public void Update(Employee employee)
         {
             if (this.EmployeeId != employee.Id)
             {
@@ -71,57 +51,66 @@ namespace Wilson.Scheduler.Core.Entities
             }
 
             CalculateHours(this, employee.Schedules.Where(s =>
-                s.Date >= this.From && s.Date <= this.To));
+                s.Date >= this.GetPeriod().From && s.Date <= this.GetPeriod().To));
 
-            CalculatePayments(this, employee.PayRate);
-
-            return this;
+            this.SubTotals = CalculateSubTotals(this.GetWorkingHours(), this.GetDaysOff(), employee.PayRate);
+            this.Total = CalculateTotal(this.GetSubTotals());
         }
 
         private static void CalculateHours(Paycheck paycheck, IEnumerable<Schedule> schedules)
         {
-            paycheck.PaidDaysOff = schedules.Where(x => x.ScheduleOption == ScheduleOption.PaidDayOff).Count();
-            paycheck.UnpaidDaysOff = schedules.Where(x => x.ScheduleOption == ScheduleOption.UnpaidDayOff).Count();
-            paycheck.SickDaysOff = schedules.Where(x => x.ScheduleOption == ScheduleOption.UnpaidDayOff).Count();
-            paycheck.HourOnBusinessTrip = schedules.Where(x => x.ScheduleOption == ScheduleOption.BusinessTrip).Sum(x => x.WorkHours);
-            paycheck.HourOnHolidays = schedules.Where(x => x.ScheduleOption == ScheduleOption.Holiday).Sum(x => x.WorkHours);
-            paycheck.Hours = schedules.Where(x => x.ScheduleOption == ScheduleOption.AtWork).Sum(x => x.WorkHours);
-            paycheck.ExtraHours = schedules.Where(x =>
+            var paidDaysOff = schedules.Where(x => x.ScheduleOption == ScheduleOption.PaidDayOff).Count();
+            var unpaidDaysOff = schedules.Where(x => x.ScheduleOption == ScheduleOption.UnpaidDayOff).Count();
+            var sickDaysOff = schedules.Where(x => x.ScheduleOption == ScheduleOption.UnpaidDayOff).Count();
+
+            paycheck.DaysOff = ValueObjects.DaysOff.Create(paidDaysOff, unpaidDaysOff, sickDaysOff);
+
+            var hourOnBusinessTrip = schedules.Where(x => x.ScheduleOption == ScheduleOption.BusinessTrip).Sum(x => x.WorkHours);
+            var hourOnHolidays = schedules.Where(x => x.ScheduleOption == ScheduleOption.Holiday).Sum(x => x.WorkHours);
+            var hours = schedules.Where(x => x.ScheduleOption == ScheduleOption.AtWork).Sum(x => x.WorkHours);
+            var extraHours = schedules.Where(x =>
                 x.ScheduleOption == ScheduleOption.Holiday ||
                 x.ScheduleOption == ScheduleOption.AtWork ||
                 x.ScheduleOption == ScheduleOption.BusinessTrip)
                 .Sum(x => x.ExtraWorkHours);
+
+            paycheck.WorkingHours = ValueObjects.WorkingHours.Create(hours, hourOnBusinessTrip, hourOnHolidays, extraHours);
         }
 
-        private static void CalculatePayments(Paycheck paycheck, PayRate payRate)
+        private static SubTotals CalculateSubTotals(WorkingHours workingHours, DaysOff daysOff, PayRate payRate)
         {
-            paycheck.PayForPayedDaysOff = paycheck.PaidDaysOff * 8 * payRate.Hour;
-            paycheck.PayBusinessTrip = paycheck.HourOnBusinessTrip * payRate.BusinessTripHour;
-            paycheck.PayForHolidayHours = paycheck.HourOnHolidays * payRate.HoidayHour;
-            paycheck.PayForHours = paycheck.Hours * payRate.HoidayHour;
-            paycheck.PayForExtraHours = paycheck.ExtraHours * payRate.ExtraHour;
+            var payForHours = workingHours.Hours * payRate.Hour;
+            var payForBusinessTrip = workingHours.HourOnBusinessTrip * payRate.BusinessTripHour;
+            var payForExtraHours = workingHours.ExtraHours * payRate.ExtraHour;
+            var payForHolidayHours = workingHours.HourOnHolidays * payRate.HoidayHour;
+            var payForPayedDaysOff = daysOff.PaidDaysOff * (payRate.Hour * 8);
 
-            paycheck.Total = paycheck.PayForPayedDaysOff + paycheck.PayBusinessTrip + paycheck.PayForHolidayHours + paycheck.PayForHours + paycheck.PayForExtraHours;
+            return ValueObjects.SubTotals.Create(payForHours, payForBusinessTrip, payForExtraHours, payForHolidayHours, payForPayedDaysOff);
         }
 
-        private static DateTime GetFirstDayOfMonth(DateTime date)
+        private static decimal CalculateTotal(SubTotals subTotals)
         {
-            return new DateTime(date.Year, date.Month, 1);
+            return subTotals.Sum();
         }
 
-        private static DateTime GetLastDayOfMonth(DateTime firstDayOfTheMonth)
+        public Period GetPeriod()
         {
-            return firstDayOfTheMonth.AddMonths(1).AddDays(-1).AddTicks(-1);
+            return (Period)this.Period;
         }
 
-        public bool Equals(Paycheck other)
+        public WorkingHours GetWorkingHours()
         {
-            if (other == null)
-            {
-                return false;
-            }
-
-            return this.From == other.From && this.To == other.To && this.EmployeeId == other.EmployeeId;
+            return (WorkingHours)this.WorkingHours;
         }
+
+        public SubTotals GetSubTotals()
+        {
+            return (SubTotals)this.SubTotals;
+        }
+
+        public DaysOff GetDaysOff()
+        {
+            return (DaysOff)this.DaysOff;
+        }        
     }
 }

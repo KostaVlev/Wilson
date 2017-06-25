@@ -1,8 +1,8 @@
 ﻿using Newtonsoft.Json;
 using System;
 
-namespace Wilson.Accounting.Core.Entities
-{
+namespace Wilson.Accounting.Core.Entities.ValueObjects
+{ 
     [JsonObject]
     public class Address : ValueObject<Address>
     {
@@ -79,12 +79,12 @@ namespace Wilson.Accounting.Core.Entities
         {
             unchecked
             {
-                int hashCode = Country.GetHashCode();
-                hashCode = (hashCode * 397) ^ PostCode.GetHashCode();
-                hashCode = (hashCode * 397) ^ City.GetHashCode();
-                hashCode = (hashCode * 397) ^ Street.GetHashCode();
-                hashCode = (hashCode * 397) ^ PostCode.GetHashCode();
-                hashCode = (hashCode * 397) ^ StreetNumber.GetHashCode();
+                int hashCode = this.Country.GetHashCode();
+                hashCode = (hashCode * 397) ^ this.PostCode.GetHashCode();
+                hashCode = (hashCode * 397) ^ this.City.GetHashCode();
+                hashCode = (hashCode * 397) ^ this.Street.GetHashCode();
+                hashCode = (hashCode * 397) ^ this.PostCode.GetHashCode();
+                hashCode = (hashCode * 397) ^ this.StreetNumber.GetHashCode();
 
                 return hashCode;
             }

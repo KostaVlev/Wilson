@@ -9,9 +9,10 @@ using Wilson.Scheduler.Core.Enumerations;
 namespace Wilson.Scheduler.Data.Migrations
 {
     [DbContext(typeof(SchedulerDbContext))]
-    partial class SchedulerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20170625075429_Paycheck")]
+    partial class Paycheck
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasDefaultSchema("Scheduler")

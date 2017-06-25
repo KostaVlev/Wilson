@@ -1,44 +1,29 @@
 ﻿using System;
+using Wilson.Accounting.Core.Entities.ValueObjects;
 
 namespace Wilson.Accounting.Core.Entities
 {
-    public class Paycheck : Entity, IEquatable<Paycheck>
+    public class Paycheck : Entity
     {
-        private Paycheck()
+        protected Paycheck()
         {
         }
 
         public DateTime Date { get; private set; }
 
-        public DateTime From { get; private set; }
+        public string Period { get; private set; }
 
-        public DateTime To { get; private set; }
+        public string WorkingHours { get; private set; }
 
-        public int Hours { get; private set; }
+        public string DaysOff { get; private set; }
 
-        public int HourOnBusinessTrip { get; private set; }
+        public string SubTotals { get; private set; }
 
-        public int HourOnHolidays { get; private set; }
-
-        public int ExtraHours { get; private set; }
-
-        public int PaidDaysOff { get; private set; }
-
-        public int UnpaidDaysOff { get; private set; }
-
-        public int SickDaysOff { get; private set; }
-
-        public decimal PayForHours { get; private set; }
-
-        public decimal PayBusinessTrip { get; private set; }
-
-        public decimal PayForExtraHours { get; private set; }
-
-        public decimal PayForHolidayHours { get; private set; }
-
-        public decimal PayForPayedDaysOff { get; private set; }
+        public string PayRate { get; private set; }
 
         public decimal Total { get; private set; }
+
+        public string Payments { get; private set; }
 
         public bool IsPaied { get; private set; }
 
@@ -46,7 +31,23 @@ namespace Wilson.Accounting.Core.Entities
 
         public virtual Employee Employee { get; private set; }
 
-        public string Payments { get; private set; }
+        public static Paycheck Create(
+             DateTime date, Period period, WorkingHours workingHours, DaysOff daysOff, PayRate payRate, string employeeId)
+        {
+            var subTotal = CalculateSubTotals(workingHours, daysOff, payRate);
+            return new Paycheck()
+            {
+                Date = date,
+                Period = period,
+                WorkingHours = workingHours,
+                DaysOff = daysOff,
+                PayRate = payRate,
+                SubTotals = subTotal,
+                Total = CalculateTotal(subTotal),
+                IsPaied = false,
+                EmployeeId = employeeId
+            };
+        }
 
         public void AddPayment(DateTime date, decimal amount)
         {
@@ -84,14 +85,45 @@ namespace Wilson.Accounting.Core.Entities
             return string.IsNullOrEmpty(this.Payments) ? ListOfPayments.Create() : (ListOfPayments)this.Payments;
         }
 
-        public bool Equals(Paycheck other)
+        public Period GetPeriod()
         {
-            if (other == null)
-            {
-                return false;
-            }
+            return (Period)this.Period;
+        }
 
-            return this.From == other.From && this.To == other.To && this.EmployeeId == other.EmployeeId;
+        public WorkingHours GetWorkingHours()
+        {
+            return (WorkingHours)this.WorkingHours;
+        }
+
+        public SubTotals GetSubTotals()
+        {
+            return (SubTotals)this.SubTotals;
+        }
+
+        public DaysOff GetDaysOff()
+        {
+            return (DaysOff)this.DaysOff;
+        }
+
+        public PayRate GetPayRate()
+        {
+            return (PayRate)this.PayRate;
+        }
+
+        private static SubTotals CalculateSubTotals(WorkingHours workingHours, DaysOff daysOff, PayRate payRate)
+        {
+            var payForHours = workingHours.Hours * payRate.HourRate;
+            var payForBusinessTrip = workingHours.HourOnBusinessTrip * payRate.BusinessTripHourRate;
+            var payForExtraHours = workingHours.ExtraHours * payRate.ExtraHourRate;
+            var payForHolidayHours = workingHours.HourOnHolidays * payRate.HoidayHourRate;
+            var payForPayedDaysOff = daysOff.PaidDaysOff * (payRate.HourRate * 8);
+
+            return ValueObjects.SubTotals.Create(payForHours, payForBusinessTrip, payForExtraHours, payForHolidayHours, payForPayedDaysOff);
+        }
+
+        private static decimal CalculateTotal(SubTotals subTotals)
+        {
+            return subTotals.Sum();
         }
     }
 } 

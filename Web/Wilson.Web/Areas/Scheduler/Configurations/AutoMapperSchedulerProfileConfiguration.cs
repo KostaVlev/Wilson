@@ -17,7 +17,10 @@ namespace Wilson.Web.Areas.Scheduler.Configurations
                 .ForMember(x => x.ProjectOptions, opt => opt.Ignore())
                 .ForMember(x => x.ScheduleOptions, opt => opt.Ignore())
                 .ForMember(x => x.ScheduleOptionName, opt => opt.Ignore());
-            CreateMap<Paycheck, PaycheckViewModel>();
+            CreateMap<Paycheck, PaycheckViewModel>()
+                .ForMember(x => x.WorkingHours, opt => opt.ResolveUsing<WorkingHoursResolver<Paycheck, PaycheckViewModel>>())
+                .ForMember(x => x.Period, opt => opt.ResolveUsing<PeriodResolver<Paycheck, PaycheckViewModel>>())
+                .ForMember(x => x.DaysOff, opt => opt.ResolveUsing<DaysOffResolver<Paycheck, PaycheckViewModel>>());
         }
     }
 }

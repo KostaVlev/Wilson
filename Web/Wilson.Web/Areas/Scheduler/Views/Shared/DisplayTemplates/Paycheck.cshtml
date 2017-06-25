@@ -30,19 +30,19 @@
             {
                 <tr>
                     <td>@paycheck.Date.ToString(Constants.DateTimeFormats.Short)</td>
-                    <td>@paycheck.From.ToString(Constants.DateTimeFormats.Short) | @paycheck.To.ToString(Constants.DateTimeFormats.Short)</td>
-                    <td>@paycheck.Hours</td>
-                    <td class="text-primary">@paycheck.PayForHours</td>
-                    <td>@paycheck.HourOnBusinessTrip</td>
-                    <td class="text-primary">@paycheck.PayBusinessTrip</td>
-                    <td>@paycheck.HourOnHolidays</td>
-                    <td class="text-primary">@paycheck.PayForHolidayHours</td>
-                    <td>@paycheck.ExtraHours</td>
-                    <td class="text-primary">@paycheck.PayForExtraHours</td>
-                    <td>@paycheck.PaidDaysOff</td>
-                    <td class="text-primary">@paycheck.PayForPayedDaysOff</td>
-                    <td>@paycheck.UnpaidDaysOff</td>
-                    <td>@paycheck.SickDaysOff</td>
+                    <td>@paycheck.Period.From.ToString(Constants.DateTimeFormats.Short) | @paycheck.Period.To.ToString(Constants.DateTimeFormats.Short)</td>
+                    <td>@paycheck.WorkingHours.Hours</td>
+                    <td class="text-primary">@paycheck.SubTotals.PayForHours</td>
+                    <td>@paycheck.WorkingHours.HourOnBusinessTrip</td>
+                    <td class="text-primary">@paycheck.SubTotals.PayForBusinessTrip</td>
+                    <td>@paycheck.WorkingHours.HourOnHolidays</td>
+                    <td class="text-primary">@paycheck.SubTotals.PayForHolidayHours</td>
+                    <td>@paycheck.WorkingHours.ExtraHours</td>
+                    <td class="text-primary">@paycheck.SubTotals.PayForExtraHours</td>
+                    <td>@paycheck.DaysOff.PaidDaysOff</td>
+                    <td class="text-primary">@paycheck.SubTotals.PayForPayedDaysOff</td>
+                    <td>@paycheck.DaysOff.UnpaidDaysOff</td>
+                    <td>@paycheck.DaysOff.SickDaysOff</td>
                     <td class="text-success">@paycheck.Total</td>
                 </tr>
             }
